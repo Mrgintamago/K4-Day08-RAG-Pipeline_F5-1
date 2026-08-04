@@ -14,7 +14,7 @@
 ```
 Task 1-10 :  ████████████████████  50 / 50 điểm   ✅ ĐẠT MỐC CP4
 Bài nhóm  :  ██████████████████░░  27 / 30 điểm
-Bonus     :  ███████████░░░░░░░░░  11 / 20 điểm   🔓 ĐÃ MỞ KHOÁ
+Bonus     :  ███████████████░░░░░  15 / 20 điểm   🔓 ĐÃ MỞ KHOÁ
 pytest    :  35 passed · 0 skipped · 0 failed      ✅ 35/35
 ```
 
@@ -41,7 +41,7 @@ pytest    :  35 passed · 0 skipped · 0 failed      ✅ 35/35
 | ⭐3 | Conversation memory multi-turn | 3 | H | ✅ `generate_with_citation(..., chat_history=)` + query contextualization |
 | ⭐4 | UI hiển thị source + score | 3 | H | ✅ badge **PHÁP LUẬT** / **QUY ĐỊNH SÀN** theo `doc_type` |
 | **⭐1** | **TF-IDF song song BM25 + giải thích** | **5** | **S** | ❌ **CHƯA LÀM** — `task6` chỉ có BM25, không có `TfidfVectorizer` |
-| **⭐5** | **Deploy online** | **4** | **Q** | 🔵 **HF Spaces đã chết** — chuyển Streamlit Cloud, xem [`DEPLOY_HF.md`](DEPLOY_HF.md) |
+| ⭐5 | Deploy online | 4 | Q | ✅ https://hf-space-gu9frvc2ksareqt4amdfe2.streamlit.app · ⚠️ **đang private, phải đổi sang public** |
 
 > ⭐1 là **bonus rẻ nhất còn lại**: 5 điểm, cùng file với BM25 đã xong, ~10 phút.
 > Điểm nằm ở **phần giải thích cơ chế** chứ không phải code — prompt sẵn ở [§10.6](#106-prompt-cho-4-ticket-bonus--copy-thẳng-vào-agent).
@@ -95,7 +95,7 @@ Tụt xuống dưới 35 là mất điểm đã có — nguy hiểm hơn là kh�
 | ⭐ F5-14 | Bonus HyDE + Query Expansion | T | 5 | ✅ |
 | ⭐ F5-15 | Bonus memory + UI source/score | H | 6 | ✅ |
 | **⭐ F5-18** | **Bonus TF-IDF** *(tách khỏi F5-6)* | **S** | **5** | 🔴 **CHƯA LÀM — bonus rẻ nhất còn lại** |
-| ⭐ F5-16 | Bonus deploy online | Q | 4 | 🔵 HF Spaces đã chết → Streamlit Cloud |
+| ⭐ F5-16 | Bonus deploy online | Q | 4 | ✅ Streamlit Cloud · ⚠️ cần chuyển sang public |
 | F5-17 | Chốt nộp | Q | — | ⬜ |
 
 Ký hiệu: ✅ xong · 🟡 đang làm · 🟢 làm được ngay, không chờ ai · ⬜ chờ ticket khác ·
@@ -110,7 +110,9 @@ Ký hiệu: ✅ xong · 🟡 đang làm · 🟢 làm được ngay, không chờ
 | **H** Hân | F5-10 **4đ** + F5-11 **8đ** + ⭐memory/UI **6đ** | — *(rảnh)* | Giúp S ở F5-13 |
 | **S** Sáng | F5-6,7 **12đ** + F5-12 **3đ** + F5-13 **9đ** | — *(rảnh)* | ⭐F5-18 TF-IDF (5đ) 🔴 |
 
-**Tổng đang có: 50 (Task) + 27 (nhóm) + 11 (bonus) = 88/100.**
+**Tổng đang có: 50 (Task) + 27 (nhóm) + 15 (bonus) = 92/100.**
+
+🚀 **Demo online:** https://hf-space-gu9frvc2ksareqt4amdfe2.streamlit.app
 
 ### 🚨 Đang chặn tiến độ
 
@@ -1293,10 +1295,10 @@ Liệt kê vi phạm nếu có, đừng tự sửa vội.
 | Ưu tiên | Ai | Việc | Điểm | Thời gian |
 |---------|----|------|------|-----------|
 | 🔴 **1** | ⭐ **S** hoặc **T** | **F5-18** TF-IDF + giải thích cơ chế — bonus rẻ nhất, cùng file với BM25 | **5** | 10 phút |
-| 🔴 **2** | ⭐ **Q** | **F5-16** deploy — Streamlit Cloud, nhánh `hf-space` (xem `DEPLOY_HF.md`) | **4** | 10 phút |
+| 🔴 **2** | **Q** | **Đổi app sang public** — hiện link redirect sang trang đăng nhập, coach không mở được | — | 1 phút |
 | ⬜ 3 | **Q** | F5-17 chốt nộp: `pytest` lại trên `main`, dọn repo | — | 10 phút |
 
-**Chỉ còn 9 điểm bonus lấy được: TF-IDF (5) + deploy (4).** Phần bắt buộc đã xong hết.
+**Chỉ còn 5 điểm bonus: TF-IDF.** Phần bắt buộc đã xong hết.
 Cả 4 người đều rảnh → ai làm F5-18 cũng được, đừng để 5 điểm rẻ nhất bị bỏ.
 
 **Prompt sẵn cho từng ticket bonus: [§10.6](#106-prompt-cho-4-ticket-bonus--copy-thẳng-vào-agent).**

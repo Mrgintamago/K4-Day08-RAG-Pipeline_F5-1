@@ -13,6 +13,13 @@ pinned: false
 
 **Chương 2 | Ngày 8 trong 15** · Nhóm **F5**
 
+> ### 🚀 Demo online
+> **https://hf-space-gu9frvc2ksareqt4amdfe2.streamlit.app**
+>
+> Deploy trên **Streamlit Community Cloud** từ nhánh `hf-space`.
+> (Hugging Face Spaces không dùng được: `sdk: streamlit` đã bị gỡ và Gradio/Docker
+> Space trên CPU free nay đòi tài khoản PRO — chi tiết ở [`DEPLOY_HF.md`](DEPLOY_HF.md).)
+
 > ## ⚖️ Trợ Lý Pháp Lý Khởi Nghiệp & Thương Mại Điện Tử
 >
 > Chủ đề **#2** trong [`SUGGESTED_TOPICS.md`](SUGGESTED_TOPICS.md): tra cứu quy định pháp lý

@@ -11,6 +11,8 @@ Sau khi hoàn thành bài cá nhân, nhóm ngồi lại để xây dựng **1 tr
 
 ## Yêu cầu 1: Sản phẩm nhóm RAG Chatbot
 
+**🚀 Demo:** https://hf-space-gu9frvc2ksareqt4amdfe2.streamlit.app
+
 Xây dựng chatbot tra cứu quy định pháp lý khi bán hàng online: nghĩa vụ thuế, đăng ký hộ kinh doanh / thành lập công ty, quy định đăng bán trên sàn TMĐT, quyền người tiêu dùng.
 
 **Yêu cầu:**
@@ -83,17 +85,18 @@ help.shopee.vn ───► Task 1 (8 PDF quy định) ───┤
                                                 ▼
                                 Task 3 — MarkItDown ──► data/standardized/*.md
                                                 ▼
-                     Task 4 — chunk 800/overlap 100 + BAAI/bge-m3 ──► chroma_db/
+           Task 4 — chunk 800/overlap 100 + MiniLM đa ngữ 384d ──► chroma_db/
+                    (1.216 chunk, đã commit sẵn trong repo)
                                                 │
                      ┌──────────────────────────┴──────────────────────────┐
                      ▼                                                     ▼
         Task 5 semantic_search()                            Task 6 lexical_search()
-        dense / cosine / HyDE                               sparse / BM25 + TF-IDF
+        dense / cosine / + HyDE                             sparse / BM25
                      └──────────────────────────┬──────────────────────────┘
                                                 ▼
                               Task 7 — RRF rerank, k=60
                                                 ▼
-                     Task 9 — retrieve(): cosine gốc < 0.48 ?
+                     Task 9 — retrieve(): cosine gốc < 0.40 ?
                               ├─ không → kết quả hybrid
                               └─ có    → Task 8 PageIndex vectorless fallback
                                                 ▼
