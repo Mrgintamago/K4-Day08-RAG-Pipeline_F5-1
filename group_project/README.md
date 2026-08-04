@@ -107,7 +107,8 @@ help.shopee.vn ───► Task 1 (8 PDF quy định) ───┤
               app.py (Streamlit chatbot)          eval_pipeline.py (RAGAS, A/B test)
 ```
 
-> Chi tiết kế hoạch, lịch checkpoint và bản đồ điểm: xem [`../PLAN.md`](../PLAN.md).
+> Kết quả đánh giá A/B: [`evaluation/results.md`](evaluation/results.md).
+> Hướng dẫn deploy: [`../DEPLOY_HF.md`](../DEPLOY_HF.md).
 
 ---
 
@@ -197,7 +198,6 @@ Theo `LAB_GUIDE.md` — **Phương Án A: nhóm 4 thành viên**.
 **Việc chung:** `golden_dataset.json` (16 câu) — mỗi người viết 4 câu từ tài liệu đã crawl, Sáng gộp thành 1 file.
 
 **Cân đối khối lượng** (Task 1–10 / bài nhóm / bonus): Q 21/7/4 · T 13/0/5 · H 4/11/6 · S 12/9/5.
-Chi tiết: [`../PLAN.md` §8](../PLAN.md).
 
 ---
 

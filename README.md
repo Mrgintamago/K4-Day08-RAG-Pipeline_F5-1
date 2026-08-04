@@ -579,7 +579,7 @@ run_dashboard()
 
 ### Kiến Trúc Hệ Thống
 
-Xem diagram đầy đủ trong [`PLAN.md`](PLAN.md) và [`group_project/README.md`](group_project/README.md).
+Xem diagram đầy đủ và 6 quyết định thiết kế trong [`group_project/README.md`](group_project/README.md).
 
 ```
 Landing (PDF + JSON) → MarkItDown → Chunking(800/100) + bge-m3 → ChromaDB
@@ -592,7 +592,7 @@ Landing (PDF + JSON) → MarkItDown → Chunking(800/100) + bge-m3 → ChromaDB
 
 ### Phân Công Công Việc
 
-Theo `LAB_GUIDE.md` — **Phương Án A: nhóm 4 thành viên**. Kế hoạch chi tiết: [`PLAN.md`](PLAN.md).
+Theo `LAB_GUIDE.md` — **Phương Án A: nhóm 4 thành viên**.
 
 | Thành viên | MSSV | Nhiệm vụ | Trạng thái |
 |-----------|------|----------|------------|
