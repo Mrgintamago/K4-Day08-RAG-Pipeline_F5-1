@@ -13,7 +13,7 @@
 
 ```
 Task 1-10 :  ████████████████████  50 / 50 điểm   ✅ ĐẠT MỐC CP4
-Bài nhóm  :  ████████████░░░░░░░░  18 / 30 điểm
+Bài nhóm  :  ██████████████████░░  27 / 30 điểm
 Bonus     :  ███████████░░░░░░░░░  11 / 20 điểm   🔓 ĐÃ MỞ KHOÁ
 pytest    :  35 passed · 0 skipped · 0 failed      ✅ 35/35
 ```
@@ -26,12 +26,12 @@ pytest    :  35 passed · 0 skipped · 0 failed      ✅ 35/35
 | Tích hợp pipeline Task 1–10 | 4 | ✅ `app.py` → `generate_with_citation()` → `retrieve()` |
 | Chất lượng câu trả lời (citation) | 3 | ✅ đã kiểm: trả lời có `[nguồn.md]`, thiếu evidence thì nói "không thể xác minh" |
 | Golden dataset ≥15 Q&A | 3 | ✅ 16 câu |
-| **Eval ≥4 metrics** | **4** | ⬜ **chưa chạy** |
-| **A/B ≥2 configs + phân tích** | **3** | ⬜ **chưa chạy** |
-| **Báo cáo worst performers** | **2** | ⬜ **chưa chạy** |
-| **Kiến trúc rõ ràng + README** | **3** | ⬜ **chưa viết** |
+| Eval ≥4 metrics | 4 | ✅ RAGAS 0.1.21, judge gpt-4o-mini, 16 câu |
+| A/B ≥2 configs + phân tích | 3 | ✅ hybrid+rerank **+0,158** so với dense-only |
+| Báo cáo worst performers | 2 | ✅ bottom 3 + failure stage + root cause |
+| Kiến trúc rõ ràng + README | 3 | ✅ 6 quyết định thiết kế trong `group_project/README.md` |
 
-**12 điểm còn thiếu nằm gọn ở 2 việc: F5-13 RAGAS (9đ) và mục kiến trúc trong README (3đ).**
+**Bài nhóm chỉ còn thiếu 3đ** — hạng mục nào cũng đã có sản phẩm kiểm chứng được.
 
 ### ⭐ Bonus — chi tiết 11/20 (audit code ngày 04/08)
 
@@ -91,7 +91,7 @@ Tụt xuống dưới 35 là mất điểm đã có — nguy hiểm hơn là kh�
 | F5-10 | Task 10 — generation | H | 4 | ✅ 3/3 test passed |
 | F5-11 | `app.py` chatbot | H | 8 | ✅ 647 dòng, chạy được, đã nối `generate_with_citation()` |
 | F5-12 | Golden dataset 16 câu | S | 3 | ✅ 16 câu, đủ 3 trường |
-| F5-13 | RAGAS eval + `results.md` | S | 9 | 🟡 scaffold 418 dòng · chờ pipeline thật để chạy |
+| F5-13 | RAGAS eval + `results.md` | S | 9 | ✅ 4 metric × 2 config + worst performers |
 | ⭐ F5-14 | Bonus HyDE + Query Expansion | T | 5 | ✅ |
 | ⭐ F5-15 | Bonus memory + UI source/score | H | 6 | ✅ |
 | **⭐ F5-18** | **Bonus TF-IDF** *(tách khỏi F5-6)* | **S** | **5** | 🔴 **CHƯA LÀM — bonus rẻ nhất còn lại** |
@@ -105,12 +105,12 @@ Ký hiệu: ✅ xong · 🟡 đang làm · 🟢 làm được ngay, không chờ
 
 | | Đã xong | Đang làm | Kế tiếp |
 |---|---|---|---|
-| **Q** Quang | F5-0,1,2,3,8,9 — **21đ** | **README kiến trúc (3đ) 🔴** | ⭐F5-16 deploy · F5-17 chốt nộp |
+| **Q** Quang | F5-0,1,2,3,8,9 **21đ** + README **3đ** | — *(rảnh)* | ⭐F5-16 deploy 🔴 · F5-17 chốt nộp |
 | **T** Tường | F5-4, F5-5 **13đ** + ⭐HyDE **5đ** | — *(rảnh)* | Giúp S ở F5-13 hoặc F5-18 |
 | **H** Hân | F5-10 **4đ** + F5-11 **8đ** + ⭐memory/UI **6đ** | — *(rảnh)* | Giúp S ở F5-13 |
-| **S** Sáng | F5-6, F5-7 **12đ** + F5-12 **3đ** | **F5-13 A/B (9đ) 🔴** | ⭐F5-18 TF-IDF (5đ) |
+| **S** Sáng | F5-6,7 **12đ** + F5-12 **3đ** + F5-13 **9đ** | — *(rảnh)* | ⭐F5-18 TF-IDF (5đ) 🔴 |
 
-**Tổng đang có: 50 (Task) + 18 (nhóm) + 11 (bonus) = 79/100.**
+**Tổng đang có: 50 (Task) + 27 (nhóm) + 11 (bonus) = 88/100.**
 
 ### 🚨 Đang chặn tiến độ
 
@@ -588,7 +588,7 @@ F5-2 (Q) ✅ ──┘             │              └─► F5-6 (S) ──┤
 | Nút thắt | Ai chờ ai | Hệ quả nếu trễ | Cách gỡ |
 |----------|-----------|----------------|---------|
 | **Không còn nút thắt ở Task 1–10** ✅ | — | — | 35/35 test passed, 50/50 điểm |
-| **F5-13 (RAGAS)** 🔴 **ĐANG XẢY RA** | S | 9/30 điểm bài nhóm — hạng mục lớn nhất còn lại | Q và T hết việc bắt buộc → nhảy vào giúp; chạy thử 5 câu trước |
+| ~~F5-13 (RAGAS)~~ ✅ | — | — | Xong: hybrid+rerank thắng dense-only +0,158 |
 | **Rate limit RAGAS** | S | Eval treo giữa chừng, mất 9đ | Chạy thử 5 câu trước, thêm `time.sleep`, rồi mới full 16 câu |
 
 **Quy tắc bàn giao:** ai xong ticket thì **push lên `main` trong vòng 5 phút** rồi
@@ -785,9 +785,9 @@ vẫn gắn `source="pageindex"`. Vẫn pass `TestTask8`; ghi rõ lý do thay th
 | 1 | ~~**F5-11** — `app.py`~~ | H | ✅ 647 dòng, chạy được, có badge nguồn |
 | 2 | ~~⭐ **F5-15** — memory + UI — **BONUS 3+3đ**~~ | H | ✅ `chat_history` + badge PHÁP LUẬT/QUY ĐỊNH SÀN |
 | 3 | ~~**F5-12** — `golden_dataset.json`~~ | S | ✅ 16 câu |
-| 4 | **F5-13** — RAGAS 4 metric × **A/B: hybrid+rerank vs dense-only** | S | 🔴 `results.md` có bảng điểm + worst performers |
-| 5 | ~~Tích hợp `retrieve()` + `generate_with_citation()` vào `app.py`~~ | Q | ✅ đã kiểm end-to-end |
-| 6 | Viết mục kiến trúc + phân công trong 2 README | Q | 🔴 Đủ theo yêu cầu chấm (3đ) |
+| 4 | ~~**F5-13** — RAGAS 4 metric × A/B~~ | S | ✅ Config A +0,158 · worst performers + root cause |
+| 5 | ~~Tích hợp `retrieve()` + `generate_with_citation()`~~ | Q | ✅ đã kiểm end-to-end |
+| 6 | ~~Viết mục kiến trúc trong README~~ | Q | ✅ 6 quyết định thiết kế |
 | 7 | ⭐ **F5-18** — TF-IDF + giải thích cơ chế — **BONUS 5đ** | S | 🔴 bonus rẻ nhất còn lại |
 
 **Rate limit RAGAS:** OpenRouter free rất dễ 429. Chạy thử **5 câu trước**, xác nhận
@@ -1292,15 +1292,12 @@ Liệt kê vi phạm nếu có, đừng tự sửa vội.
 
 | Ưu tiên | Ai | Việc | Điểm | Thời gian |
 |---------|----|------|------|-----------|
-| 🔴 **1** | **S** (+Q giúp) | **F5-13** chạy RAGAS A/B thật · thử 5 câu trước rồi mới full 16 | **9** | 20 phút |
-| 🔴 **2** | **Q** | Viết mục kiến trúc + phân công trong 2 README | **3** | 10 phút |
-| 🔴 **3** | ⭐ **S** hoặc **T** | **F5-18** TF-IDF + giải thích — bonus rẻ nhất, cùng file với BM25 | 5 | 10 phút |
-| 🟡 4 | ⭐ **Q** | **F5-16** deploy — Streamlit Cloud, nhánh `hf-space` (xem `DEPLOY_HF.md`) | 4 | 10 phút |
-| ⬜ 5 | **Q** | F5-17 chốt nộp: `pytest` lại trên `main`, dọn repo | — | 10 phút |
+| 🔴 **1** | ⭐ **S** hoặc **T** | **F5-18** TF-IDF + giải thích cơ chế — bonus rẻ nhất, cùng file với BM25 | **5** | 10 phút |
+| 🔴 **2** | ⭐ **Q** | **F5-16** deploy — Streamlit Cloud, nhánh `hf-space` (xem `DEPLOY_HF.md`) | **4** | 10 phút |
+| ⬜ 3 | **Q** | F5-17 chốt nộp: `pytest` lại trên `main`, dọn repo | — | 10 phút |
 
-**Còn 21 điểm lấy được: 12 bắt buộc (F5-13 + README) + 9 bonus (TF-IDF + deploy).**
-Tường và Hân đã xong hết phần mình → theo [hỗ trợ chéo §1](#-quy-tắc-hỗ-trợ-chéo--xong-việc-là-qua-giúp-người-khác),
-nhảy vào F5-13 hoặc F5-18.
+**Chỉ còn 9 điểm bonus lấy được: TF-IDF (5) + deploy (4).** Phần bắt buộc đã xong hết.
+Cả 4 người đều rảnh → ai làm F5-18 cũng được, đừng để 5 điểm rẻ nhất bị bỏ.
 
 **Prompt sẵn cho từng ticket bonus: [§10.6](#106-prompt-cho-4-ticket-bonus--copy-thẳng-vào-agent).**
 

@@ -108,6 +108,78 @@ help.shopee.vn ───► Task 1 (8 PDF quy định) ───┤
 
 ---
 
+## Giải Thích Kiến Trúc — 6 Quyết Định Thiết Kế
+
+### 1. Corpus 2 lớp thay vì 1 nguồn
+
+| Lớp | Trả lời câu hỏi | Nguồn | Số file |
+|-----|-----------------|-------|---------|
+| Văn bản luật | *"Pháp luật bắt tôi làm gì?"* | vi.wikisource.org | 5 |
+| Quy định sàn | *"Shopee bắt tôi làm gì?"* | help.shopee.vn | 26 |
+
+Người bán online chịu **hai tầng ràng buộc độc lập**. Chỉ có luật thì không trả lời được "Shopee cấm bán gì"; chỉ có quy định sàn thì không trả lời được "doanh thu bao nhiêu phải nộp thuế". Metadata `doc_type` giữ ranh giới này để chatbot in rõ **PHÁP LUẬT** hay **QUY ĐỊNH SÀN** — khác biệt có ý nghĩa pháp lý thật.
+
+**Nguồn đã thử và loại:** PDF trên `datafiles.chinhphu.vn` là ảnh scan (MarkItDown trích ra **0 ký tự**); `thuvienphapluat.vn` chặn bot (403); `luatvietnam.vn` paywall; `vbpl.vn` chuyển sang SPA. Wikisource có toàn văn dạng text + API công khai, và văn bản QPPL Việt Nam thuộc phạm vi công cộng (Điều 15 Luật SHTT).
+
+### 2. Chunk 800 / overlap 100
+
+Văn bản chính sách có đoạn dài. Mức 500 hay cắt giữa câu điều kiện *"nếu… thì…"* làm mất vế sau. 800 ký tự giữ trọn 1–2 điều khoản. Overlap 100 (12,5%) đủ để câu bị cắt ở ranh giới vẫn xuất hiện nguyên vẹn ở một trong hai chunk.
+
+**Lọc chunk rác trước khi index.** Đo thực tế: chunk chân trang (khối chữ ký + "Liên hệ:") **đứng TOP-1** cho câu hỏi "hồ sơ đăng ký hộ kinh doanh". Chunk ngắn không có chủ đề rõ nằm giữa không gian vector nên "trung tính" với mọi query — vừa đẩy chunk hữu ích ra khỏi top-k, vừa kéo điểm câu lạc đề lên làm hỏng ngưỡng fallback. Loại 8 chunk như vậy: 1.224 → **1.216 chunk**.
+
+### 3. Embedding: MiniLM đa ngữ 384 chiều
+
+`paraphrase-multilingual-MiniLM-L12-v2` thay vì `BAAI/bge-m3` (1024 chiều): nhẹ hơn 4,5 lần (470MB vs 2,2GB), embed 1.216 chunk trong **~40 giây** thay vì 15–25 phút.
+
+Đánh đổi được ghi nhận: chất lượng tiếng Việt kém hơn, thấy rõ ở `evaluation/results.md`. Đổi provider chỉ cần sửa `EMBEDDING_PROVIDER` trong `.env` (`sentence_transformers` | `google` | `openai`) — `embed_texts()` dispatch chung cho cả Task 4 và Task 5 nên không phải sửa code hai nơi.
+
+### 4. Hybrid retrieval — vì sao cần cả hai nhánh
+
+Corpus có hai loại câu hỏi khác hẳn nhau:
+- *"Điều 33 Luật Doanh nghiệp quy định gì?"* → **BM25 thắng**, cần khớp chính xác số hiệu
+- *"Bán online bao nhiêu thì đóng thuế?"* → **semantic thắng**, không có từ khoá trùng
+
+RRF (k=60) gộp theo **thứ hạng** chứ không theo điểm, nên không phải chuẩn hoá hai thang điểm khác nhau về chung một đơn vị.
+
+Kết quả A/B xác nhận: hybrid + rerank **+0,158 điểm trung bình** so với dense-only ([`evaluation/results.md`](evaluation/results.md)).
+
+### 5. Fallback vectorless — chỗ dễ sai nhất
+
+```python
+dense = semantic_search(query, top_k*2)
+best_cosine = dense[0]["score"]        # ← CHỤP TRƯỚC khi gộp
+merged = rerank_rrf([dense, sparse])   # score bị ghi đè thành điểm RRF
+if best_cosine < 0.40:                 # so bằng cosine, KHÔNG phải RRF
+    return pageindex_search(query, top_k)
+```
+
+Sau `rerank_rrf()`, trường `score` mang điểm RRF ≈ `1/(60+1)` ≈ **0,016** — chỉ phản ánh thứ hạng, không phản ánh độ liên quan. So threshold với điểm đó thì **mọi query, kể cả câu vô nghĩa, đều cho cùng một khoảng điểm** và fallback không bao giờ đúng.
+
+**Ngưỡng 0,40 calibrate từ số đo thật**, không lấy giá trị mẫu:
+
+| Loại query | cosine top-1 |
+|---|---|
+| Đúng chủ đề | 0,444 – 0,531 |
+| Lạc đề (thời tiết, nấu phở) | 0,265 – 0,365 |
+
+Giá trị mẫu 0,48 của LAB_GUIDE hợp với thang điểm bge-m3; dùng cho MiniLM thì câu **đúng** chủ đề (0,444) cũng rơi nhầm xuống fallback.
+
+### 6. Hạ cấp êm ở mọi tầng
+
+Pipeline phụ thuộc 3 module của 3 người + 1 API ngoài. Mỗi tầng đều có đường lui:
+
+| Tầng | Khi hỏng | Hành vi |
+|------|----------|---------|
+| `semantic_search` / `lexical_search` | `_safe_search()` nuốt lỗi | Chạy tiếp bằng nhánh còn lại |
+| PageIndex | Hết quota (free tier chỉ 3 tài liệu) | Fallback cục bộ: duyệt heading `.md`, chấm điểm phủ từ khoá — vẫn đúng tinh thần vectorless, không dùng embedding |
+| Crawl4AI | Thiếu Chromium | Tự chuyển sang `requests` (trang có SSR nên không cần trình duyệt) |
+
+Một nhánh hỏng mà sập cả `retrieve()` thì kéo luôn Task 10 và chatbot.
+
+---
+
+---
+
 ## Phân Công Công Việc
 
 Theo `LAB_GUIDE.md` — **Phương Án A: nhóm 4 thành viên**.
