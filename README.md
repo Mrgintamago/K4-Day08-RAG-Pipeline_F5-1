@@ -1,8 +1,8 @@
 ---
-title: E-commerce Support RAG Chatbot
-emoji: 🛒
-colorFrom: blue
-colorTo: indigo
+title: Trợ Lý Pháp Lý Khởi Nghiệp & TMĐT
+emoji: ⚖️
+colorFrom: indigo
+colorTo: green
 sdk: streamlit
 sdk_version: "1.35.0"
 app_file: app.py
@@ -11,15 +11,28 @@ pinned: false
 
 # Ngày 8 — RAG Pipeline v2
 
-**Chương 2 | Ngày 8 trong 15**
+**Chương 2 | Ngày 8 trong 15** · Nhóm **F5**
 
-> Dùng chung chủ đề "E-commerce Policy / Customer Support" với biến thể K4 của Ngày 7 (`K4_VARIANT.md`), để pipeline Ngày 7 → Ngày 8 nhất quán.
+> ## ⚖️ Trợ Lý Pháp Lý Khởi Nghiệp & Thương Mại Điện Tử
+>
+> Chủ đề **#2** trong [`SUGGESTED_TOPICS.md`](SUGGESTED_TOPICS.md): tra cứu quy định pháp lý
+> khi bán hàng online (Shopee/TikTok Shop), đăng ký hộ kinh doanh cá thể, thành lập
+> công ty TNHH/cổ phần, và nghĩa vụ thuế của người bán.
+>
+> Kế thừa dữ liệu chính sách TMĐT từ biến thể K4 của Ngày 7 (metadata `customer_role`),
+> mở rộng thêm lớp văn bản quy phạm pháp luật.
 
 ---
 
 ## Mục Tiêu
 
-Xây dựng một RAG pipeline thực tế, end-to-end, từ thu thập dữ liệu chính sách thương mại điện tử và hỗ trợ khách hàng → xử lý → indexing → retrieval (hybrid + vectorless fallback) → generation có citation.
+Xây dựng một RAG pipeline thực tế, end-to-end, từ thu thập văn bản pháp luật và quy định sàn thương mại điện tử → xử lý → indexing → retrieval (hybrid + vectorless fallback) → generation có citation.
+
+**Câu hỏi hệ thống phải trả lời được:**
+- *"Bán hàng online doanh thu bao nhiêu thì phải nộp thuế TNCN và GTGT?"*
+- *"Hồ sơ đăng ký hộ kinh doanh cá thể gồm những giấy tờ gì?"*
+- *"Những mặt hàng nào bị cấm đăng bán trên Shopee?"*
+- *"Người tiêu dùng có quyền trả hàng trong bao lâu?"*
 
 ---
 

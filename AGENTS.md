@@ -7,8 +7,16 @@ File này là **nguồn sự thật dùng chung** cho mọi agent: Codex, Claude
 
 ## Dự án là gì
 
-RAG pipeline tiếng Việt cho chủ đề **chính sách thương mại điện tử & hỗ trợ khách hàng**
-(dữ liệu crawl từ trung tâm trợ giúp công khai Shopee Vietnam).
+RAG pipeline tiếng Việt cho chủ đề **⚖️ Trợ Lý Pháp Lý Khởi Nghiệp & Thương Mại Điện Tử**
+(chủ đề #2 trong `SUGGESTED_TOPICS.md`): tra cứu quy định pháp lý khi bán hàng online,
+đăng ký hộ kinh doanh, thành lập công ty, nghĩa vụ thuế.
+
+Corpus 31 file `.md` (865k ký tự), 2 lớp:
+    - **Văn bản luật** (5 file, vi.wikisource.org) — "pháp luật bắt tôi làm gì"
+    - **Quy định sàn** (26 file, help.shopee.vn) — "sàn bắt tôi làm gì"
+
+Metadata mỗi file: `customer_role` (buyer|seller|both), `doc_type`
+(legal_document|platform_policy|support_article), `topic`.
 Bài lab có **10 task**, chấm bằng `pytest tests/test_individual.py` (35 test = 50 điểm),
 cộng bài nhóm (chatbot Streamlit + đánh giá RAGAS).
 

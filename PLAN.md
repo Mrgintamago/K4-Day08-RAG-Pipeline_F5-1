@@ -1,5 +1,67 @@
 # PLAN — Ngày 8: RAG Pipeline v2 (Nhóm F5)
 
+**Chủ đề: ⚖️ Trợ Lý Pháp Lý Khởi Nghiệp & Thương Mại Điện Tử** (#2 trong `SUGGESTED_TOPICS.md`)
+
+---
+
+## 📊 BẢNG TIẾN ĐỘ — cập nhật mỗi lần merge
+
+> **Cách dùng:** ai merge PR xong thì sửa đúng 1 ô trạng thái trong bảng này rồi push kèm.
+> Đừng sửa chỗ khác — bảng này là chỗ duy nhất cả nhóm nhìn để biết đang ở đâu.
+
+### Điểm đã chắc
+
+```
+Task 1-10 :  ██████░░░░░░░░░░░░░░  14 / 50 điểm
+Bài nhóm  :  ░░░░░░░░░░░░░░░░░░░░   0 / 30 điểm
+Bonus     :  ░░░░░░░░░░░░░░░░░░░░   0 / 20 điểm
+pytest    :  14 passed · 21 skipped · 0 failed        (mốc cần: 35 passed)
+```
+
+### Ticket
+
+| Ticket | Việc | Ai | Điểm | Trạng thái |
+|--------|------|----|------|-----------|
+| F5-00 | Setup môi trường | cả 4 | — | 🟡 Q xong · T/H/S chưa xác nhận |
+| F5-0 | Chốt 3 hằng số | Q | — | ✅ |
+| F5-1 | Task 1 — 13 văn bản PDF | Q | 3 | ✅ |
+| F5-2 | Task 2 — 18 bài JSON | Q | 3 | ✅ |
+| F5-3 | Task 3 — 31 file `.md` | Q | 4 | ✅ |
+| **F5-4** | **Task 4 — chunking + ChromaDB** | **T** | **7** | 🔴 **CHƯA BẮT ĐẦU — đang chặn F5-5, F5-6** |
+| F5-5 | Task 5 — semantic search | T | 6 | ⬜ chờ F5-4 |
+| F5-6 | Task 6 — lexical BM25 | S | 6 | ⬜ chờ F5-4 |
+| F5-7 | Task 7 — RRF rerank | S | 6 | 🟢 **làm được ngay** (fixture giả §3.4) |
+| F5-8 | Task 8 — PageIndex | Q | 4 | ✅ 3 doc trên PageIndex |
+| F5-9 | Task 9 — retrieve + fallback | Q | 7 | ⬜ chờ F5-5, 6, 7 |
+| F5-10 | Task 10 — generation | H | 4 | 🟢 **2 hàm đầu làm được ngay** |
+| F5-11 | `app.py` chatbot | H | 8 | ⬜ chờ F5-10 |
+| F5-12 | Golden dataset 16 câu | cả 4 | 3 | 🟢 **làm được ngay** — mỗi người 4 câu |
+| F5-13 | RAGAS eval + `results.md` | S | 9 | ⬜ chờ F5-10, F5-12 |
+| ⭐ F5-14 | Bonus HyDE | T | 5 | 🔒 khoá đến khi xong 50đ |
+| ⭐ F5-15 | Bonus memory + UI | H | 6 | 🔒 khoá đến khi xong 50đ |
+| ⭐ F5-16 | Bonus deploy HF | Q | 4 | 🔒 khoá đến khi xong 50đ |
+| F5-17 | Chốt nộp | Q | — | ⬜ |
+
+Ký hiệu: ✅ xong · 🟡 đang làm · 🟢 làm được ngay, không chờ ai · ⬜ chờ ticket khác ·
+🔴 đang chặn người khác · 🔒 chưa được phép làm · ⭐ bonus
+
+### Ai đang làm gì
+
+| | Đã xong | Đang làm | Kế tiếp |
+|---|---|---|---|
+| **Q** Quang | F5-0,1,2,3,8 (14đ) | Golden dataset 4 câu | F5-9 (chờ 5,6,7) |
+| **T** Tường | — | **F5-4 ⚠️ ưu tiên số 1** | F5-5 |
+| **H** Hân | — | F5-10 (fixture giả) | F5-11 |
+| **S** Sáng | — | F5-7 (fixture giả) | F5-6 (chờ F5-4) |
+
+### 🚨 Đang chặn tiến độ
+
+**F5-4 của Tường.** Chưa có `chroma_db/` thì F5-5 (T) và F5-6 (S) đứng, kéo theo F5-9 (Q)
+và F5-13 (S). Đây là đường găng — mọi thứ khác đều đi vòng được, cái này thì không.
+Tường đọc [§1.5](#15-corpus-doi--tuong-va-sang-phai-doc) chọn embedding provider trước khi code.
+
+---
+
 > ## 🔴 ĐỌC TRƯỚC — Đổi chủ đề, ai bị ảnh hưởng gì
 >
 > **Chủ đề mới:** #2 trong `SUGGESTED_TOPICS.md` — **"Trợ lý Pháp lý Khởi nghiệp & TMĐT"**
@@ -21,6 +83,7 @@ và `group_project/README.md` (deliverable bài nhóm).
 Tổng thời lượng: **180 phút (3 giờ)** / 7 checkpoint.
 
 **Mục lục**
+0. [**📊 Bảng tiến độ**](#-bảng-tiến-độ--cập-nhật-mỗi-lần-merge) ← xem đầu tiên
 1. [Phân vai, cân bằng khối lượng & **quy tắc hỗ trợ chéo**](#1-phân-vai--cân-bằng-khối-lượng)
 2. [Kiến trúc hệ thống](#2-kiến-trúc-hệ-thống)
 3. [Hợp đồng interface — chốt ở CP0](#3-hợp-đồng-interface--chốt-ở-cp0-bắt-buộc)
@@ -344,27 +407,63 @@ Trạng thái: ⬜ To Do · 🟡 In Progress · 🔵 In Review · ✅ Done · �
 **Ký hiệu:** ⭐ = ticket **BONUS** (20đ, làm SAU CÙNG). Ticket không có ⭐ là **bắt buộc**
 (Task 1–10 = 50đ + bài nhóm = 30đ). Xem [§8.4 danh sách bonus gọn](#84-bonus--20-điểm-làm-sau-cùng).
 
+### 📋 LUẬT SỬA BẢNG JIRA — đọc trước khi đụng vào
+
+Bảng này là **nguồn sự thật duy nhất** về tiến độ. Ai cũng sửa được, nhưng theo đúng 6 luật:
+
+1. **Chỉ sửa ô `TT` của ticket MÌNH phụ trách.** Muốn đổi trạng thái ticket người khác →
+   nhắn họ, đừng tự sửa. Ngoại lệ: Quang được sửa mọi ô (vai trò điều phối).
+2. **Chỉ đổi trạng thái khi có bằng chứng**, không đổi theo cảm giác:
+
+   | Đổi sang | Điều kiện bắt buộc |
+   |----------|--------------------|
+   | 🟡 In Progress | Đã tạo branch `F5-<n>-<mô-tả>` |
+   | 🔵 In Review | Đã mở PR **và** `pytest` không FAIL |
+   | ✅ Done | Đã **merge vào `main`** và test của ticket đó **`passed`, không phải `skipped`** |
+
+   > ⚠️ `skipped` ≠ `passed`. Chưa implement thì test tự skip — đánh ✅ lúc đó là báo cáo sai.
+
+3. **Đánh ✅ thì phải cập nhật 3 chỗ cùng lúc** (nếu không bảng sẽ mâu thuẫn nhau):
+   - ô `TT` trong bảng này
+   - dòng tương ứng ở [📊 Bảng tiến độ](#-bảng-tiến-độ--cập-nhật-mỗi-lần-merge) đầu file
+   - con số `pytest` ở Bảng tiến độ (chạy `pytest tests/test_individual.py` lấy số thật)
+
+4. **Cập nhật cột `Bàn giao` bằng số thật**, không để mô tả chung chung.
+   Ví dụ: `chroma_db/ có 1.081 chunk` thay vì `chroma_db/ > 0 docs`.
+   Người sau đọc cột này để biết đầu vào của mình là gì.
+
+5. **Ticket bị chặn** thì ghi rõ đang chờ ai ở cột `TT`, ví dụ `⬜ chờ F5-4 (T)`.
+   Thấy mình bị chặn quá 10 phút → áp dụng [quy tắc hỗ trợ chéo §1](#-quy-tắc-hỗ-trợ-chéo--xong-việc-là-qua-giúp-người-khác),
+   nhảy sang giúp người đang chặn thay vì ngồi chờ.
+
+6. **Commit sửa bảng đi kèm commit code**, đừng để thành commit riêng lẻ —
+   bảng phải luôn khớp với `main`. Mẫu commit: `F5-6: lexical_search BM25 + cap nhat PLAN`.
+
+**Không được làm:** xoá dòng ticket · đổi ID ticket · gộp 2 ticket ·
+đánh ✅ cho ticket còn `skipped` · sửa cột `Blocked by`/`Blocks` mà không báo Quang
+(đó là đồ thị phụ thuộc, đổi là hỏng thứ tự làm việc của cả nhóm).
+
 | ID | Ticket | Ai | CP | Blocked by | Blocks | Bàn giao (artifact người sau cần) | TT |
 |----|--------|----|----|-----------|--------|-----------------------------------|----|
-| **F5-00** | **Setup môi trường** (venv 3.12 + deps + `.env`) | **cả 4** | CP0 | — | *tất cả* | Mỗi máy chạy được lệnh verify `SETUP OK` (§CP0-A) | ⬜ |
+| **F5-00** | **Setup môi trường** (venv 3.12 + deps + `.env`) | **cả 4** | CP0 | — | *tất cả* | Mỗi máy chạy được lệnh verify `SETUP OK` (§CP0-A) | 🟡 Q xong · T/H/S chưa xác nhận |
 | **F5-0** | Chốt 3 hằng số + push `main` | Q | CP0 | — | F5-4, F5-9 | `main` có 800 / 100 / 0.48 | ✅ |
-| **F5-1** | Task 1 — ≥3 PDF chính sách | Q | CP1 | — | F5-3 | `data/landing/legal/*.pdf` (**13** file: 8 Shopee + 5 luật) + `_metadata.json` | ✅ |
-| **F5-2** | Task 2 — ≥5 bài hướng dẫn | Q | CP1 | — | F5-3 | `data/landing/news/*.json` (**18** file) | ✅ |
-| **F5-3** | Task 3 — convert markdown | Q | CP1 | F5-1, F5-2 | F5-4, F5-8, F5-12 | `data/standardized/` **31 file** `.md`, mỗi file có header metadata | ✅ |
-| **F5-4** | Task 4 — chunking + ChromaDB index | T | CP2 | ~~F5-0, F5-3~~ **đã thông** | F5-5, F5-6 | `chroma_db/` có collection `ecommerce_support_docs` **> 0 docs** | 🟢 **sẵn sàng làm** |
-| **F5-5** | Task 5 — `semantic_search()` | T | CP2 | F5-4 | F5-9 | Trả `list[Result]` sorted desc, **score là cosine [0,1]** | ⬜ |
-| **F5-6** | Task 6 — `lexical_search()` BM25 + TF-IDF | S | CP2 | F5-4 | F5-9 | Trả `list[Result]` sorted desc | ⬜ |
-| **F5-7** | Task 7 — `rerank_rrf()` + `rerank()` | S | CP3 | — *(fixture giả)* | F5-9 | Gộp ≥2 ranked list, output re-sorted, có `score` | ⬜ |
-| **F5-8** | Task 8 — `pageindex_search()` | Q | CP3 | F5-3 | F5-9 | Trả `list[Result]` có `source="pageindex"` | ⬜ |
-| **F5-9** | Task 9 — `retrieve()` + fallback | Q | CP4 | F5-5, F5-6, F5-7, F5-8 | F5-10, F5-13 | `retrieve()` chạy, fallback trigger khi cosine < 0.48 | ⬜ |
-| **F5-10** | Task 10 — `generate_with_citation()` | H | CP4 | F5-9 *(mock được)* | F5-11, F5-13 | `{answer, sources, retrieval_source}`, answer có `[Nguồn, Năm]` | ⬜ |
-| **F5-11** | `app.py` — Streamlit chatbot | H | CP5 | F5-10 | — | `streamlit run app.py` trả lời + hiện source & score | ⬜ |
-| **F5-12** | `golden_dataset.json` — 16 Q&A **theo 4 nhóm chủ đề mới** (§1.5) | **cả 4** (mỗi người 4 câu, S gộp) | CP5 | F5-3 | F5-13 | 15+ cặp `question` / `expected_answer` / `expected_context`, **≥3 câu cần filter `customer_role=seller`** | ⬜ |
-| **F5-13** | `eval_pipeline.py` + `results.md` — RAGAS A/B | S | CP5 | F5-10, F5-12 | — | 4 metric × 2 config + phân tích worst performers | ⬜ |
-| ⭐ **F5-14** | **[BONUS 5đ]** HyDE / Query Expansion | T | CP5 | F5-5 | — | Flag bật/tắt trong `task5`, đo được chênh lệch | ⬜ |
-| ⭐ **F5-15** | **[BONUS 3+3đ]** conversation memory + UI source/score | H | CP5 | F5-11 | — | Follow-up hiểu ngữ cảnh; UI hiện nguồn + điểm | ⬜ |
-| ⭐ **F5-16** | **[BONUS 4đ]** deploy Hugging Face Spaces | Q | CP6 | F5-11 | — | URL Space chạy được | ⬜ |
-| **F5-17** | Chốt nộp: pytest 35/35 + dọn repo + push | Q | CP6 | tất cả | — | `main` xanh, `.env`/`chroma_db/`/`.venv/` không lọt git | ⬜ |
+| **F5-1** | Task 1 — ≥3 PDF chính sách | Q | CP1 | — | F5-3 | `data/landing/legal/` **13 PDF** (8 Shopee + 5 luật), đều trích được text 1.4k–328k ký tự + `_metadata.json` | ✅ |
+| **F5-2** | Task 2 — ≥5 bài hướng dẫn | Q | CP1 | — | F5-3 | `data/landing/news/` **18 JSON**, đủ `url`/`title`/`date_crawled`/`topic`/`customer_role` | ✅ |
+| **F5-3** | Task 3 — convert markdown | Q | CP1 | F5-1, F5-2 | F5-4, F5-8, F5-12 | `data/standardized/` **31 file `.md`**, 865.028 ký tự, mỗi file có header 5 trường metadata | ✅ |
+| **F5-4** | Task 4 — chunking + ChromaDB index | T | CP2 | ~~F5-0, F5-3~~ **đã thông** | F5-5, F5-6 | `chroma_db/` collection `ecommerce_support_docs`, **dự kiến ~1.081 chunk** @800 | 🔴 **CHƯA BẮT ĐẦU — đang chặn F5-5, F5-6** |
+| **F5-5** | Task 5 — `semantic_search()` | T | CP2 | F5-4 | F5-9 | Trả `list[Result]` sorted desc, **score là cosine [0,1]** | ⬜ chờ F5-4 (T) |
+| **F5-6** | Task 6 — `lexical_search()` BM25 + TF-IDF | S | CP2 | F5-4 | F5-9 | Trả `list[Result]` sorted desc | ⬜ chờ F5-4 (T) |
+| **F5-7** | Task 7 — `rerank_rrf()` + `rerank()` | S | CP3 | — *(fixture giả)* | F5-9 | Gộp ≥2 ranked list, output re-sorted, có `score` | 🟢 **làm được ngay** |
+| **F5-8** | Task 8 — `pageindex_search()` | Q | CP3 | F5-3 | F5-9 | **3 doc trên PageIndex** + fallback cục bộ; trả `list[Result]` có `source="pageindex"` | ✅ |
+| **F5-9** | Task 9 — `retrieve()` + fallback | Q | CP4 | F5-5, F5-6, F5-7, F5-8 | F5-10, F5-13 | `retrieve()` chạy, fallback trigger khi cosine < 0.48 | ⬜ chờ F5-5, 6, 7 |
+| **F5-10** | Task 10 — `generate_with_citation()` | H | CP4 | F5-9 *(mock được)* | F5-11, F5-13 | `{answer, sources, retrieval_source}`, answer có `[Nguồn, Năm]` | 🟢 **2 hàm đầu làm được ngay** |
+| **F5-11** | `app.py` — Streamlit chatbot | H | CP5 | F5-10 | — | `streamlit run app.py` trả lời + hiện source & score | ⬜ chờ F5-10 (H) |
+| **F5-12** | `golden_dataset.json` — 16 Q&A **theo 4 nhóm chủ đề mới** (§1.5) | **cả 4** (mỗi người 4 câu, S gộp) | CP5 | F5-3 | F5-13 | 15+ cặp `question` / `expected_answer` / `expected_context`, **≥3 câu cần filter `customer_role=seller`** | 🟢 **làm được ngay** |
+| **F5-13** | `eval_pipeline.py` + `results.md` — RAGAS A/B | S | CP5 | F5-10, F5-12 | — | 4 metric × 2 config + phân tích worst performers | ⬜ chờ F5-10 (H), F5-12 |
+| ⭐ **F5-14** | **[BONUS 5đ]** HyDE / Query Expansion | T | CP5 | F5-5 | — | Flag bật/tắt trong `task5`, đo được chênh lệch | 🔒 khoá đến khi xong 50đ |
+| ⭐ **F5-15** | **[BONUS 3+3đ]** conversation memory + UI source/score | H | CP5 | F5-11 | — | Follow-up hiểu ngữ cảnh; UI hiện nguồn + điểm | 🔒 khoá đến khi xong 50đ |
+| ⭐ **F5-16** | **[BONUS 4đ]** deploy Hugging Face Spaces | Q | CP6 | F5-11 | — | URL Space chạy được | 🔒 khoá đến khi xong 50đ |
+| **F5-17** | Chốt nộp: pytest 35/35 + dọn repo + push | Q | CP6 | tất cả | — | `main` xanh, `.env`/`chroma_db/`/`.venv/` không lọt git | ⬜ chờ tất cả |
 
 ### Ticket làm được NGAY, không chờ ai
 
@@ -372,8 +471,8 @@ Trạng thái: ⬜ To Do · 🟡 In Progress · 🔵 In Review · ✅ Done · �
 |--------|----|--------------------|
 | **F5-7** | S | Dùng fixture giả §3.4, không cần ChromaDB |
 | **F5-10** (2 hàm đầu) | H | `reorder_for_llm()` + `format_context()` chỉ cần list dict |
-| **F5-12** | cả 4 | Câu hỏi viết từ `data/landing/` đã có sẵn |
-| **F5-3** | Q | Data Task 1–2 đã xong |
+| **F5-12** | cả 4 | Câu hỏi viết từ `data/standardized/` đã có sẵn 31 file |
+| **F5-4** | T | ⚠️ **Đường găng — làm ngay**, chặn F5-5 (T) và F5-6 (S) |
 
 ---
 
@@ -403,7 +502,7 @@ F5-2 (Q) ✅ ──┘             │              └─► F5-6 (S) ──┤
 
 | Nút thắt | Ai chờ ai | Hệ quả nếu trễ | Cách gỡ |
 |----------|-----------|----------------|---------|
-| **F5-4** (ChromaDB) | T chặn cả T lẫn S | F5-5 + F5-6 đứng hình → CP2 vỡ | Tải `bge-m3` **ngay từ CP0** chạy nền; kẹt thì đổi `all-MiniLM-L6-v2` |
+| **F5-4** (ChromaDB) 🔴 **ĐANG XẢY RA** | T chặn cả T lẫn S | F5-5 + F5-6 đứng hình → CP2 vỡ | Chọn embedding provider theo bảng §1.5 **trước khi code**; đừng chờ tải `bge-m3` 2.2GB |
 | **F5-9** (pipeline) | Q chờ 4 ticket | H không ghép được `app.py` | H mock `retrieve()`, ghép thật sau |
 | **F5-13** (RAGAS) | S chờ F5-10 | Mất 12đ eval | S viết sẵn `eval_pipeline.py` với hàm giả, chỉ đổi import lúc cuối |
 
