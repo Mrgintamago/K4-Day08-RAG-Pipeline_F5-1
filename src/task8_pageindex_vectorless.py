@@ -40,6 +40,24 @@ DOC_IDS_PATH = PROJECT_DIR / "pageindex_doc_ids.json"
 # Số tài liệu query song song mỗi lần fallback. PageIndex query theo từng doc_id, muốn
 # tìm trên toàn corpus phải hỏi từng tài liệu → chạy song song cho đỡ chậm.
 MAX_PARALLEL_DOCS = 6
+
+# Gói free của PageIndex giới hạn số tài liệu (thực tế đo được: upload tới file thứ 4 là
+# trả {"detail":"LimitReached"}). Vì thế KHÔNG upload cả 31 file — chỉ chọn vài tài liệu
+# "xương sống" đủ để nhánh fallback trả lời được câu hỏi ngoài phạm vi hybrid search.
+# Phần corpus còn lại vẫn được phục vụ bởi Task 5/6 (dense + BM25).
+MAX_UPLOAD_DOCS = 3
+
+# Thứ tự ưu tiên upload — đặt tên file (không đuôi) từ quan trọng nhất.
+# Chọn theo tiêu chí: bao phủ rộng nhất cho chủ đề "Pháp lý khởi nghiệp & TMĐT",
+# và là loại tài liệu có CẤU TRÚC chương/mục rõ — đúng thế mạnh của PageIndex.
+UPLOAD_PRIORITY = [
+    "ecommerce-platform-operating-rules-shopee",   # quy chế sàn, nhiều chương mục
+    "luat-doanh-nghiep-2020",                      # luật gốc cho thành lập/đăng ký KD
+    "luat-thuong-mai-2005",                        # khung pháp lý hoạt động thương mại
+    "luat-bao-ve-quyen-loi-nguoi-tieu-dung-2010",
+    "product-listing-regulations-shopee",
+    "luat-thue-thu-nhap-ca-nhan-2007",
+]
 POLL_TIMEOUT_SEC = 60
 POLL_INTERVAL_SEC = 2
 
@@ -125,16 +143,62 @@ def upload_documents(reupload: bool = False) -> dict:
     client = _client()
     doc_ids: dict[str, dict] = {}
 
+    # Tài liệu đã nằm sẵn trên PageIndex từ lần chạy trước → dùng lại, đừng upload lần
+    # nữa (quota free rất ít, upload trùng là mất chỗ của tài liệu khác).
+    existing: dict[str, str] = {}
+    try:
+        listing = client.list_documents(limit=100)
+        rows = listing.get("documents") or listing.get("data") or []
+        for row in rows:
+            did = row.get("doc_id") or row.get("id")
+            name = (row.get("name") or row.get("filename") or "").rsplit(".", 1)[0]
+            if did:
+                existing[name] = did
+        if existing:
+            print(f"  ↺ Tìm thấy {len(existing)} tài liệu đã có sẵn trên PageIndex")
+    except Exception as exc:
+        print(f"  ! Không liệt kê được tài liệu cũ ({type(exc).__name__}) — bỏ qua")
+
     items = _collect_pdfs()
+    meta_by_stem = {p.stem: m for p, m in items}
+
+    # Tài liệu đã upload rồi thì LẤY HẾT, bất kể thứ tự ưu tiên — quota đã tiêu rồi,
+    # bỏ đi là phí. Ưu tiên chỉ dùng để quyết định upload THÊM cái nào.
+    for stem, did in existing.items():
+        doc_ids[did] = meta_by_stem.get(stem, {"source": f"{stem}.pdf"})
+    if doc_ids:
+        print(f"  ✓ Dùng lại {len(doc_ids)} tài liệu đã có")
+
+    remaining = max(0, MAX_UPLOAD_DOCS - len(doc_ids))
+    order = {name: i for i, name in enumerate(UPLOAD_PRIORITY)}
+    todo = [it for it in items if it[0].stem not in existing]
+    todo.sort(key=lambda it: order.get(it[0].stem, 999))
+    items = todo[:remaining]
+
     for i, (pdf_path, meta) in enumerate(items, 1):
+
         print(f"[{i}/{len(items)}] Uploading: {pdf_path.name}")
-        resp = client.submit_document(str(pdf_path))
+        try:
+            resp = client.submit_document(str(pdf_path))
+        except Exception as exc:
+            # Hết quota → dừng hẳn nhưng GIỮ những doc_id đã có, đừng để mất công upload
+            if "LimitReached" in str(exc):
+                print("  ! Hết quota gói free của PageIndex — dừng upload, dùng số đã có")
+                break
+            print(f"  ! Lỗi upload: {type(exc).__name__}: {exc}")
+            continue
+
         doc_id = resp.get("doc_id") or resp.get("id")
         if not doc_id:
             print(f"  ! Không lấy được doc_id, response: {json.dumps(resp)[:200]}")
             continue
         doc_ids[doc_id] = meta
         print(f"  ✓ {doc_id}")
+
+    if not doc_ids:
+        print("  ! Không có tài liệu nào trên PageIndex — pageindex_search() sẽ dùng "
+              "fallback cục bộ")
+        return {}
 
     DOC_IDS_PATH.write_text(json.dumps(doc_ids, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"\n✓ Đã upload {len(doc_ids)} tài liệu, lưu vào {DOC_IDS_PATH.name}")
