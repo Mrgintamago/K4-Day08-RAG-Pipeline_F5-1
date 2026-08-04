@@ -12,31 +12,33 @@
 ### Điểm đã chắc
 
 ```
-Task 1-10 :  ██████░░░░░░░░░░░░░░  14 / 50 điểm
-Bài nhóm  :  ░░░░░░░░░░░░░░░░░░░░   0 / 30 điểm
+Task 1-10 :  ██████████░░░░░░░░░░  24 / 50 điểm
+Bài nhóm  :  ██░░░░░░░░░░░░░░░░░░   3 / 30 điểm   (golden dataset)
 Bonus     :  ░░░░░░░░░░░░░░░░░░░░   0 / 20 điểm
-pytest    :  14 passed · 21 skipped · 0 failed        (mốc cần: 35 passed)
+pytest    :  20 passed · 15 skipped · 0 failed     (mốc cần: 35 passed)
 ```
+
+**Còn thiếu 26đ = Task 4 (7) + Task 5 (6) + Task 6 (6) + Task 9 (7)** — cả 4 đều nằm sau F5-4.
 
 ### Ticket
 
 | Ticket | Việc | Ai | Điểm | Trạng thái |
 |--------|------|----|------|-----------|
-| F5-00 | Setup môi trường | cả 4 | — | 🟡 Q xong · T/H/S chưa xác nhận |
+| F5-00 | Setup môi trường | cả 4 | — | 🟡 Q/H/S xong · **T chưa xác nhận** |
 | F5-0 | Chốt 3 hằng số | Q | — | ✅ |
 | F5-1 | Task 1 — 13 văn bản PDF | Q | 3 | ✅ |
 | F5-2 | Task 2 — 18 bài JSON | Q | 3 | ✅ |
 | F5-3 | Task 3 — 31 file `.md` | Q | 4 | ✅ |
-| **F5-4** | **Task 4 — chunking + ChromaDB** | **T** | **7** | 🔴 **CHƯA BẮT ĐẦU — đang chặn F5-5, F5-6** |
+| **F5-4** | **Task 4 — chunking + ChromaDB** | **T** | **7** | 🔴 **CHƯA BẮT ĐẦU — chặn 26đ còn lại** |
 | F5-5 | Task 5 — semantic search | T | 6 | ⬜ chờ F5-4 |
 | F5-6 | Task 6 — lexical BM25 | S | 6 | ⬜ chờ F5-4 |
-| F5-7 | Task 7 — RRF rerank | S | 6 | 🟢 **làm được ngay** (fixture giả §3.4) |
+| F5-7 | Task 7 — RRF rerank | S | 6 | ✅ 3/3 test passed |
 | F5-8 | Task 8 — PageIndex | Q | 4 | ✅ 3 doc trên PageIndex |
-| F5-9 | Task 9 — retrieve + fallback | Q | 7 | ⬜ chờ F5-5, 6, 7 |
-| F5-10 | Task 10 — generation | H | 4 | 🟢 **2 hàm đầu làm được ngay** |
-| F5-11 | `app.py` chatbot | H | 8 | ⬜ chờ F5-10 |
-| F5-12 | Golden dataset 16 câu | cả 4 | 3 | 🟢 **làm được ngay** — mỗi người 4 câu |
-| F5-13 | RAGAS eval + `results.md` | S | 9 | ⬜ chờ F5-10, F5-12 |
+| F5-9 | Task 9 — retrieve + fallback | Q | 7 | ⬜ chờ F5-4→5→6 |
+| F5-10 | Task 10 — generation | H | 4 | ✅ 3/3 test passed |
+| F5-11 | `app.py` chatbot | H | 8 | 🟢 **làm được ngay** (F5-10 xong rồi) |
+| F5-12 | Golden dataset 16 câu | S | 3 | ✅ 16 câu, đủ 3 trường |
+| F5-13 | RAGAS eval + `results.md` | S | 9 | 🟡 scaffold 418 dòng · chờ pipeline thật để chạy |
 | ⭐ F5-14 | Bonus HyDE | T | 5 | 🔒 khoá đến khi xong 50đ |
 | ⭐ F5-15 | Bonus memory + UI | H | 6 | 🔒 khoá đến khi xong 50đ |
 | ⭐ F5-16 | Bonus deploy HF | Q | 4 | 🔒 khoá đến khi xong 50đ |
@@ -49,16 +51,23 @@ Ký hiệu: ✅ xong · 🟡 đang làm · 🟢 làm được ngay, không chờ
 
 | | Đã xong | Đang làm | Kế tiếp |
 |---|---|---|---|
-| **Q** Quang | F5-0,1,2,3,8 (14đ) | Golden dataset 4 câu | F5-9 (chờ 5,6,7) |
-| **T** Tường | — | **F5-4 ⚠️ ưu tiên số 1** | F5-5 |
-| **H** Hân | — | F5-10 (fixture giả) | F5-11 |
-| **S** Sáng | — | F5-7 (fixture giả) | F5-6 (chờ F5-4) |
+| **Q** Quang | F5-0, 1, 2, 3, 8 — **14đ** | 4 câu golden dataset | F5-9 (chờ F5-4→5→6) |
+| **T** Tường | — | **F5-4 🔴 CẢ NHÓM ĐANG CHỜ** | F5-5 |
+| **H** Hân | F5-10 — **4đ** | F5-11 `app.py` | ⭐F5-15 sau khi đủ 50đ |
+| **S** Sáng | F5-7, F5-12 — **6đ + 3đ** | F5-13 scaffold | F5-6 (chờ F5-4) |
 
 ### 🚨 Đang chặn tiến độ
 
-**F5-4 của Tường.** Chưa có `chroma_db/` thì F5-5 (T) và F5-6 (S) đứng, kéo theo F5-9 (Q)
-và F5-13 (S). Đây là đường găng — mọi thứ khác đều đi vòng được, cái này thì không.
-Tường đọc [§1.5](#15-corpus-doi--tuong-va-sang-phai-doc) chọn embedding provider trước khi code.
+**F5-4 của Tường — 3/4 người đã xong phần chạy được, chỉ còn cái này.**
+
+Sáng và Hân đã đi đường vòng bằng fixture giả (đúng như §3.4) nên vẫn tiến được.
+Nhưng **26/50 điểm còn lại đều nằm sau F5-4**: không có `chroma_db/` thì F5-5, F5-6 đứng,
+kéo theo F5-9 và cả phần chạy thật của F5-13.
+
+Tường đọc [§1.5](#15-corpus-doi--tuong-va-sang-phai-doc) **chọn embedding provider trước khi code** —
+corpus 1.081 chunk, dùng `bge-m3` là 15–25 phút.
+Nếu Tường chưa setup xong môi trường → áp dụng [hỗ trợ chéo §1](#-quy-tắc-hỗ-trợ-chéo--xong-việc-là-qua-giúp-người-khác),
+Sáng hoặc Quang nhảy vào làm F5-4 cùng (4 hàm rời, chia đôi được).
 
 ---
 
@@ -450,16 +459,16 @@ Bảng này là **nguồn sự thật duy nhất** về tiến độ. Ai cũng s
 | **F5-1** | Task 1 — ≥3 PDF chính sách | Q | CP1 | — | F5-3 | `data/landing/legal/` **13 PDF** (8 Shopee + 5 luật), đều trích được text 1.4k–328k ký tự + `_metadata.json` | ✅ |
 | **F5-2** | Task 2 — ≥5 bài hướng dẫn | Q | CP1 | — | F5-3 | `data/landing/news/` **18 JSON**, đủ `url`/`title`/`date_crawled`/`topic`/`customer_role` | ✅ |
 | **F5-3** | Task 3 — convert markdown | Q | CP1 | F5-1, F5-2 | F5-4, F5-8, F5-12 | `data/standardized/` **31 file `.md`**, 865.028 ký tự, mỗi file có header 5 trường metadata | ✅ |
-| **F5-4** | Task 4 — chunking + ChromaDB index | T | CP2 | ~~F5-0, F5-3~~ **đã thông** | F5-5, F5-6 | `chroma_db/` collection `ecommerce_support_docs`, **dự kiến ~1.081 chunk** @800 | 🔴 **CHƯA BẮT ĐẦU — đang chặn F5-5, F5-6** |
+| **F5-4** | Task 4 — chunking + ChromaDB index | T | CP2 | ~~F5-0, F5-3~~ **đã thông** | F5-5, F5-6 | `chroma_db/` collection `ecommerce_support_docs`, **dự kiến ~1.081 chunk** @800 | 🔴 **CHƯA BẮT ĐẦU — chặn 26/50 điểm còn lại** |
 | **F5-5** | Task 5 — `semantic_search()` | T | CP2 | F5-4 | F5-9 | Trả `list[Result]` sorted desc, **score là cosine [0,1]** | ⬜ chờ F5-4 (T) |
 | **F5-6** | Task 6 — `lexical_search()` BM25 + TF-IDF | S | CP2 | F5-4 | F5-9 | Trả `list[Result]` sorted desc | ⬜ chờ F5-4 (T) |
-| **F5-7** | Task 7 — `rerank_rrf()` + `rerank()` | S | CP3 | — *(fixture giả)* | F5-9 | Gộp ≥2 ranked list, output re-sorted, có `score` | 🟢 **làm được ngay** |
-| **F5-8** | Task 8 — `pageindex_search()` | Q | CP3 | F5-3 | F5-9 | **3 doc trên PageIndex** + fallback cục bộ; trả `list[Result]` có `source="pageindex"` | ✅ |
-| **F5-9** | Task 9 — `retrieve()` + fallback | Q | CP4 | F5-5, F5-6, F5-7, F5-8 | F5-10, F5-13 | `retrieve()` chạy, fallback trigger khi cosine < 0.48 | ⬜ chờ F5-5, 6, 7 |
-| **F5-10** | Task 10 — `generate_with_citation()` | H | CP4 | F5-9 *(mock được)* | F5-11, F5-13 | `{answer, sources, retrieval_source}`, answer có `[Nguồn, Năm]` | 🟢 **2 hàm đầu làm được ngay** |
-| **F5-11** | `app.py` — Streamlit chatbot | H | CP5 | F5-10 | — | `streamlit run app.py` trả lời + hiện source & score | ⬜ chờ F5-10 (H) |
-| **F5-12** | `golden_dataset.json` — 16 Q&A **theo 4 nhóm chủ đề mới** (§1.5) | **cả 4** (mỗi người 4 câu, S gộp) | CP5 | F5-3 | F5-13 | 15+ cặp `question` / `expected_answer` / `expected_context`, **≥3 câu cần filter `customer_role=seller`** | 🟢 **làm được ngay** |
-| **F5-13** | `eval_pipeline.py` + `results.md` — RAGAS A/B | S | CP5 | F5-10, F5-12 | — | 4 metric × 2 config + phân tích worst performers | ⬜ chờ F5-10 (H), F5-12 |
+| **F5-7** | Task 7 — `rerank_rrf()` + `rerank()` | S | CP3 | — *(fixture giả)* | F5-9 | Gộp ≥2 ranked list, output re-sorted, có `score` — `TestTask7` **3/3 passed** | ✅ |
+| **F5-8** | Task 8 — `pageindex_search()` | Q | CP3 | F5-3 | F5-9 | **3 doc trên PageIndex** + fallback cục bộ; `TestTask8` **2/2 passed** | ✅ |
+| **F5-9** | Task 9 — `retrieve()` + fallback | Q | CP4 | F5-5, F5-6, ~~F5-7~~ ✅, ~~F5-8~~ ✅ | F5-10, F5-13 | `retrieve()` chạy, fallback trigger khi cosine < 0.48 | ⬜ **chỉ còn chờ F5-4 → F5-5, F5-6** |
+| **F5-10** | Task 10 — `generate_with_citation()` | H | CP4 | F5-9 *(đã mock)* | F5-11, F5-13 | `{answer, sources, retrieval_source}` + `[Nguồn, Năm]` — `TestTask10` **3/3 passed** | ✅ |
+| **F5-11** | `app.py` — Streamlit chatbot | H | CP5 | ~~F5-10~~ ✅ | — | `streamlit run app.py` trả lời + hiện source & score | 🟢 **làm được ngay** |
+| **F5-12** | `golden_dataset.json` — 16 Q&A **theo 4 nhóm chủ đề mới** (§1.5) | S | CP5 | F5-3 | F5-13 | **16 câu**, đủ `question`/`expected_answer`/`expected_context`, bám luật + thuế + quy định sàn | ✅ |
+| **F5-13** | `eval_pipeline.py` + `results.md` — RAGAS A/B | S | CP5 | ~~F5-10~~ ✅, ~~F5-12~~ ✅, **F5-9** | — | 4 metric × 2 config + phân tích worst performers | 🟡 scaffold 418 dòng · chờ `retrieve()` thật mới chạy được A/B |
 | ⭐ **F5-14** | **[BONUS 5đ]** HyDE / Query Expansion | T | CP5 | F5-5 | — | Flag bật/tắt trong `task5`, đo được chênh lệch | 🔒 khoá đến khi xong 50đ |
 | ⭐ **F5-15** | **[BONUS 3+3đ]** conversation memory + UI source/score | H | CP5 | F5-11 | — | Follow-up hiểu ngữ cảnh; UI hiện nguồn + điểm | 🔒 khoá đến khi xong 50đ |
 | ⭐ **F5-16** | **[BONUS 4đ]** deploy Hugging Face Spaces | Q | CP6 | F5-11 | — | URL Space chạy được | 🔒 khoá đến khi xong 50đ |
@@ -469,10 +478,11 @@ Bảng này là **nguồn sự thật duy nhất** về tiến độ. Ai cũng s
 
 | Ticket | Ai | Vì sao không bị chặn |
 |--------|----|--------------------|
-| **F5-7** | S | Dùng fixture giả §3.4, không cần ChromaDB |
-| **F5-10** (2 hàm đầu) | H | `reorder_for_llm()` + `format_context()` chỉ cần list dict |
-| **F5-12** | cả 4 | Câu hỏi viết từ `data/standardized/` đã có sẵn 31 file |
-| **F5-4** | T | ⚠️ **Đường găng — làm ngay**, chặn F5-5 (T) và F5-6 (S) |
+| **F5-4** | T | ⚠️ **Đường găng — làm ngay**, chặn 26/50 điểm còn lại |
+| **F5-11** | H | F5-10 đã xong → dựng `app.py` được luôn, tạm mock `retrieve()` |
+| ~~F5-7~~ | S | ✅ xong bằng fixture giả §3.4 |
+| ~~F5-10~~ | H | ✅ xong bằng fixture giả |
+| ~~F5-12~~ | S | ✅ 16 câu, viết từ `data/standardized/` |
 
 ---
 
@@ -1093,14 +1103,20 @@ Liệt kê vi phạm nếu có, đừng tự sửa vội.
 
 ## 11. Việc Kế Tiếp Ngay
 
-| Ai | Việc | Thời gian |
-|----|------|-----------|
-| **cả 4** | **F5-00** — setup theo §CP0-A, chạy đến khi thấy `SETUP OK` | 10–15 phút |
-| **cả 4** | Đọc [§1.5](#15-corpus-doi--tuong-va-sang-phai-doc) — chủ đề và corpus đã đổi | 3 phút |
-| **T** | **Chốt embedding provider** (bảng §1.5) rồi bắt đầu F5-4 | 2 phút quyết + chạy nền |
-| **S** | Viết 4 câu golden dataset nhóm "Thuế & hoá đơn"; đọc `TestTask6`/`TestTask7` | 10 phút |
-| **H** | Viết `reorder_for_llm()` bằng fixture giả §3.4 (không chờ ai) | 10 phút |
-| **Q** | Dán `PAGEINDEX_API_KEY` vào `.env` rồi chạy upload F5-8 | 5 phút |
+| Ưu tiên | Ai | Việc | Thời gian |
+|---------|----|------|-----------|
+| 🔴 **1** | **T** | **F5-4** — chọn embedding provider (§1.5) rồi index. **Cả nhóm đang chờ** | 20–30 phút |
+| 🟡 2 | **T** | F5-5 `semantic_search()` ngay sau khi index xong | 15 phút |
+| 🟡 2 | **S** | F5-6 `lexical_search()` — chạy song song với F5-5, cùng chờ `chroma_db/` | 15 phút |
+| 🟢 3 | **H** | F5-11 `app.py` — F5-10 xong rồi, tạm mock `retrieve()` | 25 phút |
+| 🟢 3 | **Q** | 4 câu golden dataset nhóm "Thành lập & đăng ký KD" | 10 phút |
+| ⬜ 4 | **Q** | F5-9 ngay khi F5-5 + F5-6 merge → rồi calibrate `SCORE_THRESHOLD` | 30 phút |
+| ⬜ 5 | **S** | F5-13 chạy A/B thật sau khi có `retrieve()` | 20 phút |
 
-**Trạng thái:** Task 1, 2, 3, 8 xong · `pytest` **14 passed, 21 skipped** ·
-Nút thắt kế tiếp là **F5-4 của Tường** (chặn F5-5 + F5-6).
+**Trạng thái:** `pytest` **20 passed · 15 skipped · 0 failed** · **24/50 điểm**.
+Xong: Task 1, 2, 3, 7, 8, 10 + golden dataset.
+Còn: Task 4, 5, 6, 9 (**26đ**) — **tất cả đều nằm sau F5-4**.
+
+> Nếu Tường kẹt setup, đừng chờ: F5-4 gồm 4 hàm rời (`load_documents`, `chunk_documents`,
+> `embed_chunks`, `index_to_vectorstore`) — chia đôi cho 2 người làm song song được,
+> chỉ nối lại ở `run_pipeline()`.
