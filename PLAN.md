@@ -227,8 +227,8 @@ Trạng thái: ⬜ To Do · 🟡 In Progress · 🔵 In Review · ✅ Done · �
 | **F5-0** | Chốt 3 hằng số + push `main` | Q | CP0 | — | F5-4, F5-9 | `main` có 800 / 100 / 0.48 | ✅ |
 | **F5-1** | Task 1 — ≥3 PDF chính sách | Q | CP1 | — | F5-3 | `data/landing/legal/*.pdf` (6 file) + `_metadata.json` | ✅ |
 | **F5-2** | Task 2 — ≥5 bài hướng dẫn | Q | CP1 | — | F5-3 | `data/landing/news/*.json` (10 file) | ✅ |
-| **F5-3** | Task 3 — convert markdown | Q | CP1 | F5-1, F5-2 | F5-4, F5-8, F5-12 | `data/standardized/legal/*.md` + `news/*.md` | ⬜ |
-| **F5-4** | Task 4 — chunking + ChromaDB index | T | CP2 | F5-0, F5-3 | F5-5, F5-6 | `chroma_db/` có collection `ecommerce_support_docs` **> 0 docs** | ⬜ |
+| **F5-3** | Task 3 — convert markdown | Q | CP1 | F5-1, F5-2 | F5-4, F5-8, F5-12 | `data/standardized/legal/*.md` (6) + `news/*.md` (10), mỗi file có header metadata | ✅ |
+| **F5-4** | Task 4 — chunking + ChromaDB index | T | CP2 | ~~F5-0, F5-3~~ **đã thông** | F5-5, F5-6 | `chroma_db/` có collection `ecommerce_support_docs` **> 0 docs** | 🟢 **sẵn sàng làm** |
 | **F5-5** | Task 5 — `semantic_search()` | T | CP2 | F5-4 | F5-9 | Trả `list[Result]` sorted desc, **score là cosine [0,1]** | ⬜ |
 | **F5-6** | Task 6 — `lexical_search()` BM25 + TF-IDF | S | CP2 | F5-4 | F5-9 | Trả `list[Result]` sorted desc | ⬜ |
 | **F5-7** | Task 7 — `rerank_rrf()` + `rerank()` | S | CP3 | — *(fixture giả)* | F5-9 | Gộp ≥2 ranked list, output re-sorted, có `score` | ⬜ |
@@ -372,7 +372,7 @@ Lệnh tải model trước cho T (chạy nền, làm việc khác song song):
 |---|--------|-----|----------|
 | 1 | ~~F5-1~~ | Q | ✅ 6 PDF trong `data/landing/legal/` + `_metadata.json` |
 | 2 | ~~F5-2~~ | Q | ✅ 10 JSON trong `data/landing/news/` |
-| 3 | **F5-3** — `python -X utf8 -m src.task3_convert_markdown` | Q | `.md` ở cả `legal/` và `news/`, mỗi file > 200 ký tự |
+| 3 | ~~**F5-3**~~ | Q | ✅ 16 file `.md` (6 legal + 10 news), TestTask3 4/4 passed |
 | 4 | **F5-12** khởi động — mỗi người viết 4 câu hỏi từ data đã crawl | cả 4 | Mỗi người có 4 câu nháp |
 | 5 | Đọc data để hiểu domain trước khi code | T, H, S | Biết corpus nói về gì |
 
@@ -381,6 +381,45 @@ của help.shopee.vn → text bài viết sạch, không cần Chromium.
 Chạy `--crawl4ai` để đổi sang Crawl4AI AsyncWebCrawler (tự fallback nếu thiếu browser binary).
 
 Task 3 cần `markitdown[pdf]` — lỗi `MissingDependencyException` thì `pip install "markitdown[pdf]"`.
+
+---
+
+### 📦 BÀN GIAO F5-3 → F5-4 (Quang → Tường)
+
+**F5-4 đã hết vật cản, Tường bắt đầu được ngay.** `git pull origin main` rồi làm.
+
+Đầu vào có sẵn: **16 file** trong `data/standardized/` — 6 `legal/` + 10 `news/`.
+Mỗi file mở đầu bằng khối header cố định:
+
+```markdown
+# CHÍNH SÁCH TRẢ HÀNG VÀ HOÀN TIỀN
+
+**Source:** https://help.shopee.vn/portal/4/article/77251
+**Crawled:** 2026-08-04T11:49:52+07:00
+**customer_role:** buyer
+**doc_type:** policy
+**topic:** trả hàng & hoàn tiền     ← chỉ có ở news/
+
+---
+<nội dung thật bắt đầu từ đây>
+```
+
+**Tường nên làm gì với header này** trong `load_documents()`:
+- Parse `**Key:** value` phía trên dấu `---` → dict metadata cho document.
+- Lấy `# <tiêu đề>` dòng đầu làm `title`.
+- Phần sau `---` mới là nội dung đem đi chunk — **đừng chunk luôn cả header**,
+  nếu không mỗi chunk đầu tài liệu sẽ chứa URL làm nhiễu BM25 ở Task 6.
+- Gắn vào metadata mỗi chunk: `source` (tên file), `title`, `url`, `customer_role`, `doc_type`.
+  Task 10 cần `title` + `url` để in citation `[Nguồn, Năm]`; Task 6/9 cần `customer_role`
+  cho benchmark có metadata_filter.
+
+Kiểm tra nhanh trước khi code:
+```powershell
+Get-ChildItem data\standardized -Recurse -Filter *.md | Measure-Object   # phải ra 16
+Get-Content data\standardized\legal\returns-refund-policy-shopee.md -TotalCount 12
+```
+
+Prompt sẵn cho agent: `PLAN.md` §10.3, mục **F5-4**.
 
 ---
 
