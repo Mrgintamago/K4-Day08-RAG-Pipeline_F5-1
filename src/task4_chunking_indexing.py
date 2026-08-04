@@ -35,15 +35,14 @@ trong cùng collection, retrieval sẽ trả về kết quả rác từ dữ li�
 """
 import os
 import re
+import unicodedata
 from pathlib import Path
-from openai import OpenAI
 
 import chromadb
 from dotenv import load_dotenv
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-load_dotenv() # Load environment variables from .env
-_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+load_dotenv()  # Load environment variables from .env
 
 STANDARDIZED_DIR = Path(__file__).parent.parent / "data" / "standardized"
 CHROMA_DIR = Path(__file__).parent.parent / "chroma_db"
@@ -63,13 +62,34 @@ CHUNK_SIZE = 800
 CHUNK_OVERLAP = 100
 CHUNKING_METHOD = "recursive"  # "recursive" | "markdown_header" | "semantic"
 
-# EMBEDDING_PROVIDER: Chọn nhà cung cấp embedding.
-#   - "openai": Sử dụng OpenAI API trực tiếp (cần OPENAI_API_KEY)
-EMBEDDING_PROVIDER = os.getenv("EMBEDDING_PROVIDER", "openai")
+# EMBEDDING_PROVIDER — đổi được qua .env, không phải sửa code (gợi ý của repo gốc).
+#   - "sentence_transformers" (mặc định): chạy local, KHÔNG cần API key
+#   - "openai": text-embedding-3-small, 1536 chiều — cần OPENAI_API_KEY
+#   - "google": models/text-embedding-004, 768 chiều — cần GEMINI_API_KEY
+#
+# Vì sao mặc định là sentence_transformers: nhóm chỉ có OPENROUTER_API_KEY và
+# PAGEINDEX_API_KEY. OpenRouter KHÔNG cung cấp embedding API, nên nhánh "openai"
+# không chạy được nếu không mua thêm key riêng của OpenAI.
+#
+# ⚠️ ĐỔI PROVIDER LÀ PHẢI XOÁ chroma_db/ VÀ INDEX LẠI — số chiều khác nhau
+# (384 / 768 / 1536) không tương thích ngược.
+EMBEDDING_PROVIDER = os.getenv("EMBEDDING_PROVIDER", "sentence_transformers")
 
-# OpenAI text-embedding-3-small: 1536 dimensions
-EMBEDDING_MODEL = "text-embedding-3-small"
-EMBEDDING_DIM = 1536
+# Vì sao chọn paraphrase-multilingual-MiniLM-L12-v2 thay vì BAAI/bge-m3:
+#   - Đa ngôn ngữ, huấn luyện trên 50+ thứ tiếng gồm tiếng Việt — hợp corpus
+#     văn bản luật + quy định sàn tiếng Việt của nhóm.
+#   - Nặng ~470MB so với ~2.2GB của bge-m3. Corpus 31 file ≈ 1.100 chunk,
+#     model này embed hết trong vài phút thay vì 15–25 phút.
+#   - Chất lượng tiếng Việt kém bge-m3 một chút, nhưng đủ để tách bạch
+#     câu hỏi đúng chủ đề và câu lạc đề — điều kiện cần cho ngưỡng fallback ở Task 9.
+_MODEL_BY_PROVIDER = {
+    "sentence_transformers": ("sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2", 384),
+    "openai": ("text-embedding-3-small", 1536),
+    "google": ("models/text-embedding-004", 768),
+}
+EMBEDDING_MODEL, EMBEDDING_DIM = _MODEL_BY_PROVIDER.get(
+    EMBEDDING_PROVIDER, _MODEL_BY_PROVIDER["sentence_transformers"]
+)
 
 # VECTOR_STORE = "chromadb": Đơn giản, local persistent, không cần Docker,
 #   đáp ứng đủ yêu cầu của bài lab.
@@ -84,6 +104,107 @@ COLLECTION_NAME = "ecommerce_support_docs"
 # --- Helper functions for sharing client ---
 _chroma_client = None
 _chroma_collection = None
+_embedder = None
+
+
+class _Embedder:
+    """
+    Bọc 3 provider sau CÙNG MỘT giao diện `.encode(texts)`.
+
+    Vì sao cần lớp bọc: Task 5 gọi `model.encode(query)` theo kiểu sentence-transformers.
+    Bọc lại như thế này thì đổi provider chỉ là sửa .env — Task 5 không phải sửa gì,
+    đúng tinh thần "viết 1 hàm embed dùng chung cho cả Task 4 và Task 5".
+
+    Client của provider API được khởi tạo LƯỜI (lúc gọi, không phải lúc import).
+    Nếu tạo ở cấp module thì thiếu API key là crash ngay khi `import task4`, kéo sập
+    cả Task 5, 9, 10 và làm pytest fail hàng loạt dù những task đó không hề dùng API.
+    """
+
+    def __init__(self, provider: str, model_name: str):
+        self.provider = provider
+        self.model_name = model_name
+        self._impl = None
+
+    def _load(self):
+        if self._impl is not None:
+            return self._impl
+
+        if self.provider == "sentence_transformers":
+            from sentence_transformers import SentenceTransformer
+
+            self._impl = SentenceTransformer(self.model_name)
+
+        elif self.provider == "openai":
+            from openai import OpenAI
+
+            key = os.getenv("OPENAI_API_KEY")
+            if not key:
+                raise RuntimeError(
+                    "EMBEDDING_PROVIDER=openai nhưng thiếu OPENAI_API_KEY trong .env. "
+                    "Lưu ý OPENROUTER_API_KEY KHÔNG dùng được cho embedding."
+                )
+            self._impl = OpenAI(api_key=key)
+
+        elif self.provider == "google":
+            import google.generativeai as genai
+
+            key = os.getenv("GEMINI_API_KEY")
+            if not key:
+                raise RuntimeError(
+                    "EMBEDDING_PROVIDER=google nhưng thiếu GEMINI_API_KEY trong .env"
+                )
+            genai.configure(api_key=key)
+            self._impl = genai
+
+        else:
+            raise ValueError(f"EMBEDDING_PROVIDER không hợp lệ: {self.provider}")
+
+        return self._impl
+
+    def encode(self, texts, batch_size: int = 200, show_progress: bool = False):
+        """Nhận 1 chuỗi hoặc list chuỗi, trả list[float] hoặc list[list[float]]."""
+        single = isinstance(texts, str)
+        items = [texts] if single else list(texts)
+        impl = self._load()
+
+        if self.provider == "sentence_transformers":
+            vectors = impl.encode(
+                items, batch_size=32, show_progress_bar=show_progress
+            ).tolist()
+
+        elif self.provider == "openai":
+            vectors = []
+            for i in range(0, len(items), batch_size):
+                batch = items[i : i + batch_size]
+                resp = impl.embeddings.create(model=self.model_name, input=batch)
+                vectors.extend(d.embedding for d in resp.data)
+
+        else:  # google — API nhận từng văn bản một
+            vectors = [
+                impl.embed_content(model=self.model_name, content=t)["embedding"]
+                for t in items
+            ]
+
+        return vectors[0] if single else vectors
+
+
+def get_embedding_model() -> _Embedder:
+    """
+    Trả về embedder dùng chung cho Task 4 (index) và Task 5 (query).
+
+    Dùng chung một đối tượng là bắt buộc: query phải được embed bằng ĐÚNG model đã
+    dùng lúc index, nếu không vector nằm ở hai không gian khác nhau và cosine
+    similarity trở nên vô nghĩa.
+    """
+    global _embedder
+    if _embedder is None:
+        _embedder = _Embedder(EMBEDDING_PROVIDER, EMBEDDING_MODEL)
+    return _embedder
+
+
+def embed_texts(texts, show_progress: bool = False):
+    """Hàm tiện dụng — embed list văn bản bằng provider đang cấu hình."""
+    return get_embedding_model().encode(texts, show_progress=show_progress)
 
 
 def get_collection():
@@ -98,9 +219,9 @@ def get_collection():
         try:
             _chroma_collection = _chroma_client.get_collection(name=COLLECTION_NAME)
             print(f"Chroma collection '{COLLECTION_NAME}' loaded.")
-        except ValueError:
+        except Exception:
+            # chromadb >=1.0 ném NotFoundError, không phải ValueError.
             print(f"Chroma collection '{COLLECTION_NAME}' not found. Please run task4 to create it.")
-            # Trả về None hoặc raise lỗi để báo hiệu collection chưa sẵn sàng
             return None
 
     return _chroma_collection
@@ -139,6 +260,12 @@ def load_documents() -> list[dict]:
         for key, value in meta_lines:
             # Chuẩn hoá key: 'Crawled' -> 'crawled', 'customer_role' -> 'customer_role'
             key_lower = key.lower().replace(" ", "_")
+            # '**Source:**' trong file .md là URL gốc, KHÔNG được ghi đè lên
+            # metadata['source'] (tên file). Task 10 dùng 'source' làm nhãn trích dẫn
+            # ngắn gọn và Task 9 dùng nó để khử trùng lặp — thay bằng URL dài thì
+            # citation hiện nguyên đường link, rất khó đọc.
+            if key_lower == "source":
+                key_lower = "url"
             metadata[key_lower] = value.strip()
 
         documents.append({"content": content_part.strip(), "metadata": metadata})
@@ -161,14 +288,88 @@ def chunk_documents(documents: list[dict]) -> list[dict]:
         length_function=len,
     )
     chunks = []
+    dropped = 0
     for doc in documents:
         splits = splitter.split_text(doc["content"])
         for i, chunk_text in enumerate(splits):
+            if _is_junk_chunk(chunk_text):
+                dropped += 1
+                continue
             # Mỗi chunk kế thừa metadata của document gốc
             chunk_metadata = doc["metadata"].copy()
             chunk_metadata["chunk_index"] = i
             chunks.append({"content": chunk_text, "metadata": chunk_metadata})
+
+    if dropped:
+        print(f"  - Đã loại {dropped} chunk rác (boilerplate/link/tên shop)")
     return chunks
+
+
+# Ngưỡng lọc chunk rác
+MIN_CHUNK_CHARS = 80          # ngắn hơn thì không đủ ngữ cảnh để trả lời gì
+MAX_NON_TEXT_RATIO = 0.35     # tỉ lệ ký tự không phải chữ/khoảng trắng
+
+# Dấu hiệu chunk là phần chân trang / thủ tục, không phải nội dung quy định.
+# Đo thực tế: chunk chứa khối chữ ký + "Liên hệ:" của Quy chế hoạt động sàn đứng TOP-1
+# cho câu hỏi "hồ sơ đăng ký hộ kinh doanh" — hoàn toàn không liên quan.
+BOILERPLATE_MARKERS = (
+    "đã ký và đóng dấu",
+    "liên hệ: https",
+    "bản cập nhật ngày",
+    "vui lòng bấm vào đây",
+    "phiên bản này có hiệu lực sau",
+    "để tham khảo phiên bản trước",
+)
+MAX_BOILERPLATE_HITS = 2      # dính từ 2 dấu hiệu trở lên thì coi là chân trang
+
+
+def _is_junk_chunk(text: str) -> bool:
+    """
+    Bỏ những chunk không mang thông tin trả lời được.
+
+    Vì sao cần: đo thực tế trên corpus này, chunk kiểu "Nội\\n\\nLiên hệ: https://..."
+    hoặc danh sách tên shop ("vnhobbyshop_njyhb327n Hitachivietnam.store...") lại
+    đứng TOP cho câu hỏi "hồ sơ đăng ký hộ kinh doanh". Lý do: chúng ngắn và
+    không có chủ đề rõ nên vector nằm gần giữa không gian, "trung tính" với mọi query.
+    Chúng vừa đẩy chunk hữu ích ra khỏi top_k, vừa kéo điểm câu hỏi lạc đề lên cao
+    làm ngưỡng fallback ở Task 9 mất tác dụng.
+    """
+    stripped = text.strip()
+    if len(stripped) < MIN_CHUNK_CHARS:
+        return True
+
+    # Chunk mà phần lớn là URL
+    without_urls = re.sub(r"https?://\S+", "", stripped)
+    if len(without_urls.strip()) < MIN_CHUNK_CHARS:
+        return True
+
+    # Chunk toàn ký hiệu/mã/tên tài khoản, ít chữ thật
+    letters = sum(1 for c in stripped if c.isalpha() or c.isspace())
+    if letters / len(stripped) < (1 - MAX_NON_TEXT_RATIO):
+        return True
+
+    # Chunk không có lấy một câu hoàn chỉnh (không có khoảng trắng đủ nhiều)
+    if stripped.count(" ") < 10:
+        return True
+
+    # Chân trang / khối chữ ký — là văn bản thật nên không lọc được bằng hình dạng,
+    # phải nhận diện bằng dấu hiệu nội dung.
+    #
+    # Hai bước chuẩn hoá BẮT BUỘC trước khi so marker:
+    #
+    # 1. Gộp khoảng trắng — text trích từ PDF hay dính khoảng trắng đôi và xuống dòng
+    #    giữa câu ("TMĐT  qua  https", "Bản \nCập Nhật ngày").
+    # 2. Chuẩn hoá Unicode về NFC — đây là cái bẫy khó thấy nhất: text từ MarkItDown
+    #    lẫn cả dạng NFD (dấu tiếng Việt là ký tự tổ hợp rời) lẫn NFC (dựng sẵn).
+    #    Hai chuỗi nhìn GIỐNG HỆT nhau trên màn hình nhưng `"liên hệ" in text` trả về
+    #    False. Không có bước này thì mọi bộ lọc/so khớp chuỗi tiếng Việt đều
+    #    trượt ngẫu nhiên.
+    lowered = unicodedata.normalize("NFC", re.sub(r"\s+", " ", stripped)).lower()
+    hits = sum(1 for m in BOILERPLATE_MARKERS if unicodedata.normalize("NFC", m) in lowered)
+    if hits >= MAX_BOILERPLATE_HITS:
+        return True
+
+    return False
 
 
 def embed_chunks(chunks: list[dict]) -> list[dict]:
@@ -178,23 +379,14 @@ def embed_chunks(chunks: list[dict]) -> list[dict]:
     Returns:
         Mỗi chunk dict được thêm key 'embedding': list[float]
     """
-    print(f"Embedding {len(chunks)} chunks với {EMBEDDING_MODEL}...")
+    print(f"Embedding {len(chunks)} chunks với {EMBEDDING_MODEL} "
+          f"(provider={EMBEDDING_PROVIDER}, dim={EMBEDDING_DIM})...")
 
-    batch_size = 200
-    for i in range(0, len(chunks), batch_size):
-        batch_end = min(i + batch_size, len(chunks))
-        batch_chunks = chunks[i:batch_end]
-        texts = [c["content"] for c in batch_chunks]
+    texts = [c["content"] for c in chunks]
+    vectors = embed_texts(texts, show_progress=True)
 
-        print(f"  Batch {i // batch_size + 1}/{(len(chunks) + batch_size - 1) // batch_size} ({len(texts)} chunks)")
-
-        response = _client.embeddings.create(
-            model=EMBEDDING_MODEL,
-            input=texts
-        )
-
-        for chunk, embedding_obj in zip(batch_chunks, response.data):
-            chunk["embedding"] = embedding_obj.embedding
+    for chunk, vector in zip(chunks, vectors):
+        chunk["embedding"] = vector
 
     return chunks
 
@@ -211,9 +403,10 @@ def index_to_vectorstore(chunks: list[dict]):
     try:
         client.delete_collection(name=COLLECTION_NAME)
         print(f"  - Deleted existing collection '{COLLECTION_NAME}'.")
-    except ValueError:
+    except Exception:
+        # chromadb >=1.0 ném chromadb.errors.NotFoundError chứ không phải ValueError;
+        # bắt rộng để không phụ thuộc vào loại exception của từng phiên bản.
         print(f"  - Collection '{COLLECTION_NAME}' not found, skipping deletion.")
-        pass  # Collection does not exist, which is fine
 
     collection = client.create_collection(
         name=COLLECTION_NAME,

@@ -39,7 +39,11 @@ def semantic_search(query: str, top_k: int = 10) -> list[dict]:
         print(f"Error: {e}")
         return []
 
-    query_vector = model.encode(query).tolist()
+    # get_embedding_model() trả về _Embedder — .encode() đã cho sẵn list[float],
+    # không cần .tolist() như khi dùng trực tiếp SentenceTransformer.
+    # Query BẮT BUỘC dùng cùng embedder với lúc index, nếu không vector nằm ở
+    # hai không gian khác nhau và cosine similarity trở nên vô nghĩa.
+    query_vector = model.encode(query)
 
     results = collection.query(
         query_embeddings=[query_vector],
