@@ -109,14 +109,14 @@ Hệ quả cần lường trước:
 > (tra cứu quy định khi bán hàng online, đăng ký hộ kinh doanh, nghĩa vụ thuế).
 > Chủ đề cũ (hỗ trợ khách hàng Shopee) là **tập con** của chủ đề mới, nên **không ai phải làm lại từ đầu.**
 >
-> | Role | Có bị ảnh hưởng? | Phải làm gì khác |
-> |------|------------------|------------------|
-> | **Q — Quang** | ✅ Đã xử lý xong | Task 1–3 crawl lại xong rồi, không còn việc tồn |
-> | **T — Tường** | ⚠️ **CÓ — đọc mục [1.5](#15-corpus-doi--tuong-va-sang-phai-doc)** | Corpus to gấp 2.5 lần → chọn embedding provider cho đúng, nếu không F5-4 chạy 20+ phút |
-> | **H — Hân** | ⚪ Gần như không | Chỉ đổi câu hỏi gợi ý trong `app.py` sang chủ đề pháp lý |
-> | **S — Sáng** | ⚠️ **CÓ — đọc mục [1.5](#15-corpus-doi--tuong-va-sang-phai-doc)** | Golden dataset phải hỏi về luật + thuế, không chỉ hỏi đơn hàng |
+> | Role | Đã xử lý xong chưa | Ghi chú |
+> |------|--------------------|---------|
+> | **Q — Quang** | ✅ | Task 1–3 crawl lại theo chủ đề mới, xong |
+> | **T — Tường** | ✅ | Đã chọn MiniLM đa ngữ và index 1.216 chunk |
+> | **H — Hân** | ⚪ còn 1 việc nhỏ | Đổi câu hỏi gợi ý trong `app.py` sang chủ đề pháp lý (đã đổi sẵn ở commit đổi tên chủ đề) |
+> | **S — Sáng** | ✅ | Golden dataset 16 câu đã bám luật + thuế + quy định sàn |
 >
-> Chi tiết corpus mới và lý do chọn nguồn: [§1.5](#15-corpus-doi--tuong-va-sang-phai-doc).
+> Chi tiết corpus và lý do chọn nguồn: [§1.5](#15-corpus-doi--tuong-va-sang-phai-doc).
 
 Bám theo `README.md` (chấm điểm), `LAB_GUIDE.md` (checkpoint & phân vai — **Phương Án A: nhóm 4 thành viên**)
 và `group_project/README.md` (deliverable bài nhóm).
@@ -194,8 +194,12 @@ Chủ đề mới cần 2 lớp tài liệu bổ sung nhau:
 | **Quy định sàn** | "Shopee bắt tôi làm gì?" | help.shopee.vn | 26 |
 | **Văn bản luật** | "Pháp luật bắt tôi làm gì?" | vi.wikisource.org | 5 |
 
-**Corpus hiện tại: 31 file `.md`, 865.028 ký tự ≈ 1.081 chunk @800.**
+**Corpus hiện tại: 31 file `.md`, 865.028 ký tự → đã index thành 1.216 chunk @800.**
 Trước khi đổi chủ đề là 16 file / ~350k ký tự — **to lên 2,5 lần**.
+
+> ✅ **Đã index xong và commit `chroma_db/` lên repo** — pull về là chạy được Task 5/6/9
+> ngay, không ai phải index lại. Phần cảnh báo bên dưới giữ lại để tham khảo khi cần
+> đổi model hoặc đổi corpus.
 
 <details>
 <summary><b>13 văn bản lớp legal</b> (bấm để xem)</summary>
@@ -223,7 +227,7 @@ dòng tiền người bán (2), bảo hành (1).
 
 #### ⚠️ TƯỜNG (F5-4) — đọc kỹ, đây là thay đổi lớn nhất
 
-**1.081 chunk thay vì ~430.** Với `BAAI/bge-m3` chạy CPU, embedding 1.081 chunk mất
+**1.216 chunk thay vì ~430.** Với `BAAI/bge-m3` chạy CPU, embedding 1.216 chunk mất
 **khoảng 15–25 phút** — vượt hẳn 25 phút của cả CP2. Ba lựa chọn, chọn 1 **ngay từ CP0**:
 
 | Cách | Lệnh / cấu hình | Thời gian embed | Đánh đổi |
@@ -470,7 +474,7 @@ Bảng này là **nguồn sự thật duy nhất** về tiến độ. Ai cũng s
    - con số `pytest` ở Bảng tiến độ (chạy `pytest tests/test_individual.py` lấy số thật)
 
 4. **Cập nhật cột `Bàn giao` bằng số thật**, không để mô tả chung chung.
-   Ví dụ: `chroma_db/ có 1.081 chunk` thay vì `chroma_db/ > 0 docs`.
+   Ví dụ: `chroma_db/ có 1.216 chunk` thay vì `chroma_db/ > 0 docs`.
    Người sau đọc cột này để biết đầu vào của mình là gì.
 
 5. **Ticket bị chặn** thì ghi rõ đang chờ ai ở cột `TT`, ví dụ `⬜ chờ F5-4 (T)`.
@@ -606,7 +610,7 @@ Rồi chạy test — đúng lúc này phải thấy **6 passed** (Task 1–2 đ
 |---|------|-----|----------|
 | 1 | ~~F5-0: sửa 3 hằng số (§3.3)~~ | Q | ✅ đã sửa, còn commit + push `main` |
 | 2 | Chia sẻ `OPENROUTER_API_KEY` cho cả nhóm (kênh riêng, KHÔNG commit) | Q | Cả 4 người gọi được API |
-| 3 | **Chốt embedding provider** theo bảng §1.5 (corpus 1.081 chunk!) rồi tải model chạy nền | T | Đã chọn xong provider, không đổi giữa chừng |
+| 3 | ~~Chốt embedding provider rồi index~~ | T | ✅ MiniLM đa ngữ 384d, 1.216 chunk, `chroma_db/` đã commit |
 | 4 | `streamlit run app.py` mở được | H | localhost:8501 |
 | 5 | Đọc `tests/test_individual.py::TestTask6,TestTask7` để nắm tiêu chí | S | Biết test đòi gì trước khi code |
 
@@ -656,7 +660,7 @@ Task 3 cần `markitdown[pdf]` — lỗi `MissingDependencyException` thì `pip 
 embedding provider cho đúng nếu không F5-4 chạy 20+ phút và chặn cả nhóm.
 
 Đầu vào có sẵn: **31 file** trong `data/standardized/` — 13 `legal/` + 18 `news/`,
-tổng 865k ký tự ≈ 1.081 chunk @800.
+tổng 865k ký tự → 1.216 chunk @800 (đã index sẵn trong `chroma_db/`).
 Mỗi file mở đầu bằng khối header cố định:
 
 ```markdown
@@ -699,9 +703,9 @@ Prompt sẵn cho agent: `PLAN.md` §10.3, mục **F5-4**.
 
 | # | Ticket | Ai | Xong khi |
 |---|--------|-----|----------|
-| 1 | **F5-4** — chunk 800/100, embed `bge-m3`, index `chroma_db/` | T | Collection > 0 docs, `TestTask4` pass |
-| 2 | **F5-5** — `semantic_search()` | T | `TestTask5` pass, score là cosine [0,1] |
-| 3 | **F5-6** — `lexical_search()` BM25 · ⭐ thêm TF-IDF = **BONUS 5đ** | S | `TestTask6` pass, keyword khớp phải xếp cao hơn |
+| 1 | ~~**F5-4**~~ | T | ✅ 1.216 chunk, MiniLM đa ngữ 384d, `TestTask4` 4/4 |
+| 2 | ~~**F5-5**~~ | T | ✅ `TestTask5` 4/4, score là cosine [0,1] |
+| 3 | ~~**F5-6**~~ · ⭐ TF-IDF = **BONUS 5đ** vẫn làm được | S | ✅ `TestTask6` 4/4 |
 | 4 | **F5-8** — đăng ký pageindex.ai, upload doc | Q | Có `PAGEINDEX_API_KEY`, doc đã upload |
 | 5 | **F5-10** khởi động — `reorder_for_llm()` + `format_context()` bằng fixture giả | H | 2 hàm chạy đúng, chưa cần LLM |
 
@@ -722,16 +726,16 @@ vẫn gắn `source="pageindex"`. Vẫn pass `TestTask8`; ghi rõ lý do thay th
 
 ---
 
-### CP4 — Task 9–10 (1:20–1:45) 🎯 MỐC 50 ĐIỂM BẮT BUỘC
+### CP4 — Task 9–10 (1:20–1:45) 🎯 MỐC 50 ĐIỂM — ✅ **ĐÃ ĐẠT**
 
-| # | Ticket | Ai | Xong khi |
-|---|--------|-----|----------|
-| 1 | **F5-9** — `retrieve()` = semantic + lexical → RRF → fallback | Q | `TestTask9` pass, fallback trigger thật |
-| 2 | Calibrate lại `SCORE_THRESHOLD` trên corpus thật | Q | Query lạc đề rơi vào PageIndex, query đúng thì không |
-| 3 | **F5-10** — output có `[Nguồn, Năm]` | H | Thiếu evidence → "I cannot verify this information" |
-| 4 | **F5-13** — dựng khung `eval_pipeline.py` với hàm giả | S | Chạy được end-to-end với 2 câu mẫu |
-| 5 | ⭐ **F5-14** — HyDE — **BONUS 5đ** (chỉ làm nếu F5-5 đã xanh) | T | Bật/tắt bằng flag |
-| 6 | Chạy full `pytest -v` trên `main` | Q | **35/35 passed** |
+| # | Ticket | Ai | Kết quả |
+|---|--------|-----|---------|
+| 1 | ~~**F5-9** — `retrieve()` = semantic + lexical → RRF → fallback~~ | Q | ✅ `TestTask9` 4/4, fallback trigger thật |
+| 2 | ~~Calibrate `SCORE_THRESHOLD`~~ | Q | ✅ **0,40** (đo: đúng chủ đề 0,444–0,531 · lạc đề 0,265–0,365) |
+| 3 | ~~**F5-10** — output có `[Nguồn, Năm]`~~ | H | ✅ `TestTask10` 3/3 |
+| 4 | ~~**F5-13** — dựng khung `eval_pipeline.py`~~ | S | ✅ scaffold 418 dòng |
+| 5 | ⭐ **F5-14** — HyDE — **BONUS 5đ** | T | 🔓 mở khoá, làm được ngay |
+| 6 | ~~Chạy full `pytest -v` trên `main`~~ | Q | ✅ **35/35 passed, 0 skipped, 0 failed** |
 
 ---
 
@@ -877,18 +881,21 @@ Get-ChildItem data\standardized -Recurse -Filter *.md | Measure-Object
 
 | Task | Ticket | Điểm | Chủ trì | Trạng thái |
 |------|--------|------|---------|-----------|
-| 1 — Thu thập ≥3 văn bản chính sách | F5-1 | 3 | **Q** | ✅ 6 PDF |
-| 2 — Crawl ≥5 bài viết | F5-2 | 3 | **Q** | ✅ 10 JSON |
-| 3 — Convert markdown | F5-3 | 4 | **Q** | ⬜ |
-| 4 — Chunking + indexing | F5-4 | 7 | **T** | ⬜ |
-| 5 — Semantic search | F5-5 | 6 | **T** | ⬜ |
-| 6 — Lexical search (BM25) | F5-6 | 6 | **S** | ⬜ |
-| 7 — Reranking (RRF) | F5-7 | 6 | **S** | ⬜ |
-| 8 — PageIndex vectorless | F5-8 | 4 | **Q** | ⬜ |
-| 9 — Retrieval pipeline + fallback | F5-9 | 7 | **Q** | ⬜ |
-| 10 — Generation có citation | F5-10 | 4 | **H** | ⬜ |
+| Task | Ticket | Điểm | Chủ trì | Test | Trạng thái |
+|------|--------|------|---------|------|-----------|
+| 1 — Thu thập văn bản chính sách + luật | F5-1 | 3 | **Q** | 3/3 | ✅ 13 PDF |
+| 2 — Crawl bài hướng dẫn | F5-2 | 3 | **Q** | 4/4 | ✅ 18 JSON |
+| 3 — Convert markdown | F5-3 | 4 | **Q** | 4/4 | ✅ 31 file `.md` |
+| 4 — Chunking + indexing | F5-4 | 7 | **T** | 4/4 | ✅ 1.216 chunk |
+| 5 — Semantic search | F5-5 | 6 | **T** | 4/4 | ✅ cosine [0,1] |
+| 6 — Lexical search (BM25) | F5-6 | 6 | **S** | 4/4 | ✅ |
+| 7 — Reranking (RRF) | F5-7 | 6 | **S** | 3/3 | ✅ |
+| 8 — PageIndex vectorless | F5-8 | 4 | **Q** | 2/2 | ✅ 3 doc |
+| 9 — Retrieval pipeline + fallback | F5-9 | 7 | **Q** | 4/4 | ✅ ngưỡng 0,40 |
+| 10 — Generation có citation | F5-10 | 4 | **H** | 3/3 | ✅ |
+| **TỔNG** | | **50** | | **35/35** | ✅ **ĐẠT** |
 
-Tổng theo người: **Q 21đ** (6 đã xong) · **T 13đ** · **S 12đ** · **H 4đ**
+Tổng theo người: **Q 21đ** · **T 13đ** · **S 12đ** · **H 4đ**
 (H bù lại bằng 11đ bài nhóm ở chatbot).
 
 ### Bài nhóm — 30 điểm
@@ -945,9 +952,10 @@ và là nút thắt chặn 2 người khác.
 
 | Rủi ro | Dấu hiệu | Xử lý | Ai |
 |--------|----------|-------|-----|
-| **Embed 1.081 chunk quá lâu** (corpus to 2.5× sau khi đổi chủ đề) | CP2 quá 10 phút chưa index xong | Đổi `all-MiniLM-L6-v2` (~3–5 ph) hoặc `EMBEDDING_PROVIDER=google` — bảng so sánh ở §1.5 | T |
-| Tải `bge-m3` quá lâu (~2.2GB) | Chưa tải xong khi tới CP2 | Đừng chờ: chuyển thẳng sang MiniLM/Google, ghi lý do vào comment | T |
-| Golden dataset vẫn hỏi theo chủ đề cũ | Câu hỏi toàn về đơn hàng, không có luật/thuế | Dùng đúng 4 nhóm chủ đề ở §1.5, mỗi người 4 câu | S |
+| ~~Embed quá lâu~~ ✅ | — | — | Đã xong: MiniLM đa ngữ, 1.216 chunk trong ~40 giây |
+| ~~Golden dataset lệch chủ đề~~ ✅ | — | — | 16 câu đã bám luật + thuế + quy định sàn |
+| **Merge làm tụt dưới 35 passed** | `pytest` sau merge < 35 | Mất điểm ĐÃ CÓ — nguy hiểm hơn không làm bonus. Bắt buộc chạy `pytest` trước mỗi merge | Q gác |
+| **Chất lượng retrieval trung bình** | Chunk top-1 đôi khi lạc | MiniLM 384d yếu hơn bge-m3. Ghi vào `results.md` như phát hiện có căn cứ + đề xuất bge-m3 làm config thứ 3 cho A/B | S |
 | PageIndex không đăng ký/hết quota | F5-8 lỗi 401/429 | Fallback vectorless tự viết theo heading `.md` | Q |
 | RAGAS dính 429 | Eval treo giữa chừng | Giảm còn 5–8 câu, thêm `time.sleep`, retry | S |
 | Fallback F5-9 không trigger | Query lạc đề vẫn ra kết quả hybrid | So threshold với **cosine gốc** `dense_results[0]["score"]`, không phải điểm RRF | Q |
