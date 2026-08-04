@@ -13,10 +13,12 @@
 
 ```
 Task 1-10 :  ████████████████████  50 / 50 điểm   ✅ ĐẠT MỐC CP4
-Bài nhóm  :  ██░░░░░░░░░░░░░░░░░░   3 / 30 điểm   (golden dataset)
+Bài nhóm  :  ███████░░░░░░░░░░░░░  11 / 30 điểm   (chatbot 8 + golden dataset 3)
 Bonus     :  ░░░░░░░░░░░░░░░░░░░░   0 / 20 điểm   🔓 ĐÃ MỞ KHOÁ
 pytest    :  35 passed · 0 skipped · 0 failed      ✅ 35/35
 ```
+
+**Còn lại: F5-13 RAGAS (9đ) · README kiến trúc (3đ) · chất lượng câu trả lời (3đ) · bonus (20đ).**
 
 ## 🎉 ĐÃ QUA MỐC 50 ĐIỂM — BONUS MỞ KHOÁ
 
@@ -54,7 +56,7 @@ Tụt xuống dưới 35 là mất điểm đã có — nguy hiểm hơn là kh�
 | F5-8 | Task 8 — PageIndex | Q | 4 | ✅ 3 doc trên PageIndex |
 | F5-9 | Task 9 — retrieve + fallback | Q | 7 | ✅ 4/4 · ngưỡng **0,40** · fallback trigger đúng |
 | F5-10 | Task 10 — generation | H | 4 | ✅ 3/3 test passed |
-| F5-11 | `app.py` chatbot | H | 8 | 🟢 **làm được ngay** (F5-10 xong rồi) |
+| F5-11 | `app.py` chatbot | H | 8 | ✅ 647 dòng, chạy được, đã nối `generate_with_citation()` |
 | F5-12 | Golden dataset 16 câu | S | 3 | ✅ 16 câu, đủ 3 trường |
 | F5-13 | RAGAS eval + `results.md` | S | 9 | 🟡 scaffold 418 dòng · chờ pipeline thật để chạy |
 | ⭐ F5-14 | Bonus HyDE | T | 5 | 🔓 **đã mở khoá** |
@@ -502,7 +504,7 @@ Bảng này là **nguồn sự thật duy nhất** về tiến độ. Ai cũng s
 | **F5-8** | Task 8 — `pageindex_search()` | Q | CP3 | F5-3 | F5-9 | **3 doc trên PageIndex** + fallback cục bộ; `TestTask8` **2/2 passed** | ✅ |
 | **F5-9** | Task 9 — `retrieve()` + fallback | Q | CP4 | ~~F5-5,6,7,8~~ ✅ | F5-10, F5-13 | `SCORE_THRESHOLD = 0,40` (calibrate từ số đo thật). Smoke test: câu đúng chủ đề → `source="hybrid"`, câu lạc đề → `source="pageindex"`. `TestTask9` **4/4 passed** | ✅ |
 | **F5-10** | Task 10 — `generate_with_citation()` | H | CP4 | F5-9 *(đã mock)* | F5-11, F5-13 | `{answer, sources, retrieval_source}` + `[Nguồn, Năm]` — `TestTask10` **3/3 passed** | ✅ |
-| **F5-11** | `app.py` — Streamlit chatbot | H | CP5 | ~~F5-10~~ ✅ | — | `streamlit run app.py` trả lời + hiện source & score | 🟢 **làm được ngay** |
+| **F5-11** | `app.py` — Streamlit chatbot | H | CP5 | ~~F5-10~~ ✅ | — | 647 dòng, `streamlit run app.py` khởi động sạch, đã gọi `generate_with_citation()`; có `st.session_state` + hiển thị score/source | ✅ |
 | **F5-12** | `golden_dataset.json` — 16 Q&A **theo 4 nhóm chủ đề mới** (§1.5) | S | CP5 | F5-3 | F5-13 | **16 câu**, đủ `question`/`expected_answer`/`expected_context`, bám luật + thuế + quy định sàn | ✅ |
 | **F5-13** | `eval_pipeline.py` + `results.md` — RAGAS A/B | S | CP5 | ~~F5-10~~ ✅, ~~F5-12~~ ✅, **F5-9** | — | 4 metric × 2 config + phân tích worst performers | 🟡 scaffold 418 dòng · chờ `retrieve()` thật mới chạy được A/B |
 | ⭐ **F5-14** | **[BONUS 5đ]** HyDE / Query Expansion | T | CP5 | F5-5 | — | Flag bật/tắt trong `task5`, đo được chênh lệch | 🔓 **đã mở khoá** |
@@ -514,10 +516,10 @@ Bảng này là **nguồn sự thật duy nhất** về tiến độ. Ai cũng s
 
 | Ticket | Ai | Vì sao không bị chặn |
 |--------|----|--------------------|
-| **F5-11** | H | 🔴 `retrieve()` đã chạy → nối thật vào `app.py` được ngay |
-| **F5-13** | S | 🔴 `retrieve()` đã chạy → chạy A/B thật được ngay |
-| **F5-12** (4 câu) | Q | Nhóm "Thành lập & đăng ký KD", evidence từ `luat-doanh-nghiep-2020.md` |
-| ⭐ Bonus | cả 4 | 🔓 Đã mở khoá sau khi đạt 35/35 |
+| **F5-13** | S | 🔴 `retrieve()` đã chạy → chạy A/B thật được ngay, 9đ |
+| ⭐ **Bonus** | cả 4 | 🔓 Mở khoá · **prompt sẵn ở [§10.6](#106-prompt-cho-4-ticket-bonus--copy-thẳng-vào-agent)** |
+| README kiến trúc | Q | 3đ, viết được ngay |
+| ~~F5-11~~ | H | ✅ `app.py` chạy được |
 | ~~Task 1–10~~ | cả 4 | ✅ **50/50 điểm, 35/35 test** |
 
 ---
@@ -549,7 +551,7 @@ F5-2 (Q) ✅ ──┘             │              └─► F5-6 (S) ──┤
 | Nút thắt | Ai chờ ai | Hệ quả nếu trễ | Cách gỡ |
 |----------|-----------|----------------|---------|
 | **Không còn nút thắt ở Task 1–10** ✅ | — | — | 35/35 test passed, 50/50 điểm |
-| **F5-11 + F5-13** 🔴 **ĐANG XẢY RA** | H và S | 17/30 điểm bài nhóm | Q và T hết việc bắt buộc → nhảy vào giúp trước khi làm bonus |
+| **F5-13 (RAGAS)** 🔴 **ĐANG XẢY RA** | S | 9/30 điểm bài nhóm — hạng mục lớn nhất còn lại | Q và T hết việc bắt buộc → nhảy vào giúp; chạy thử 5 câu trước |
 | **Rate limit RAGAS** | S | Eval treo giữa chừng, mất 9đ | Chạy thử 5 câu trước, thêm `time.sleep`, rồi mới full 16 câu |
 
 **Quy tắc bàn giao:** ai xong ticket thì **push lên `main` trong vòng 5 phút** rồi
@@ -1123,6 +1125,113 @@ Chạy thử 5 câu trước khi chạy full 16 câu.
 7. **Với `retrieve()` và `generate_with_citation()`**: đọc kỹ từng dòng, đây là 2 hàm
    giám khảo soi nhiều nhất.
 
+### 10.6. Prompt cho 4 ticket BONUS — copy thẳng vào agent
+
+> ⚠️ **Luật chung cho mọi ticket bonus:** hiện `pytest` đang **35 passed**. Bonus là điểm
+> cộng thêm, **không được đánh đổi bằng điểm đã có**. Mọi prompt dưới đây đều kết thúc
+> bằng yêu cầu chạy lại full test — nếu tụt xuống dưới 35, **revert ngay**, đừng cố sửa tiếp.
+
+---
+
+#### ⭐1 — TF-IDF song song BM25 (S · 5đ · rẻ nhất, làm đầu tiên)
+
+Tiêu chí chấm: *"Giải thích cơ chế lexical search khác BM25"*. Điểm nằm ở **phần giải thích**,
+không phải ở việc code chạy — nên docstring quan trọng ngang code.
+
+```
+Đọc AGENTS.md. Trong src/task6_lexical_search.py, thêm hàm tfidf_search(query, top_k=10)
+dùng sklearn TfidfVectorizer, trả đúng shape {"content","score","metadata"} sorted desc
+như lexical_search().
+
+Viết docstring tiếng Việt giải thích TF-IDF KHÁC BM25 ở đúng 3 điểm:
+1. Bão hoà tần suất: TF-IDF cho điểm tăng tuyến tính theo số lần xuất hiện từ khoá,
+   BM25 có tham số k1 làm điểm bão hoà — từ khoá lặp 20 lần không hơn nhiều lặp 5 lần.
+2. Chuẩn hoá độ dài văn bản: BM25 có tham số b phạt tài liệu dài, TF-IDF chỉ chuẩn hoá
+   bằng norm L2.
+3. Hệ quả trên corpus này: tài liệu luật rất dài (luat-doanh-nghiep-2020.md 328k ký tự)
+   nằm chung với bài help center ngắn (~1k ký tự) -> BM25 công bằng hơn cho tài liệu dài.
+
+KHÔNG đổi chữ ký lexical_search() hiện có. Xong chạy:
+  .\.venv\Scripts\python.exe -m pytest tests/test_individual.py -v
+Phải giữ nguyên 35 passed. Cho tôi xem output.
+```
+
+---
+
+#### ⭐2 — Conversation memory + UI source/score (H · 3+3đ)
+
+`app.py` đã có `st.session_state` và hiển thị score — prompt này để **kiểm và bù chỗ thiếu**,
+không phải viết lại.
+
+```
+Đọc AGENTS.md. Rà soát app.py xem đã đạt đủ 2 tiêu chí bonus chưa, chỉ bổ sung phần thiếu:
+
+(a) Conversation memory multi-turn (3đ): hỏi "Hộ kinh doanh nộp thuế thế nào?" rồi hỏi
+    tiếp "còn công ty TNHH thì sao?" — câu 2 phải hiểu "thì sao" đang nói về NỘP THUẾ.
+    Cách làm: giữ lịch sử trong st.session_state rồi ghép 2-3 lượt gần nhất vào query
+    trước khi gọi retrieve(), hoặc viết lại câu hỏi thành câu độc lập.
+
+(b) UI hiển thị nguồn (3đ): mỗi câu trả lời phải hiện danh sách tài liệu đã dùng, kèm
+    score và metadata doc_type. In rõ "Văn bản luật" khi doc_type=legal_document và
+    "Quy định sàn" khi doc_type=platform_policy — phân biệt này quan trọng về mặt pháp lý
+    và là điểm cộng cho tiêu chí "chất lượng câu trả lời".
+
+CHỈ sửa app.py, KHÔNG đụng src/. Xong chạy:
+  .\.venv\Scripts\streamlit.exe run app.py
+rồi thử đúng cặp câu hỏi follow-up ở (a) và cho tôi biết câu 2 có hiểu ngữ cảnh không.
+Sau đó chạy pytest, phải giữ 35 passed.
+```
+
+---
+
+#### ⭐3 — HyDE / Query Expansion (T · 5đ)
+
+```
+Đọc AGENTS.md. Trong src/task5_semantic_search.py, thêm HyDE (Hypothetical Document
+Embeddings) bật/tắt được:
+
+    def semantic_search(query, top_k=10, use_hyde=False)
+
+Cách hoạt động: gọi LLM qua OpenRouter (key OPENROUTER_API_KEY, dùng openai SDK với
+base_url của OpenRouter) sinh 1 đoạn TRẢ LỜI GIẢ ĐỊNH ngắn (~3 câu) cho câu hỏi, rồi
+embed đoạn đó thay vì embed câu hỏi gốc. Lý do HyDE hiệu quả: câu hỏi và câu trả lời
+nằm ở hai vùng khác nhau trong không gian vector; đoạn giả định trông giống văn bản
+trong corpus hơn nên khớp tốt hơn.
+
+BẮT BUỘC: mặc định use_hyde=False. Chữ ký hàm đã chốt ở PLAN.md §3.2, thêm tham số
+có giá trị mặc định thì không phá vỡ hợp đồng, nhưng ĐỔI mặc định thành True sẽ làm
+Task 9 tốn thêm 1 LLM call mỗi query và có thể timeout.
+
+Đo hiệu quả để lấy điểm: chạy 5 câu trong golden_dataset.json với use_hyde=False và
+True, in ra cosine top-1 của từng lần, ghi bảng so sánh vào docstring.
+
+CHỈ sửa task5. Xong chạy pytest, phải giữ 35 passed.
+```
+
+---
+
+#### ⭐4 — Deploy Hugging Face Spaces (Q · 4đ · làm CUỐI CÙNG)
+
+Đánh dấu 🔴 trong bảng bonus vì dễ vỡ phút chót. Chỉ làm khi mọi thứ khác đã xong.
+
+```
+Chuẩn bị deploy app.py lên Hugging Face Spaces (SDK streamlit). README.md đã có sẵn
+YAML header cấu hình Space ở 10 dòng đầu.
+
+Kiểm tra giúp tôi 3 điều kiện trước khi push:
+1. chroma_db/ đã được commit chưa (33MB) — Space KHÔNG chạy được Task 4 lúc khởi động
+   nên phải có sẵn index.
+2. app.py có đọc API key bằng os.getenv() không, có hardcode chỗ nào không —
+   trên Space key được set qua Settings > Variables and secrets, KHÔNG commit .env.
+3. requirements.txt có cài được trên Space không: sentence-transformers kéo theo torch,
+   Space free có 16GB đĩa. Model paraphrase-multilingual-MiniLM-L12-v2 chỉ ~470MB
+   nên ổn, nhưng kiểm tra xem app có tự tải model lúc khởi động không và mất bao lâu.
+
+Liệt kê việc cần sửa, ĐỪNG tự sửa. Tôi sẽ quyết rồi mới push.
+```
+
+---
+
 ### 10.5. Prompt tự kiểm tra trước khi mở PR
 
 Dán cho agent trước khi push:
@@ -1145,15 +1254,15 @@ Liệt kê vi phạm nếu có, đừng tự sửa vội.
 
 | Ưu tiên | Ai | Việc | Điểm | Thời gian |
 |---------|----|------|------|-----------|
-| 🔴 **1** | **H** (+T giúp) | **F5-11** `app.py` — nối `retrieve()` + `generate_with_citation()` thật | 8 | 25 phút |
 | 🔴 **1** | **S** (+Q giúp) | **F5-13** chạy RAGAS A/B thật · thử 5 câu trước rồi mới full 16 | 9 | 20 phút |
-| 🟡 2 | **Q** | 4 câu golden dataset nhóm "Thành lập & đăng ký KD" | — | 10 phút |
 | 🟡 2 | **Q** | Viết mục kiến trúc + phân công trong 2 README | 3 | 10 phút |
 | 🟢 3 | ⭐ **S** | Bonus TF-IDF — ghi giải thích cơ chế vào docstring | 5 | 10 phút |
-| 🟢 3 | ⭐ **H** | Bonus memory + UI source/score (làm luôn trong F5-11) | 6 | — |
+| 🟢 3 | ⭐ **H** | Bonus memory + UI source/score — kiểm lại đã đủ tiêu chí chưa | 6 | 10 phút |
 | 🟢 4 | ⭐ **T** | Bonus HyDE trong `task5` | 5 | 20 phút |
 | ⬜ 5 | ⭐ **Q** | Bonus deploy HF Spaces (`chroma_db/` đã commit sẵn) | 4 | 20 phút |
 | ⬜ 6 | **Q** | F5-17 chốt nộp: `pytest` lại trên `main`, dọn repo | — | 10 phút |
+
+**Prompt sẵn cho từng ticket bonus: [§10.6](#106-prompt-cho-4-ticket-bonus--copy-thẳng-vào-agent).**
 
 **Trạng thái:** `pytest` **35 passed · 0 skipped · 0 failed** · **50/50 điểm Task 1–10** ✅
 
