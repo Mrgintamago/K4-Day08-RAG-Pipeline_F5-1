@@ -549,20 +549,29 @@ run_dashboard()
 
 ### Kiến Trúc Hệ Thống
 
+Xem diagram đầy đủ trong [`PLAN.md`](PLAN.md) và [`group_project/README.md`](group_project/README.md).
+
 ```
-[Vẽ diagram kiến trúc ở đây]
+Landing (PDF + JSON) → MarkItDown → Chunking(800/100) + bge-m3 → ChromaDB
+   → Semantic ⊕ BM25 → RRF rerank → cosine < 0.48 ? PageIndex fallback
+   → Reorder (front + back[::-1]) → LLM → answer + citation
+   → Streamlit chatbot | RAGAS evaluation (A/B)
 ```
 
 ---
 
 ### Phân Công Công Việc
 
+Theo `LAB_GUIDE.md` — **Phương Án A: nhóm 4 thành viên**. Kế hoạch chi tiết: [`PLAN.md`](PLAN.md).
+
 | Thành viên | MSSV | Nhiệm vụ | Trạng thái |
 |-----------|------|----------|------------|
-| | | | |
-| | | | |
-| | | | |
-| | | | |
+| Nguyễn Xuân Quang | 2A202601776 | Role 1 — Team Leader & Data/Pipeline: Task 1, 2, 3, 8, 9 + tích hợp, review PR, deploy | 🟡 Task 1–2 xong |
+| Cao Các Tường | 2A202601236 | Role 2 — Vector DB & Dense Search: Task 4 (ChromaDB), Task 5 (semantic search) + bonus HyDE | ⬜ Đang làm |
+| Lưu Nguyễn Ngọc Hân | 2A202601386 | Role 3 — Generation & Frontend: Task 10, `app.py` Streamlit + bonus memory & UI | ⬜ Đang làm |
+| Trần Quang Sáng | 2A202601446 | Role 4 — Sparse Search & Evaluation: Task 6 (BM25/TF-IDF), Task 7 (RRF), RAGAS eval + `results.md` | ⬜ Đang làm |
+
+`golden_dataset.json` (16 câu): **cả 4 người, mỗi người 4 câu**, Sáng gộp file.
 
 ---
 

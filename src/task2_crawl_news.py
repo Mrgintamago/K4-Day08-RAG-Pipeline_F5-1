@@ -1,31 +1,36 @@
 """
 Task 2 — Crawl bài viết/hướng dẫn hỗ trợ khách hàng về thương mại điện tử.
 
-Hướng dẫn:
-    1. Crawl tối thiểu 5 bài viết từ trung tâm trợ giúp công khai của một sàn TMĐT.
-    2. Sử dụng Crawl4AI hoặc thư viện crawling tương tự.
-    3. Lưu output vào data/landing/news/
-    4. Mỗi bài lưu 1 file JSON với metadata (url, title, date_crawled, content).
+Nguồn: Trung tâm trợ giúp công khai của Shopee Vietnam (help.shopee.vn),
+robots.txt cho phép crawl toàn bộ (`Allow: /`).
 
-Cài đặt:
-    pip install crawl4ai
-    playwright install chromium   # bắt buộc — pip install crawl4ai KHÔNG tự tải browser binary,
-                                   # thiếu bước này sẽ báo lỗi
-                                   # "BrowserType.launch: Executable doesn't exist"
+Chủ đề: theo dõi đơn hàng, đổi phương thức thanh toán, bằng chứng hoàn tiền,
+mua hàng xuyên biên giới — khớp với chủ đề K4 "E-commerce Policy / Customer Support".
 
-Gợi ý chủ đề: theo dõi đơn hàng, đổi phương thức thanh toán, bằng chứng hoàn tiền,
-mua hàng xuyên biên giới.
+Engine:
+    Mặc định dùng HTTP thuần (`requests`) vì trang help.shopee.vn có server-side
+    rendering: dữ liệu bài viết nằm sẵn trong `window["FORGE_SSR_DATA_MAP"]`,
+    không cần trình duyệt headless.
+    Chạy với cờ `--crawl4ai` để dùng Crawl4AI AsyncWebCrawler theo khuyến nghị
+    của bài lab (cần `playwright install chromium`; tự fallback nếu thiếu).
 
-Lưu ý: một số trang help center dùng JavaScript render (SPA) — nếu crawl về chỉ thấy
-tiêu đề mà không có nội dung, đổi sang bài viết khác cùng domain thay vì cố xử lý.
+Chạy:
+    python -m src.task2_crawl_news
+    python -m src.task2_crawl_news --crawl4ai
 """
+
+from __future__ import annotations
 
 import asyncio
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
+from src.shopee_help import fetch_article
+
 DATA_DIR = Path(__file__).parent.parent / "data" / "landing" / "news"
+
+MIN_CONTENT_CHARS = 200  # bài ngắn hơn coi như crawl hỏng, bỏ qua
 
 
 def setup_directory():
@@ -33,11 +38,21 @@ def setup_directory():
     DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 
-# TODO: Điền danh sách URL bài viết cần crawl
-ARTICLE_URLS = [
-    # Ví dụ (trang công khai Shopee Vietnam):
-    # "https://help.shopee.vn/portal/4/article/...",
-]
+# article_id -> (tên file, chủ đề, customer_role)
+ARTICLES = {
+    79215: ("track-shipping-status", "theo dõi đơn hàng", "buyer"),
+    79472: ("check-order-status", "theo dõi đơn hàng", "buyer"),
+    79128: ("change-payment-method-prepaid-order", "phương thức thanh toán", "buyer"),
+    79198: ("available-payment-methods", "phương thức thanh toán", "buyer"),
+    79467: ("refund-evidence-guide", "trả hàng & hoàn tiền", "buyer"),
+    79233: ("submit-return-refund-request", "trả hàng & hoàn tiền", "buyer"),
+    79470: ("track-international-order", "mua hàng xuyên biên giới", "buyer"),
+    79556: ("international-order-delivery-time", "mua hàng xuyên biên giới", "buyer"),
+    79491: ("lookup-tracking-number", "theo dõi đơn hàng", "buyer"),
+    79545: ("pay-with-credit-debit-card", "phương thức thanh toán", "buyer"),
+}
+
+ARTICLE_URLS = [f"https://help.shopee.vn/portal/4/article/{aid}" for aid in ARTICLES]
 
 
 async def crawl_article(url: str) -> dict:
@@ -52,38 +67,65 @@ async def crawl_article(url: str) -> dict:
             "content_markdown": str
         }
     """
-    from crawl4ai import AsyncWebCrawler
+    from src.shopee_help import fetch_html_crawl4ai, parse_article
 
-    # TODO: Implement crawling logic
-    # async with AsyncWebCrawler() as crawler:
-    #     result = await crawler.arun(url=url)
-    #     return {
-    #         "url": url,
-    #         "title": result.metadata.get("title", "Unknown"),
-    #         "date_crawled": datetime.now().isoformat(),
-    #         "content_markdown": result.markdown,
-    #     }
-    raise NotImplementedError("Implement crawl_article")
+    article_id = url.rstrip("/").split("/")[-1].split("-")[0]
+    html = await fetch_html_crawl4ai(url)
+    article = parse_article(html, article_id)
+    return {
+        "url": url,
+        "title": article["title"],
+        "date_crawled": datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds"),
+        "content_markdown": article["content_text"],
+    }
 
 
-async def crawl_all():
-    """Crawl toàn bộ bài viết trong ARTICLE_URLS."""
+def crawl_all(engine: str = "requests"):
+    """Crawl toàn bộ bài viết trong ARTICLES."""
     setup_directory()
 
-    for i, url in enumerate(ARTICLE_URLS, 1):
-        print(f"[{i}/{len(ARTICLE_URLS)}] Crawling: {url}")
-        article = await crawl_article(url)
+    saved, skipped = [], []
+    for i, (article_id, (slug, topic, role)) in enumerate(ARTICLES.items(), 1):
+        url = f"https://help.shopee.vn/portal/4/article/{article_id}"
+        print(f"[{i}/{len(ARTICLES)}] Crawling: {url}")
+        try:
+            article = fetch_article(article_id, engine=engine)
+        except Exception as exc:
+            print(f"  ! Lỗi: {type(exc).__name__}: {exc} — bỏ qua")
+            skipped.append(article_id)
+            continue
 
-        # Lưu file JSON
-        filename = f"article_{i:02d}.json"
-        filepath = DATA_DIR / filename
-        filepath.write_text(json.dumps(article, ensure_ascii=False, indent=2))
-        print(f"  ✓ Saved: {filepath}")
+        text = article["content_text"]
+        if len(text) < MIN_CONTENT_CHARS:
+            print(f"  ! Nội dung quá ngắn ({len(text)} ký tự) — có thể là trang SPA rỗng, bỏ qua")
+            skipped.append(article_id)
+            continue
+
+        record = {
+            "url": url,
+            "title": article["title"],
+            "date_crawled": datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds"),
+            "content_markdown": text,
+            "article_id": article["article_id"],
+            "topic": topic,
+            "customer_role": role,
+            "breadcrumb": article["breadcrumb"],
+            "source": "help.shopee.vn",
+        }
+
+        filepath = DATA_DIR / f"article_{i:02d}_{slug}.json"
+        filepath.write_text(json.dumps(record, ensure_ascii=False, indent=2), encoding="utf-8")
+        print(f"  ✓ Saved: {filepath.name} ({filepath.stat().st_size:,} bytes, {len(text):,} ký tự)")
+        saved.append(record)
+
+    print(f"\n✓ Crawl xong: {len(saved)} bài lưu vào {DATA_DIR}")
+    if skipped:
+        print(f"⚠ Bỏ qua {len(skipped)} bài: {skipped}")
+    return saved
 
 
 if __name__ == "__main__":
-    if not ARTICLE_URLS:
-        print("⚠ Hãy điền ARTICLE_URLS trước khi chạy!")
-        print("Gợi ý: tìm trang hướng dẫn/hỗ trợ khách hàng trên help center của sàn TMĐT")
-    else:
-        asyncio.run(crawl_all())
+    import sys
+
+    engine = "crawl4ai" if "--crawl4ai" in sys.argv else "requests"
+    crawl_all(engine=engine)

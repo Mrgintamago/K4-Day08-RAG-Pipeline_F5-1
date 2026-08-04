@@ -35,10 +35,17 @@ from .task8_pageindex_vectorless import pageindex_search
 # CONFIGURATION
 # =============================================================================
 
-# TODO: Calibrate threshold này bằng cách tự đo điểm cosine của semantic_search
-# cho câu hỏi liên quan vs câu hỏi lạc đề (xem ghi chú ở trên) — ĐỪNG copy nguyên
-# giá trị mẫu, mỗi corpus/embedding model sẽ cho khoảng điểm khác nhau.
-SCORE_THRESHOLD = 0.3   # Nếu best score (cosine gốc) < threshold → fallback PageIndex
+# Giá trị khởi điểm 0.48 theo LAB_GUIDE (Checkpoint 3/4), hợp với thang cosine của
+# BAAI/bge-m3 trên corpus tiếng Việt này.
+#
+# VẪN PHẢI CALIBRATE LẠI sau khi index xong (F5-4): chạy semantic_search() với vài câu
+# hỏi đúng chủ đề và vài câu lạc đề, xem điểm cosine top-1 rơi vào khoảng nào, rồi đặt
+# threshold vào giữa hai khoảng đó. Đổi embedding model → phải đo lại.
+#
+# LƯU Ý: đây là ngưỡng cho ĐIỂM COSINE GỐC (dense_results[0]["score"], thang [0,1]),
+# KHÔNG phải điểm RRF đã fuse (top-1 RRF luôn ≈ 1/61 ≈ 0.016 nên fallback sẽ không bao
+# giờ trigger nếu so nhầm).
+SCORE_THRESHOLD = 0.48  # Nếu best score (cosine gốc) < threshold → fallback PageIndex
 DEFAULT_TOP_K = 5
 RERANK_METHOD = "rrf"  # "cross_encoder" | "mmr" | "rrf"
 

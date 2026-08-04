@@ -1,0 +1,11 @@
+{
+  "url": "https://help.shopee.vn/portal/4/article/79472",
+  "title": "[Thông tin đơn hàng] Hướng dẫn kiểm tra trạng thái đơn hàng trên Shopee",
+  "date_crawled": "2026-08-04T11:41:29+07:00",
+  "content_markdown": "Bạn có thể kiểm tra trạng thái đơn hàng trên Ứng dụng Shopee tại mục Tôi > Đơn mua. Các trạng thái của đơn hàng gồm:\n- Chờ xác nhận: đơn hàng đang trong giai đoạn xác nhận tính hợp lệ bởi hệ thống\n- Chờ lấy hàng: đơn hàng đã được chuyển thông tin tới Người bán để giao cho đơn vị vận chuyển\n- Đang giao: đơn hàng đang được giao tới Người mua\n- Đánh giá: đơn hàng đang chờ được đánh giá sản phẩm\n- Đã giao: đơn hàng đã được giao thành công tới Người mua\n- Đã hủy: đơn hàng đã được hủy thành công\n- Trả hàng: đơn hàng đã được trả hàng thành công\n\n⚠️ Lưu ý:\n- Khi đơn hàng của bạn đã chuyển sang trạng thái Đang giao, bạn có thể kiểm tra hành trình vận chuyển của đơn hàng trên Ứng dụng Shopee\n- Những đơn hàng được vận chuyển bởi các đơn vị vận chuyển trên Shopee sẽ được cung cấp một Mã vận đơn giúp Người mua dễ dàng tra cứu thông tin vận chuyển trên trang tra cứu thông tin vận chuyển của đơn vị vận chuyển\n- Tham khảo một (số) cách xử lý khi trạng thái đơn hàng cập nhật chưa chính xác.",
+  "article_id": "79472",
+  "topic": "theo dõi đơn hàng",
+  "customer_role": "buyer",
+  "breadcrumb": [],
+  "source": "help.shopee.vn"
+}

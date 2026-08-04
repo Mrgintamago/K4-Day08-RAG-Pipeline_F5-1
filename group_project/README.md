@@ -70,19 +70,51 @@ Xem code mẫu (DeepEval/RAGAS/TruLens) chi tiết trong `README.md` gốc mục
 ## Kiến Trúc Hệ Thống
 
 ```
-[Vẽ diagram kiến trúc ở đây]
+help.shopee.vn ──► Task 1 (6 PDF chính sách) ──┐
+                   Task 2 (10 JSON hướng dẫn) ─┤ data/landing/
+                                                ▼
+                                Task 3 — MarkItDown ──► data/standardized/*.md
+                                                ▼
+                     Task 4 — chunk 800/overlap 100 + BAAI/bge-m3 ──► chroma_db/
+                                                │
+                     ┌──────────────────────────┴──────────────────────────┐
+                     ▼                                                     ▼
+        Task 5 semantic_search()                            Task 6 lexical_search()
+        dense / cosine / HyDE                               sparse / BM25 + TF-IDF
+                     └──────────────────────────┬──────────────────────────┘
+                                                ▼
+                              Task 7 — RRF rerank, k=60
+                                                ▼
+                     Task 9 — retrieve(): cosine gốc < 0.48 ?
+                              ├─ không → kết quả hybrid
+                              └─ có    → Task 8 PageIndex vectorless fallback
+                                                ▼
+                     Task 10 — reorder (front + back[::-1]) → LLM → citation
+                                                │
+                          ┌─────────────────────┴─────────────────────┐
+                          ▼                                           ▼
+              app.py (Streamlit chatbot)          eval_pipeline.py (RAGAS, A/B test)
 ```
+
+> Chi tiết kế hoạch, lịch checkpoint và bản đồ điểm: xem [`../PLAN.md`](../PLAN.md).
 
 ---
 
 ## Phân Công Công Việc
 
+Theo `LAB_GUIDE.md` — **Phương Án A: nhóm 4 thành viên**.
+
 | Thành viên | MSSV | Nhiệm vụ | Trạng thái |
 |-----------|------|----------|------------|
-| | | | |
-| | | | |
-| | | | |
-| | | | |
+| Nguyễn Xuân Quang | 2A202601776 | **Role 1 — Team Leader & Data/Pipeline**: Task 1–2 (thu thập + crawl), Task 3 (convert markdown), Task 8 (PageIndex vectorless), Task 9 (retrieval pipeline + fallback), tích hợp vào `app.py`, review PR, deploy | 🟡 Task 1–2 xong |
+| Cao Các Tường | 2A202601236 | **Role 2 — Vector DB & Dense Search**: Task 4 (chunking 800/100 + ChromaDB + `bge-m3`), Task 5 (semantic search), bonus HyDE / Query Expansion | ⬜ Đang làm |
+| Lưu Nguyễn Ngọc Hân | 2A202601386 | **Role 3 — Generation & Frontend**: Task 10 (generation có citation + reorder), `app.py` Streamlit UI, bonus conversation memory + hiển thị source/score | ⬜ Đang làm |
+| Trần Quang Sáng | 2A202601446 | **Role 4 — Sparse Search & Evaluation**: Task 6 (BM25 + TF-IDF), Task 7 (RRF rerank), `eval_pipeline.py` RAGAS 4 metric + A/B, `results.md` | ⬜ Đang làm |
+
+**Việc chung:** `golden_dataset.json` (16 câu) — mỗi người viết 4 câu từ tài liệu đã crawl, Sáng gộp thành 1 file.
+
+**Cân đối khối lượng** (Task 1–10 / bài nhóm / bonus): Q 21/7/4 · T 13/0/5 · H 4/11/6 · S 12/9/5.
+Chi tiết: [`../PLAN.md` §8](../PLAN.md).
 
 ---
 

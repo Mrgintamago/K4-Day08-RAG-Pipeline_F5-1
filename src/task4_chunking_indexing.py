@@ -40,9 +40,14 @@ CHROMA_DIR = Path(__file__).parent.parent / "chroma_db"
 # CONFIGURATION — Giải thích lựa chọn của bạn trong comment
 # =============================================================================
 
-# TODO: Chọn chunking strategy và giải thích vì sao
-CHUNK_SIZE = 500        # Vì sao chọn 500? ...
-CHUNK_OVERLAP = 50      # Vì sao chọn 50? ...
+# Chunking strategy — chốt theo LAB_GUIDE (Checkpoint 2).
+# CHUNK_SIZE = 800: các bài help center Shopee là văn bản chính sách có đoạn dài;
+#   800 ký tự giữ trọn được 1–2 điều khoản trong cùng một chunk (mức 500 hay cắt
+#   giữa câu điều kiện "nếu ... thì ..."), mà vẫn thừa chỗ cho context window của LLM.
+# CHUNK_OVERLAP = 100 (12.5% của 800): đủ để câu bị cắt ở ranh giới chunk vẫn xuất hiện
+#   trọn vẹn ở một trong hai chunk, nhưng không phình số chunk quá nhiều.
+CHUNK_SIZE = 800
+CHUNK_OVERLAP = 100
 CHUNKING_METHOD = "recursive"  # "recursive" | "markdown_header" | "semantic"
 
 # TODO: Chọn embedding model và giải thích
