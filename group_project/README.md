@@ -147,6 +147,31 @@ RRF (k=60) gộp theo **thứ hạng** chứ không theo điểm, nên không ph
 
 Kết quả A/B xác nhận: hybrid + rerank **+0,158 điểm trung bình** so với dense-only ([`evaluation/results.md`](evaluation/results.md)).
 
+#### ⭐ Bonus: TF-IDF song song BM25 — vì sao chọn BM25
+
+`src/task6_lexical_search.py` có **cả hai** thuật toán sparse: `lexical_search()` dùng BM25 (chính thức trong pipeline) và `tfidf_search()` dùng TF-IDF + cosine (đối chứng). Cả hai dùng chung tokenizer nên so sánh công bằng — chỉ khác công thức tính điểm.
+
+**3 điểm khác nhau:**
+
+| | TF-IDF | BM25 |
+|---|---|---|
+| **Bão hoà tần suất** | Điểm tăng **tuyến tính** theo `tf` — lặp 40 lần cho điểm gấp 4 lần lặp 10 lần | Tham số `k1=1.5` làm điểm **bão hoà** — chênh lệch giữa 10 và 40 lần rất nhỏ |
+| **Chuẩn hoá độ dài** | Norm L2 trên vector, **không so** với độ dài trung bình corpus | `b=0.75` phạt tài liệu dài theo tỉ lệ `\|d\|/avgdl` |
+| **Thang điểm** | Cosine ∈ [0,1] | Không chặn trên (~11–16 trên corpus này) |
+
+**Hệ quả trên corpus này:** độ dài lệch hơn 1.000 lần (`luat-doanh-nghiep-2020.md` ~328k ký tự vs `article_07` ~300 ký tự). Chuẩn hoá L2 không "biết" độ dài trung bình nên thổi phồng chunk ngắn.
+
+**Đo thật** (`python -X utf8 -m src.task6_lexical_search --compare`):
+
+| Query | BM25 | TF-IDF |
+|---|---|---|
+| *"Điều 33 Luật Doanh nghiệp quy định gì"* | ✅ #1 = đúng Điều 33 | ❌ Điều 33 tụt xuống #3 |
+| *"phương thức thanh toán shopee"* | ✅ top-3 đều đúng tài liệu | ❌ #1 sai tài liệu |
+
+Với câu hỏi có **số hiệu điều luật**, bão hoà TF giúp token hiếm `"33"` giữ trọng số cao thay vì bị các chunk lặp nhiều thuật ngữ pháp lý chung lấn át — đúng loại câu hỏi phổ biến của chủ đề này.
+
+Chênh lệch thang điểm (11–16 vs 0–1) cũng là lý do Task 7 **phải** gộp bằng RRF theo thứ hạng, không cộng điểm trực tiếp.
+
 ### 5. Fallback vectorless — chỗ dễ sai nhất
 
 ```python
