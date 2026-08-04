@@ -1,7 +1,7 @@
 # [Thao tác] Cách tra cứu mã vận đơn của đơn hàng
 
 **Source:** https://help.shopee.vn/portal/4/article/79491
-**Crawled:** 2026-08-04T11:41:32+07:00
+**Crawled:** 2026-08-04T15:07:18+07:00
 **customer_role:** buyer
 **topic:** theo dõi đơn hàng
 **doc_type:** support_article

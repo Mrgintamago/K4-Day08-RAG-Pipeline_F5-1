@@ -1,7 +1,7 @@
 # CHÍNH SÁCH CHỐNG HÀNH VI GIAN LẬN TRÊN SÀN SHOPEE VÀ CÁC BIỆN PHÁP XỬ LÝ ĐỐI VỚI NGƯỜI BÁN VI PHẠM
 
 **Source:** https://help.shopee.vn/portal/4/article/140097
-**Crawled:** 2026-08-04T11:49:57+07:00
+**Crawled:** 2026-08-04T15:01:28+07:00
 **customer_role:** seller
 **doc_type:** policy
 

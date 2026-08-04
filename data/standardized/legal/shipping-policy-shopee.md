@@ -1,7 +1,7 @@
 # CHÍNH SÁCH VẬN CHUYỂN SHOPEE
 
 **Source:** https://help.shopee.vn/portal/4/article/77250
-**Crawled:** 2026-08-04T11:49:56+07:00
+**Crawled:** 2026-08-04T15:01:26+07:00
 **customer_role:** both
 **doc_type:** policy
 

@@ -6,7 +6,8 @@
     "url": "https://help.shopee.vn/portal/4/article/77251",
     "customer_role": "buyer",
     "source": "help.shopee.vn",
-    "date_collected": "2026-08-04T11:49:52+07:00",
+    "doc_type": "platform_policy",
+    "date_collected": "2026-08-04T15:01:20+07:00",
     "chars": 19315
   },
   {
@@ -16,7 +17,8 @@
     "url": "https://help.shopee.vn/portal/4/article/77244",
     "customer_role": "both",
     "source": "help.shopee.vn",
-    "date_collected": "2026-08-04T11:49:53+07:00",
+    "doc_type": "platform_policy",
+    "date_collected": "2026-08-04T15:01:21+07:00",
     "chars": 42795
   },
   {
@@ -26,7 +28,8 @@
     "url": "https://help.shopee.vn/portal/4/article/77246",
     "customer_role": "seller",
     "source": "help.shopee.vn",
-    "date_collected": "2026-08-04T11:49:55+07:00",
+    "doc_type": "platform_policy",
+    "date_collected": "2026-08-04T15:01:25+07:00",
     "chars": 21036
   },
   {
@@ -36,7 +39,8 @@
     "url": "https://help.shopee.vn/portal/4/article/77250",
     "customer_role": "both",
     "source": "help.shopee.vn",
-    "date_collected": "2026-08-04T11:49:56+07:00",
+    "doc_type": "platform_policy",
+    "date_collected": "2026-08-04T15:01:26+07:00",
     "chars": 23832
   },
   {
@@ -46,7 +50,8 @@
     "url": "https://help.shopee.vn/portal/4/article/77247",
     "customer_role": "seller",
     "source": "help.shopee.vn",
-    "date_collected": "2026-08-04T11:49:57+07:00",
+    "doc_type": "platform_policy",
+    "date_collected": "2026-08-04T15:01:27+07:00",
     "chars": 12517
   },
   {
@@ -56,7 +61,85 @@
     "url": "https://help.shopee.vn/portal/4/article/140097",
     "customer_role": "seller",
     "source": "help.shopee.vn",
-    "date_collected": "2026-08-04T11:49:57+07:00",
+    "doc_type": "platform_policy",
+    "date_collected": "2026-08-04T15:01:28+07:00",
     "chars": 6117
+  },
+  {
+    "file": "ecommerce-platform-operating-rules-shopee.pdf",
+    "article_id": "77245",
+    "title": "QUY CHẾ HOẠT ĐỘNG SÀN THƯƠNG MẠI ĐIỆN TỬ SHOPEE.VN",
+    "url": "https://help.shopee.vn/portal/4/article/77245",
+    "customer_role": "seller",
+    "source": "help.shopee.vn",
+    "doc_type": "platform_policy",
+    "date_collected": "2026-08-04T15:01:30+07:00",
+    "chars": 76663
+  },
+  {
+    "file": "terms-of-service-shopee.pdf",
+    "article_id": "77242",
+    "title": "Điều khoản Shopee",
+    "url": "https://help.shopee.vn/portal/4/article/77242",
+    "customer_role": "both",
+    "source": "help.shopee.vn",
+    "doc_type": "platform_policy",
+    "date_collected": "2026-08-04T15:01:32+07:00",
+    "chars": 1230
+  },
+  {
+    "file": "luat-doanh-nghiep-2020.pdf",
+    "title": "Luật Doanh nghiệp nước Cộng hòa xã hội chủ nghĩa Việt Nam 2020",
+    "url": "https://vi.wikisource.org/wiki/Luật_Doanh_nghiệp_nước_Cộng_hòa_xã_hội_chủ_nghĩa_Việt_Nam_2020",
+    "customer_role": "seller",
+    "topic": "thành lập doanh nghiệp",
+    "source": "vi.wikisource.org",
+    "doc_type": "legal_document",
+    "date_collected": "2026-08-04T15:02:10+07:00",
+    "chars": 325311
+  },
+  {
+    "file": "luat-thuong-mai-2005.pdf",
+    "title": "Luật Thương mại nước Cộng hòa xã hội chủ nghĩa Việt Nam 2005",
+    "url": "https://vi.wikisource.org/wiki/Luật_Thương_mại_nước_Cộng_hòa_xã_hội_chủ_nghĩa_Việt_Nam_2005",
+    "customer_role": "both",
+    "topic": "hoạt động thương mại",
+    "source": "vi.wikisource.org",
+    "doc_type": "legal_document",
+    "date_collected": "2026-08-04T15:02:27+07:00",
+    "chars": 178484
+  },
+  {
+    "file": "luat-bao-ve-quyen-loi-nguoi-tieu-dung-2010.pdf",
+    "title": "Luật Bảo vệ quyền lợi người tiêu dùng nước Cộng hòa xã hội chủ nghĩa Việt Nam 2010",
+    "url": "https://vi.wikisource.org/wiki/Luật_Bảo_vệ_quyền_lợi_người_tiêu_dùng_nước_Cộng_hòa_xã_hội_chủ_nghĩa_Việt_Nam_2010",
+    "customer_role": "both",
+    "topic": "quyền người tiêu dùng",
+    "source": "vi.wikisource.org",
+    "doc_type": "legal_document",
+    "date_collected": "2026-08-04T15:02:34+07:00",
+    "chars": 38163
+  },
+  {
+    "file": "luat-giao-dich-dien-tu-2005.pdf",
+    "title": "Luật Giao dịch điện tử nước Cộng hòa xã hội chủ nghĩa Việt Nam 2005",
+    "url": "https://vi.wikisource.org/wiki/Luật_Giao_dịch_điện_tử_nước_Cộng_hòa_xã_hội_chủ_nghĩa_Việt_Nam_2005",
+    "customer_role": "both",
+    "topic": "giao dịch điện tử",
+    "source": "vi.wikisource.org",
+    "doc_type": "legal_document",
+    "date_collected": "2026-08-04T15:02:38+07:00",
+    "chars": 35949
+  },
+  {
+    "file": "luat-thue-thu-nhap-ca-nhan-2007.pdf",
+    "title": "Luật Thuế thu nhập cá nhân nước Cộng hòa xã hội chủ nghĩa Việt Nam 2007",
+    "url": "https://vi.wikisource.org/wiki/Luật_Thuế_thu_nhập_cá_nhân_nước_Cộng_hòa_xã_hội_chủ_nghĩa_Việt_Nam_2007",
+    "customer_role": "seller",
+    "topic": "thuế",
+    "source": "vi.wikisource.org",
+    "doc_type": "legal_document",
+    "date_collected": "2026-08-04T15:02:44+07:00",
+    "chars": 25938
   }
 ]

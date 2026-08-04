@@ -1,7 +1,7 @@
 # Hướng Dẫn Đổi Phương Thức Thanh Toán Cho Đơn Hàng Trả Trước
 
 **Source:** https://help.shopee.vn/portal/4/article/79128
-**Crawled:** 2026-08-04T11:41:29+07:00
+**Crawled:** 2026-08-04T15:07:04+07:00
 **customer_role:** buyer
 **topic:** phương thức thanh toán
 **doc_type:** support_article

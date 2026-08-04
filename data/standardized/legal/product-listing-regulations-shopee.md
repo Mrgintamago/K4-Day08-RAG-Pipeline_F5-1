@@ -1,7 +1,7 @@
 # QUY ĐỊNH VỀ ĐĂNG BÁN SẢN PHẨM TRÊN SHOPEE
 
 **Source:** https://help.shopee.vn/portal/4/article/77246
-**Crawled:** 2026-08-04T11:49:55+07:00
+**Crawled:** 2026-08-04T15:01:25+07:00
 **customer_role:** seller
 **doc_type:** policy
 

@@ -1,7 +1,7 @@
 # CHÍNH SÁCH CẤM/HẠN CHẾ SẢN PHẨM
 
 **Source:** https://help.shopee.vn/portal/4/article/77247
-**Crawled:** 2026-08-04T11:49:57+07:00
+**Crawled:** 2026-08-04T15:01:27+07:00
 **customer_role:** seller
 **doc_type:** policy
 

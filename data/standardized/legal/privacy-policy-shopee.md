@@ -1,7 +1,7 @@
 # CHÍNH SÁCH BẢO MẬT
 
 **Source:** https://help.shopee.vn/portal/4/article/77244
-**Crawled:** 2026-08-04T11:49:53+07:00
+**Crawled:** 2026-08-04T15:01:21+07:00
 **customer_role:** both
 **doc_type:** policy
 

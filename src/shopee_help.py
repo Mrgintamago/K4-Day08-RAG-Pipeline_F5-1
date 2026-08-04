@@ -28,7 +28,9 @@ USER_AGENT = (
     "(KHTML, like Gecko) Chrome/126.0 Safari/537.36"
 )
 
-ARTICLE_URL = "https://help.shopee.vn/portal/4/article/{article_id}"
+# Trung tâm trợ giúp chia theo "portal": 4 = người mua, 10 = người bán/đối tác.
+ARTICLE_URL = "https://help.shopee.vn/portal/{portal}/article/{article_id}"
+DEFAULT_PORTAL = 4
 SSR_KEY = 'window["FORGE_SSR_DATA_MAP"] = '
 
 
@@ -137,14 +139,16 @@ def parse_article(html: str, article_id: str | int) -> dict:
     }
 
 
-def fetch_article(article_id: str | int, engine: str = "requests") -> dict:
+def fetch_article(article_id: str | int, engine: str = "requests",
+                  portal: int = DEFAULT_PORTAL) -> dict:
     """
     Lấy 1 bài viết theo article_id.
 
     engine="crawl4ai" dùng AsyncWebCrawler (khuyến nghị của bài lab); nếu thiếu
     thư viện / chưa `playwright install chromium` thì tự động fallback sang requests.
+    portal: 4 = trung tâm trợ giúp người mua, 10 = người bán/đối tác.
     """
-    url = ARTICLE_URL.format(article_id=article_id)
+    url = ARTICLE_URL.format(portal=portal, article_id=article_id)
 
     html = None
     if engine == "crawl4ai":

@@ -1,7 +1,7 @@
 # [Đơn hàng Quốc tế] Tôi cần chờ bao lâu để nhận được đơn hàng Quốc tế?
 
 **Source:** https://help.shopee.vn/portal/4/article/79556
-**Crawled:** 2026-08-04T11:41:32+07:00
+**Crawled:** 2026-08-04T15:07:15+07:00
 **customer_role:** buyer
 **topic:** mua hàng xuyên biên giới
 **doc_type:** support_article

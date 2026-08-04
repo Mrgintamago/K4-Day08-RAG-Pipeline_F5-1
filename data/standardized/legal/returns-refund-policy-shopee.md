@@ -1,7 +1,7 @@
 # CHÍNH SÁCH TRẢ HÀNG VÀ HOÀN TIỀN
 
 **Source:** https://help.shopee.vn/portal/4/article/77251
-**Crawled:** 2026-08-04T11:49:52+07:00
+**Crawled:** 2026-08-04T15:01:20+07:00
 **customer_role:** buyer
 **doc_type:** policy
 
