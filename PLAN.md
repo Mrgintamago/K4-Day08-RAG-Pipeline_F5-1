@@ -14,7 +14,7 @@
 ```
 Task 1-10 :  ████████████████████  50 / 50 điểm   ✅ ĐẠT MỐC CP4
 Bài nhóm  :  ████████████░░░░░░░░  18 / 30 điểm
-Bonus     :  ░░░░░░░░░░░░░░░░░░░░   0 / 20 điểm   🔓 ĐÃ MỞ KHOÁ
+Bonus     :  ███████████░░░░░░░░░  11 / 20 điểm   🔓 ĐÃ MỞ KHOÁ
 pytest    :  35 passed · 0 skipped · 0 failed      ✅ 35/35
 ```
 
@@ -32,6 +32,26 @@ pytest    :  35 passed · 0 skipped · 0 failed      ✅ 35/35
 | **Kiến trúc rõ ràng + README** | **3** | ⬜ **chưa viết** |
 
 **12 điểm còn thiếu nằm gọn ở 2 việc: F5-13 RAGAS (9đ) và mục kiến trúc trong README (3đ).**
+
+### ⭐ Bonus — chi tiết 11/20 (audit code ngày 04/08)
+
+| # | Tiêu chí | Điểm | Ai | Trạng thái |
+|---|---|---|---|---|
+| ⭐2 | HyDE / Query Expansion | 5 | T | ✅ `hyde_search()`, `expand_query()`, `multi_query_search()` (RRF) |
+| ⭐3 | Conversation memory multi-turn | 3 | H | ✅ `generate_with_citation(..., chat_history=)` + query contextualization |
+| ⭐4 | UI hiển thị source + score | 3 | H | ✅ badge **PHÁP LUẬT** / **QUY ĐỊNH SÀN** theo `doc_type` |
+| **⭐1** | **TF-IDF song song BM25 + giải thích** | **5** | **S** | ❌ **CHƯA LÀM** — `task6` chỉ có BM25, không có `TfidfVectorizer` |
+| **⭐5** | **Deploy online** | **4** | **Q** | 🔵 **HF Spaces đã chết** — chuyển Streamlit Cloud, xem [`DEPLOY_HF.md`](DEPLOY_HF.md) |
+
+> ⭐1 là **bonus rẻ nhất còn lại**: 5 điểm, cùng file với BM25 đã xong, ~10 phút.
+> Điểm nằm ở **phần giải thích cơ chế** chứ không phải code — prompt sẵn ở [§10.6](#106-prompt-cho-4-ticket-bonus--copy-thẳng-vào-agent).
+
+> ⛔ **Hugging Face Spaces không dùng được nữa** (thử thật 04/08/2026):
+> `sdk: streamlit` bị API từ chối (`expected one of "gradio"|"docker"|"static"`), và
+> Gradio/Docker Space trên CPU free giờ **đòi tài khoản PRO** (HTTP 402). Chỉ Static
+> Space còn free mà Static không chạy được Python.
+> Tiêu chí chấm ghi *"Hugging Face Spaces / **Render** / ..."* nên **Streamlit Community
+> Cloud vẫn tính điểm** — miễn phí, deploy thẳng từ GitHub, hợp nhất với app Streamlit.
 
 ## 🎉 ĐÃ QUA MỐC 50 ĐIỂM — BONUS MỞ KHOÁ
 
@@ -72,9 +92,10 @@ Tụt xuống dưới 35 là mất điểm đã có — nguy hiểm hơn là kh�
 | F5-11 | `app.py` chatbot | H | 8 | ✅ 647 dòng, chạy được, đã nối `generate_with_citation()` |
 | F5-12 | Golden dataset 16 câu | S | 3 | ✅ 16 câu, đủ 3 trường |
 | F5-13 | RAGAS eval + `results.md` | S | 9 | 🟡 scaffold 418 dòng · chờ pipeline thật để chạy |
-| ⭐ F5-14 | Bonus HyDE | T | 5 | 🔓 **đã mở khoá** |
-| ⭐ F5-15 | Bonus memory + UI | H | 6 | 🔓 **đã mở khoá** |
-| ⭐ F5-16 | Bonus deploy HF | Q | 4 | 🔵 nhánh `hf-space` sẵn sàng · chờ tạo Space |
+| ⭐ F5-14 | Bonus HyDE + Query Expansion | T | 5 | ✅ |
+| ⭐ F5-15 | Bonus memory + UI source/score | H | 6 | ✅ |
+| **⭐ F5-18** | **Bonus TF-IDF** *(tách khỏi F5-6)* | **S** | **5** | 🔴 **CHƯA LÀM — bonus rẻ nhất còn lại** |
+| ⭐ F5-16 | Bonus deploy online | Q | 4 | 🔵 HF Spaces đã chết → Streamlit Cloud |
 | F5-17 | Chốt nộp | Q | — | ⬜ |
 
 Ký hiệu: ✅ xong · 🟡 đang làm · 🟢 làm được ngay, không chờ ai · ⬜ chờ ticket khác ·
@@ -85,9 +106,11 @@ Ký hiệu: ✅ xong · 🟡 đang làm · 🟢 làm được ngay, không chờ
 | | Đã xong | Đang làm | Kế tiếp |
 |---|---|---|---|
 | **Q** Quang | F5-0,1,2,3,8,9 — **21đ** | **README kiến trúc (3đ) 🔴** | ⭐F5-16 deploy · F5-17 chốt nộp |
-| **T** Tường | F5-4, F5-5 — **13đ** | — *(rảnh)* | ⭐F5-14 HyDE · giúp S ở F5-13 |
-| **H** Hân | F5-10 **4đ** + F5-11 **8đ** | — *(rảnh)* | ⭐F5-15 kiểm memory + UI |
-| **S** Sáng | F5-6, F5-7 **12đ** + F5-12 **3đ** | **F5-13 chạy A/B (9đ) 🔴** | ⭐TF-IDF |
+| **T** Tường | F5-4, F5-5 **13đ** + ⭐HyDE **5đ** | — *(rảnh)* | Giúp S ở F5-13 hoặc F5-18 |
+| **H** Hân | F5-10 **4đ** + F5-11 **8đ** + ⭐memory/UI **6đ** | — *(rảnh)* | Giúp S ở F5-13 |
+| **S** Sáng | F5-6, F5-7 **12đ** + F5-12 **3đ** | **F5-13 A/B (9đ) 🔴** | ⭐F5-18 TF-IDF (5đ) |
+
+**Tổng đang có: 50 (Task) + 18 (nhóm) + 11 (bonus) = 79/100.**
 
 ### 🚨 Đang chặn tiến độ
 
@@ -520,8 +543,9 @@ Bảng này là **nguồn sự thật duy nhất** về tiến độ. Ai cũng s
 | **F5-11** | `app.py` — Streamlit chatbot | H | CP5 | ~~F5-10~~ ✅ | — | 647 dòng, `streamlit run app.py` khởi động sạch, đã gọi `generate_with_citation()`; có `st.session_state` + hiển thị score/source | ✅ |
 | **F5-12** | `golden_dataset.json` — 16 Q&A **theo 4 nhóm chủ đề mới** (§1.5) | S | CP5 | F5-3 | F5-13 | **16 câu**, đủ `question`/`expected_answer`/`expected_context`, bám luật + thuế + quy định sàn | ✅ |
 | **F5-13** | `eval_pipeline.py` + `results.md` — RAGAS A/B | S | CP5 | ~~F5-10~~ ✅, ~~F5-12~~ ✅, **F5-9** | — | 4 metric × 2 config + phân tích worst performers | 🟡 scaffold 418 dòng · chờ `retrieve()` thật mới chạy được A/B |
-| ⭐ **F5-14** | **[BONUS 5đ]** HyDE / Query Expansion | T | CP5 | F5-5 | — | Flag bật/tắt trong `task5`, đo được chênh lệch | 🔓 **đã mở khoá** |
-| ⭐ **F5-15** | **[BONUS 3+3đ]** conversation memory + UI source/score | H | CP5 | F5-11 | — | Follow-up hiểu ngữ cảnh; UI hiện nguồn + điểm | 🔓 **đã mở khoá** |
+| ⭐ **F5-14** | **[BONUS 5đ]** HyDE / Query Expansion | T | CP5 | ~~F5-5~~ ✅ | — | `hyde_search()` (mean-pool nhiều hypothesis), `expand_query()`, `multi_query_search()` gộp bằng RRF | ✅ |
+| ⭐ **F5-15** | **[BONUS 3+3đ]** conversation memory + UI source/score | H | CP5 | ~~F5-11~~ ✅ | — | `generate_with_citation(..., chat_history=)` + query contextualization; UI badge **PHÁP LUẬT**/**QUY ĐỊNH SÀN** theo `doc_type` | ✅ |
+| ⭐ **F5-18** | **[BONUS 5đ]** TF-IDF song song BM25 + giải thích cơ chế | S | CP5 | ~~F5-6~~ ✅ | — | `tfidf_search()` dùng `TfidfVectorizer` + docstring giải thích 3 điểm khác BM25 | 🔴 **CHƯA LÀM** |
 | ⭐ **F5-16** | **[BONUS 4đ]** deploy Hugging Face Spaces | Q | CP6 | ~~F5-11~~ ✅ | — | Nhánh `hf-space` sẵn sàng (requirements 20→9 gói), hướng dẫn ở [`DEPLOY_HF.md`](DEPLOY_HF.md). **Còn chờ Quang tạo Space + token** | 🔵 **In Review — cần 1 việc tay** |
 | **F5-17** | Chốt nộp: pytest 35/35 + dọn repo + push | Q | CP6 | tất cả | — | `main` xanh, `.env`/`chroma_db/`/`.venv/` không lọt git | ⬜ chờ tất cả |
 
@@ -749,7 +773,7 @@ vẫn gắn `source="pageindex"`. Vẫn pass `TestTask8`; ghi rõ lý do thay th
 | 2 | ~~Calibrate `SCORE_THRESHOLD`~~ | Q | ✅ **0,40** (đo: đúng chủ đề 0,444–0,531 · lạc đề 0,265–0,365) |
 | 3 | ~~**F5-10** — output có `[Nguồn, Năm]`~~ | H | ✅ `TestTask10` 3/3 |
 | 4 | ~~**F5-13** — dựng khung `eval_pipeline.py`~~ | S | ✅ scaffold 418 dòng |
-| 5 | ⭐ **F5-14** — HyDE — **BONUS 5đ** | T | 🔓 mở khoá, làm được ngay |
+| 5 | ~~⭐ **F5-14** — HyDE — **BONUS 5đ**~~ | T | ✅ `hyde_search` + `multi_query_search` |
 | 6 | ~~Chạy full `pytest -v` trên `main`~~ | Q | ✅ **35/35 passed, 0 skipped, 0 failed** |
 
 ---
@@ -758,12 +782,13 @@ vẫn gắn `source="pageindex"`. Vẫn pass `TestTask8`; ghi rõ lý do thay th
 
 | # | Ticket | Ai | Xong khi |
 |---|--------|-----|----------|
-| 1 | **F5-11** — `app.py`: chat, sidebar `top_k`, panel source + score | H | Hỏi → trả lời kèm nguồn |
-| 2 | ⭐ **F5-15** — memory + UI source/score — **BONUS 3+3đ** | H | Follow-up "còn phí thì sao?" hiểu ngữ cảnh |
-| 3 | **F5-12** — gộp 16 câu của 4 người thành `golden_dataset.json` | S gộp | Có `expected_context` khớp file thật |
-| 4 | **F5-13** — RAGAS 4 metric × **A/B: hybrid+rerank vs dense-only** | S | `results.md` có bảng điểm + worst performers |
-| 5 | Tích hợp `retrieve()` + `generate_with_citation()` vào `app.py` | Q | Không import vòng, chạy 1 lệnh |
-| 6 | Viết mục kiến trúc + phân công trong 2 README | Q | Đủ theo yêu cầu chấm (3đ) |
+| 1 | ~~**F5-11** — `app.py`~~ | H | ✅ 647 dòng, chạy được, có badge nguồn |
+| 2 | ~~⭐ **F5-15** — memory + UI — **BONUS 3+3đ**~~ | H | ✅ `chat_history` + badge PHÁP LUẬT/QUY ĐỊNH SÀN |
+| 3 | ~~**F5-12** — `golden_dataset.json`~~ | S | ✅ 16 câu |
+| 4 | **F5-13** — RAGAS 4 metric × **A/B: hybrid+rerank vs dense-only** | S | 🔴 `results.md` có bảng điểm + worst performers |
+| 5 | ~~Tích hợp `retrieve()` + `generate_with_citation()` vào `app.py`~~ | Q | ✅ đã kiểm end-to-end |
+| 6 | Viết mục kiến trúc + phân công trong 2 README | Q | 🔴 Đủ theo yêu cầu chấm (3đ) |
+| 7 | ⭐ **F5-18** — TF-IDF + giải thích cơ chế — **BONUS 5đ** | S | 🔴 bonus rẻ nhất còn lại |
 
 **Rate limit RAGAS:** OpenRouter free rất dễ 429. Chạy thử **5 câu trước**, xác nhận
 pipeline đúng rồi mới chạy full 16 câu.
@@ -1269,13 +1294,13 @@ Liệt kê vi phạm nếu có, đừng tự sửa vội.
 |---------|----|------|------|-----------|
 | 🔴 **1** | **S** (+Q giúp) | **F5-13** chạy RAGAS A/B thật · thử 5 câu trước rồi mới full 16 | **9** | 20 phút |
 | 🔴 **2** | **Q** | Viết mục kiến trúc + phân công trong 2 README | **3** | 10 phút |
-| 🟡 3 | ⭐ **Q** | **F5-16** — tạo Space + token rồi `git push hf hf-space:main` (xem `DEPLOY_HF.md`) | 4 | 10 phút |
-| 🟢 4 | ⭐ **S** | Bonus TF-IDF — ghi giải thích cơ chế vào docstring | 5 | 10 phút |
-| 🟢 4 | ⭐ **H** | Bonus memory + UI source/score — kiểm lại đã đủ tiêu chí chưa | 6 | 10 phút |
-| 🟢 5 | ⭐ **T** | Bonus HyDE trong `task5` | 5 | 20 phút |
-| ⬜ 6 | **Q** | F5-17 chốt nộp: `pytest` lại trên `main`, dọn repo | — | 10 phút |
+| 🔴 **3** | ⭐ **S** hoặc **T** | **F5-18** TF-IDF + giải thích — bonus rẻ nhất, cùng file với BM25 | 5 | 10 phút |
+| 🟡 4 | ⭐ **Q** | **F5-16** deploy — Streamlit Cloud, nhánh `hf-space` (xem `DEPLOY_HF.md`) | 4 | 10 phút |
+| ⬜ 5 | **Q** | F5-17 chốt nộp: `pytest` lại trên `main`, dọn repo | — | 10 phút |
 
-**12 điểm bắt buộc còn thiếu nằm ở 2 dòng 🔴 đầu bảng** — làm 2 cái đó trước mọi bonus.
+**Còn 21 điểm lấy được: 12 bắt buộc (F5-13 + README) + 9 bonus (TF-IDF + deploy).**
+Tường và Hân đã xong hết phần mình → theo [hỗ trợ chéo §1](#-quy-tắc-hỗ-trợ-chéo--xong-việc-là-qua-giúp-người-khác),
+nhảy vào F5-13 hoặc F5-18.
 
 **Prompt sẵn cho từng ticket bonus: [§10.6](#106-prompt-cho-4-ticket-bonus--copy-thẳng-vào-agent).**
 
