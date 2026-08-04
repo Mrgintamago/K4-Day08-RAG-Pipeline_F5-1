@@ -1,6 +1,8 @@
 # Core
 python-dotenv>=1.0.0
 requests>=2.31.0
+langchain==0.2.17
+langchain-core==0.2.43
 numpy>=1.24.0
 
 # Task 2 - Crawling
@@ -11,13 +13,20 @@ markitdown[pdf]>=0.1.0
 fpdf2>=2.7.0
 
 # Task 4 - Chunking & Indexing
-langchain-text-splitters>=0.2.0
+langchain-text-splitters>=0.2.4
+langchain-community==0.2.19
 sentence-transformers>=2.2.0
 chromadb>=0.5.0
 
 # Task 6 - BM25 + TF-IDF
 rank-bm25>=0.2.2
 scikit-learn>=1.3.0
+
+# KHONG ghim litellm==1.81.13 o day - resolver se bat kha thi:
+#   ragas==0.1.21        -> can langchain-core 0.2.x
+#   litellm 1.81.13      -> keo langchain-openai len 1.x -> can langchain-core >=1.5
+# Hai rang buoc loai tru nhau. Neu can litellm cho muc dich khac, cai rieng trong
+# mot venv khac, dung them vao file nay.
 
 # Task 8 - PageIndex
 pageindex>=0.1.0
@@ -31,7 +40,9 @@ streamlit>=1.35.0
 # Group project - Evaluation
 ragas==0.1.21
 datasets>=2.14.0
-langchain-openai>=0.1.0
+# Chan tren <0.2: langchain-openai 1.x doi langchain-core>=1.5, xung dot voi
+# langchain-core==0.2.43 ma ragas 0.1.21 can. Ban 0.1.x doi core >=0.2.40,<0.3 - vua khop.
+langchain-openai>=0.1.25,<0.2
 
 # Testing (dung de cham diem bai ca nhan)
 pytest>=7.0.0
