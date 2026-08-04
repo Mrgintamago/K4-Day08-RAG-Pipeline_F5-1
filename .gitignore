@@ -12,8 +12,13 @@ venv/
 # Temp PDF conversion cache
 data/_tmp_pdf/
 
-# Vector store (sinh ra khi chay Task 4, khong commit)
-chroma_db/
+# Vector store: CO commit len repo (33MB).
+# Ly do: ca nhom pull ve la chay duoc Task 5/6/9 ngay, khong ai phai index lai
+# (~40 giay + phai co model trong cache). Cung can cho deploy Hugging Face Spaces
+# vi Space khong chay duoc Task 4 luc khoi dong.
+# Neu doi corpus hoac doi embedding model -> XOA chroma_db/ va chay lai Task 4,
+# roi commit ban moi (so chieu khac nhau khong tuong thich nguoc).
+# chroma_db/
 
 # Temp / cache
 .pytest_cache/

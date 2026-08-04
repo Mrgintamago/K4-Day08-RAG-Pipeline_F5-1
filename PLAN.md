@@ -481,12 +481,12 @@ Bảng này là **nguồn sự thật duy nhất** về tiến độ. Ai cũng s
 | **F5-1** | Task 1 — ≥3 PDF chính sách | Q | CP1 | — | F5-3 | `data/landing/legal/` **13 PDF** (8 Shopee + 5 luật), đều trích được text 1.4k–328k ký tự + `_metadata.json` | ✅ |
 | **F5-2** | Task 2 — ≥5 bài hướng dẫn | Q | CP1 | — | F5-3 | `data/landing/news/` **18 JSON**, đủ `url`/`title`/`date_crawled`/`topic`/`customer_role` | ✅ |
 | **F5-3** | Task 3 — convert markdown | Q | CP1 | F5-1, F5-2 | F5-4, F5-8, F5-12 | `data/standardized/` **31 file `.md`**, 865.028 ký tự, mỗi file có header 5 trường metadata | ✅ |
-| **F5-4** | Task 4 — chunking + ChromaDB index | T | CP2 | ~~F5-0, F5-3~~ **đã thông** | F5-5, F5-6 | `chroma_db/` collection `ecommerce_support_docs`, **dự kiến ~1.081 chunk** @800 | 🔴 **CHƯA BẮT ĐẦU — chặn 26/50 điểm còn lại** |
-| **F5-5** | Task 5 — `semantic_search()` | T | CP2 | F5-4 | F5-9 | Trả `list[Result]` sorted desc, **score là cosine [0,1]** | ⬜ chờ F5-4 (T) |
-| **F5-6** | Task 6 — `lexical_search()` BM25 + TF-IDF | S | CP2 | F5-4 | F5-9 | Trả `list[Result]` sorted desc | ⬜ chờ F5-4 (T) |
+| **F5-4** | Task 4 — chunking + ChromaDB index | T | CP2 | ~~F5-0, F5-3~~ ✅ | F5-5, F5-6 | `chroma_db/` **1.216 chunk** @800, model `paraphrase-multilingual-MiniLM-L12-v2` (384d), **đã commit lên repo** — pull về là dùng được ngay, không phải index lại. `TestTask4` **4/4 passed** | ✅ |
+| **F5-5** | Task 5 — `semantic_search()` | T | CP2 | ~~F5-4~~ ✅ | F5-9 | Trả `list[Result]` sorted desc, score là cosine [0,1]. Đo thực tế: đúng chủ đề **0,444–0,531** · lạc đề **0,265–0,365**. `TestTask5` **4/4 passed** | ✅ |
+| **F5-6** | Task 6 — `lexical_search()` BM25 + TF-IDF | S | CP2 | ~~F5-4~~ ✅ | F5-9 | Trả `list[Result]` sorted desc; corpus lấy từ `data/standardized/**/*.md` (31 file) | 🔴 **ĐƯỜNG GĂNG — khoá 13đ Task + 9đ bài nhóm** |
 | **F5-7** | Task 7 — `rerank_rrf()` + `rerank()` | S | CP3 | — *(fixture giả)* | F5-9 | Gộp ≥2 ranked list, output re-sorted, có `score` — `TestTask7` **3/3 passed** | ✅ |
 | **F5-8** | Task 8 — `pageindex_search()` | Q | CP3 | F5-3 | F5-9 | **3 doc trên PageIndex** + fallback cục bộ; `TestTask8` **2/2 passed** | ✅ |
-| **F5-9** | Task 9 — `retrieve()` + fallback | Q | CP4 | F5-5, F5-6, ~~F5-7~~ ✅, ~~F5-8~~ ✅ | F5-10, F5-13 | `retrieve()` chạy, fallback trigger khi cosine < 0.48 | ⬜ **chỉ còn chờ F5-4 → F5-5, F5-6** |
+| **F5-9** | Task 9 — `retrieve()` + fallback | Q | CP4 | ~~F5-5~~ ✅, **F5-6**, ~~F5-7~~ ✅, ~~F5-8~~ ✅ | F5-10, F5-13 | `retrieve()` chạy, fallback trigger. **Đặt `SCORE_THRESHOLD ≈ 0,40`** theo số đo ở F5-5 — KHÔNG dùng 0,48, câu đúng chủ đề sẽ rơi nhầm xuống fallback | ⬜ **chỉ còn chờ F5-6** |
 | **F5-10** | Task 10 — `generate_with_citation()` | H | CP4 | F5-9 *(đã mock)* | F5-11, F5-13 | `{answer, sources, retrieval_source}` + `[Nguồn, Năm]` — `TestTask10` **3/3 passed** | ✅ |
 | **F5-11** | `app.py` — Streamlit chatbot | H | CP5 | ~~F5-10~~ ✅ | — | `streamlit run app.py` trả lời + hiện source & score | 🟢 **làm được ngay** |
 | **F5-12** | `golden_dataset.json` — 16 Q&A **theo 4 nhóm chủ đề mới** (§1.5) | S | CP5 | F5-3 | F5-13 | **16 câu**, đủ `question`/`expected_answer`/`expected_context`, bám luật + thuế + quy định sàn | ✅ |
@@ -500,11 +500,11 @@ Bảng này là **nguồn sự thật duy nhất** về tiến độ. Ai cũng s
 
 | Ticket | Ai | Vì sao không bị chặn |
 |--------|----|--------------------|
-| **F5-4** | T | ⚠️ **Đường găng — làm ngay**, chặn 26/50 điểm còn lại |
-| **F5-11** | H | F5-10 đã xong → dựng `app.py` được luôn, tạm mock `retrieve()` |
-| ~~F5-7~~ | S | ✅ xong bằng fixture giả §3.4 |
-| ~~F5-10~~ | H | ✅ xong bằng fixture giả |
-| ~~F5-12~~ | S | ✅ 16 câu, viết từ `data/standardized/` |
+| **F5-6** | S | 🔴 **Đường găng — làm ngay.** `chroma_db/` đã commit sẵn, pull về là chạy |
+| **F5-11** | H | F5-10 xong → nối `generate_with_citation()` thật vào `app.py` |
+| **F5-12** (4 câu) | Q | Nhóm "Thành lập & đăng ký KD", evidence từ `luat-doanh-nghiep-2020.md` |
+| ~~F5-4, F5-5~~ | T | ✅ 1.216 chunk đã index và commit |
+| ~~F5-7, F5-12~~ | S | ✅ RRF + 16 câu golden dataset |
 
 ---
 
@@ -534,9 +534,9 @@ F5-2 (Q) ✅ ──┘             │              └─► F5-6 (S) ──┤
 
 | Nút thắt | Ai chờ ai | Hệ quả nếu trễ | Cách gỡ |
 |----------|-----------|----------------|---------|
-| **F5-4** (ChromaDB) 🔴 **ĐANG XẢY RA** | T chặn cả T lẫn S | F5-5 + F5-6 đứng hình → CP2 vỡ | Chọn embedding provider theo bảng §1.5 **trước khi code**; đừng chờ tải `bge-m3` 2.2GB |
-| **F5-9** (pipeline) | Q chờ 4 ticket | H không ghép được `app.py` | H mock `retrieve()`, ghép thật sau |
-| **F5-13** (RAGAS) | S chờ F5-10 | Mất 12đ eval | S viết sẵn `eval_pipeline.py` với hàm giả, chỉ đổi import lúc cuối |
+| **F5-6** (BM25) 🔴 **ĐANG XẢY RA** | S chặn Q (F5-9) → chặn chính S (F5-13) | Khoá 13đ Task + 9đ bài nhóm | Tường đã rảnh → nhảy vào làm cùng: BM25 và TF-IDF là 2 hàm độc lập, chia đôi được |
+| ~~F5-4 (ChromaDB)~~ ✅ | — | — | Đã xong, `chroma_db/` commit lên repo nên không ai phải index lại |
+| ~~F5-13 (RAGAS)~~ | S | — | Scaffold xong rồi, chỉ chờ `retrieve()` thật để chạy A/B |
 
 **Quy tắc bàn giao:** ai xong ticket thì **push lên `main` trong vòng 5 phút** rồi
 báo nhóm 1 dòng: `F5-4 merged — chroma_db/ có 342 chunks, chạy lại bằng python -m src.task4_chunking_indexing`.
