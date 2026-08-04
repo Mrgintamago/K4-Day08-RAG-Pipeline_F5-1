@@ -12,13 +12,19 @@
 ### Điểm đã chắc
 
 ```
-Task 1-10 :  ███████████████░░░░░  37 / 50 điểm
+Task 1-10 :  ████████████████████  50 / 50 điểm   ✅ ĐẠT MỐC CP4
 Bài nhóm  :  ██░░░░░░░░░░░░░░░░░░   3 / 30 điểm   (golden dataset)
-Bonus     :  ░░░░░░░░░░░░░░░░░░░░   0 / 20 điểm
-pytest    :  27 passed · 8 skipped · 0 failed      (mốc cần: 35 passed)
+Bonus     :  ░░░░░░░░░░░░░░░░░░░░   0 / 20 điểm   🔓 ĐÃ MỞ KHOÁ
+pytest    :  35 passed · 0 skipped · 0 failed      ✅ 35/35
 ```
 
-**Còn thiếu 13đ = Task 6 (6) + Task 9 (7).** `chroma_db/` đã có **1.216 chunk** → F5-6 hết vật cản.
+## 🎉 ĐÃ QUA MỐC 50 ĐIỂM — BONUS MỞ KHOÁ
+
+Luật "còn ticket 50đ chưa xong thì cấm làm bonus" **đã hết hiệu lực**. Từ giờ ưu tiên:
+**F5-11 chatbot (8đ) → F5-13 eval (9đ) → bonus (20đ)**.
+
+⚠️ Từ giờ mỗi PR merge vào `main` phải chạy lại `pytest` và **giữ nguyên 35 passed**.
+Tụt xuống dưới 35 là mất điểm đã có — nguy hiểm hơn là không làm thêm được bonus.
 
 ### 📈 Số đo retrieval (dùng cho F5-9 calibrate ngưỡng)
 
@@ -36,24 +42,24 @@ pytest    :  27 passed · 8 skipped · 0 failed      (mốc cần: 35 passed)
 
 | Ticket | Việc | Ai | Điểm | Trạng thái |
 |--------|------|----|------|-----------|
-| F5-00 | Setup môi trường | cả 4 | — | 🟡 Q/H/S xong · **T chưa xác nhận** |
+| F5-00 | Setup môi trường | cả 4 | — | ✅ **cả 4 xong** — bằng chứng: cả 4 đều đã push code chạy được lên `main` |
 | F5-0 | Chốt 3 hằng số | Q | — | ✅ |
 | F5-1 | Task 1 — 13 văn bản PDF | Q | 3 | ✅ |
 | F5-2 | Task 2 — 18 bài JSON | Q | 3 | ✅ |
 | F5-3 | Task 3 — 31 file `.md` | Q | 4 | ✅ |
 | F5-4 | Task 4 — chunking + ChromaDB | T | 7 | ✅ **1.216 chunk**, 4/4 test passed |
 | F5-5 | Task 5 — semantic search | T | 6 | ✅ 4/4 test passed |
-| **F5-6** | **Task 6 — lexical BM25** | **S** | **6** | 🟢 **hết vật cản — làm được ngay** |
+| F5-6 | Task 6 — lexical BM25 | S | 6 | ✅ 4/4 test passed |
 | F5-7 | Task 7 — RRF rerank | S | 6 | ✅ 3/3 test passed |
 | F5-8 | Task 8 — PageIndex | Q | 4 | ✅ 3 doc trên PageIndex |
-| **F5-9** | **Task 9 — retrieve + fallback** | **Q** | **7** | ⬜ chỉ còn chờ **F5-6** |
+| F5-9 | Task 9 — retrieve + fallback | Q | 7 | ✅ 4/4 · ngưỡng **0,40** · fallback trigger đúng |
 | F5-10 | Task 10 — generation | H | 4 | ✅ 3/3 test passed |
 | F5-11 | `app.py` chatbot | H | 8 | 🟢 **làm được ngay** (F5-10 xong rồi) |
 | F5-12 | Golden dataset 16 câu | S | 3 | ✅ 16 câu, đủ 3 trường |
 | F5-13 | RAGAS eval + `results.md` | S | 9 | 🟡 scaffold 418 dòng · chờ pipeline thật để chạy |
-| ⭐ F5-14 | Bonus HyDE | T | 5 | 🔒 khoá đến khi xong 50đ |
-| ⭐ F5-15 | Bonus memory + UI | H | 6 | 🔒 khoá đến khi xong 50đ |
-| ⭐ F5-16 | Bonus deploy HF | Q | 4 | 🔒 khoá đến khi xong 50đ |
+| ⭐ F5-14 | Bonus HyDE | T | 5 | 🔓 **đã mở khoá** |
+| ⭐ F5-15 | Bonus memory + UI | H | 6 | 🔓 **đã mở khoá** |
+| ⭐ F5-16 | Bonus deploy HF | Q | 4 | 🔓 **đã mở khoá** |
 | F5-17 | Chốt nộp | Q | — | ⬜ |
 
 Ký hiệu: ✅ xong · 🟡 đang làm · 🟢 làm được ngay, không chờ ai · ⬜ chờ ticket khác ·
@@ -61,20 +67,24 @@ Ký hiệu: ✅ xong · 🟡 đang làm · 🟢 làm được ngay, không chờ
 
 ### Ai đang làm gì
 
-| | Đã xong | Đang làm | Kế tiếp |
+| | Đã xong (Task 1–10) | Đang làm | Kế tiếp |
 |---|---|---|---|
-| **Q** Quang | F5-0, 1, 2, 3, 8 — **14đ** | 4 câu golden dataset | **F5-9** (chỉ chờ F5-6) |
-| **T** Tường | F5-4, F5-5 — **13đ** | — | ⭐F5-14 sau khi đủ 50đ |
-| **H** Hân | F5-10 — **4đ** | F5-11 `app.py` | ⭐F5-15 sau khi đủ 50đ |
-| **S** Sáng | F5-7, F5-12 — **6đ + 3đ** | **F5-6 🔴 đường găng** | F5-13 chạy A/B thật |
+| **Q** Quang | F5-0, 1, 2, 3, 8, 9 — **21đ** | 4 câu golden dataset | ⭐F5-16 deploy · F5-17 chốt nộp |
+| **T** Tường | F5-4, F5-5 — **13đ** | — | ⭐F5-14 HyDE · giúp F5-11 |
+| **H** Hân | F5-10 — **4đ** | **F5-11 `app.py` 🔴** | ⭐F5-15 memory + UI |
+| **S** Sáng | F5-6, F5-7 — **12đ** (+F5-12 3đ) | **F5-13 chạy A/B 🔴** | — |
 
 ### 🚨 Đang chặn tiến độ
 
-**F5-6 của Sáng.** `chroma_db/` đã có 1.216 chunk nên F5-6 hết vật cản — nhưng nó là
-ticket cuối cùng chặn **F5-9 (7đ)**, và F5-9 lại chặn phần chạy thật của **F5-13 (9đ)**.
-Nghĩa là 1 ticket đang khoá 13/50 điểm còn lại cộng 9 điểm bài nhóm.
+**Không còn ticket nào chặn Task 1–10.** Hai việc quan trọng nhất giờ là bài nhóm:
 
-Thứ tự đúng: **F5-6 (S) → F5-9 (Q) → F5-13 chạy A/B (S)**.
+| Ticket | Ai | Điểm | Vì sao gấp |
+|---|---|---|---|
+| **F5-11** `app.py` | H | 8 | Chatbot là hạng mục điểm cao nhất của bài nhóm; chưa chạy được thì mất luôn 3đ "chất lượng câu trả lời" |
+| **F5-13** RAGAS A/B | S | 9 | `retrieve()` đã sẵn sàng → chạy được ngay. Dễ dính rate limit nên phải bắt đầu sớm |
+
+Q và T đã hết việc bắt buộc → theo [hỗ trợ chéo §1](#-quy-tắc-hỗ-trợ-chéo--xong-việc-là-qua-giúp-người-khác),
+nhảy vào giúp 2 ticket trên trước khi động tới bonus.
 
 ### ⚠️ Chất lượng retrieval — cần biết trước khi làm F5-6 và F5-13
 
@@ -476,35 +486,35 @@ Bảng này là **nguồn sự thật duy nhất** về tiến độ. Ai cũng s
 
 | ID | Ticket | Ai | CP | Blocked by | Blocks | Bàn giao (artifact người sau cần) | TT |
 |----|--------|----|----|-----------|--------|-----------------------------------|----|
-| **F5-00** | **Setup môi trường** (venv 3.12 + deps + `.env`) | **cả 4** | CP0 | — | *tất cả* | Mỗi máy chạy được lệnh verify `SETUP OK` (§CP0-A) | 🟡 Q xong · T/H/S chưa xác nhận |
+| **F5-00** | **Setup môi trường** (venv 3.12 + deps + `.env`) | **cả 4** | CP0 | — | *tất cả* | Mỗi máy chạy được lệnh verify `SETUP OK` (§CP0-A). **Xác nhận: cả 4 thành viên đều đã push code chạy được lên `main`** (Q: F5-1,2,3,8,9 · T: F5-4,5 · H: F5-10 · S: F5-6,7,12) | ✅ |
 | **F5-0** | Chốt 3 hằng số + push `main` | Q | CP0 | — | F5-4, F5-9 | `main` có 800 / 100 / 0.48 | ✅ |
 | **F5-1** | Task 1 — ≥3 PDF chính sách | Q | CP1 | — | F5-3 | `data/landing/legal/` **13 PDF** (8 Shopee + 5 luật), đều trích được text 1.4k–328k ký tự + `_metadata.json` | ✅ |
 | **F5-2** | Task 2 — ≥5 bài hướng dẫn | Q | CP1 | — | F5-3 | `data/landing/news/` **18 JSON**, đủ `url`/`title`/`date_crawled`/`topic`/`customer_role` | ✅ |
 | **F5-3** | Task 3 — convert markdown | Q | CP1 | F5-1, F5-2 | F5-4, F5-8, F5-12 | `data/standardized/` **31 file `.md`**, 865.028 ký tự, mỗi file có header 5 trường metadata | ✅ |
 | **F5-4** | Task 4 — chunking + ChromaDB index | T | CP2 | ~~F5-0, F5-3~~ ✅ | F5-5, F5-6 | `chroma_db/` **1.216 chunk** @800, model `paraphrase-multilingual-MiniLM-L12-v2` (384d), **đã commit lên repo** — pull về là dùng được ngay, không phải index lại. `TestTask4` **4/4 passed** | ✅ |
 | **F5-5** | Task 5 — `semantic_search()` | T | CP2 | ~~F5-4~~ ✅ | F5-9 | Trả `list[Result]` sorted desc, score là cosine [0,1]. Đo thực tế: đúng chủ đề **0,444–0,531** · lạc đề **0,265–0,365**. `TestTask5` **4/4 passed** | ✅ |
-| **F5-6** | Task 6 — `lexical_search()` BM25 + TF-IDF | S | CP2 | ~~F5-4~~ ✅ | F5-9 | Trả `list[Result]` sorted desc; corpus lấy từ `data/standardized/**/*.md` (31 file) | 🔴 **ĐƯỜNG GĂNG — khoá 13đ Task + 9đ bài nhóm** |
+| **F5-6** | Task 6 — `lexical_search()` BM25 + TF-IDF | S | CP2 | ~~F5-4~~ ✅ | F5-9 | Trả `list[Result]` sorted desc; corpus từ `data/standardized/**/*.md`. `TestTask6` **4/4 passed** | ✅ |
 | **F5-7** | Task 7 — `rerank_rrf()` + `rerank()` | S | CP3 | — *(fixture giả)* | F5-9 | Gộp ≥2 ranked list, output re-sorted, có `score` — `TestTask7` **3/3 passed** | ✅ |
 | **F5-8** | Task 8 — `pageindex_search()` | Q | CP3 | F5-3 | F5-9 | **3 doc trên PageIndex** + fallback cục bộ; `TestTask8` **2/2 passed** | ✅ |
-| **F5-9** | Task 9 — `retrieve()` + fallback | Q | CP4 | ~~F5-5~~ ✅, **F5-6**, ~~F5-7~~ ✅, ~~F5-8~~ ✅ | F5-10, F5-13 | `retrieve()` chạy, fallback trigger. **Đặt `SCORE_THRESHOLD ≈ 0,40`** theo số đo ở F5-5 — KHÔNG dùng 0,48, câu đúng chủ đề sẽ rơi nhầm xuống fallback | ⬜ **chỉ còn chờ F5-6** |
+| **F5-9** | Task 9 — `retrieve()` + fallback | Q | CP4 | ~~F5-5,6,7,8~~ ✅ | F5-10, F5-13 | `SCORE_THRESHOLD = 0,40` (calibrate từ số đo thật). Smoke test: câu đúng chủ đề → `source="hybrid"`, câu lạc đề → `source="pageindex"`. `TestTask9` **4/4 passed** | ✅ |
 | **F5-10** | Task 10 — `generate_with_citation()` | H | CP4 | F5-9 *(đã mock)* | F5-11, F5-13 | `{answer, sources, retrieval_source}` + `[Nguồn, Năm]` — `TestTask10` **3/3 passed** | ✅ |
 | **F5-11** | `app.py` — Streamlit chatbot | H | CP5 | ~~F5-10~~ ✅ | — | `streamlit run app.py` trả lời + hiện source & score | 🟢 **làm được ngay** |
 | **F5-12** | `golden_dataset.json` — 16 Q&A **theo 4 nhóm chủ đề mới** (§1.5) | S | CP5 | F5-3 | F5-13 | **16 câu**, đủ `question`/`expected_answer`/`expected_context`, bám luật + thuế + quy định sàn | ✅ |
 | **F5-13** | `eval_pipeline.py` + `results.md` — RAGAS A/B | S | CP5 | ~~F5-10~~ ✅, ~~F5-12~~ ✅, **F5-9** | — | 4 metric × 2 config + phân tích worst performers | 🟡 scaffold 418 dòng · chờ `retrieve()` thật mới chạy được A/B |
-| ⭐ **F5-14** | **[BONUS 5đ]** HyDE / Query Expansion | T | CP5 | F5-5 | — | Flag bật/tắt trong `task5`, đo được chênh lệch | 🔒 khoá đến khi xong 50đ |
-| ⭐ **F5-15** | **[BONUS 3+3đ]** conversation memory + UI source/score | H | CP5 | F5-11 | — | Follow-up hiểu ngữ cảnh; UI hiện nguồn + điểm | 🔒 khoá đến khi xong 50đ |
-| ⭐ **F5-16** | **[BONUS 4đ]** deploy Hugging Face Spaces | Q | CP6 | F5-11 | — | URL Space chạy được | 🔒 khoá đến khi xong 50đ |
+| ⭐ **F5-14** | **[BONUS 5đ]** HyDE / Query Expansion | T | CP5 | F5-5 | — | Flag bật/tắt trong `task5`, đo được chênh lệch | 🔓 **đã mở khoá** |
+| ⭐ **F5-15** | **[BONUS 3+3đ]** conversation memory + UI source/score | H | CP5 | F5-11 | — | Follow-up hiểu ngữ cảnh; UI hiện nguồn + điểm | 🔓 **đã mở khoá** |
+| ⭐ **F5-16** | **[BONUS 4đ]** deploy Hugging Face Spaces | Q | CP6 | F5-11 | — | URL Space chạy được | 🔓 **đã mở khoá** |
 | **F5-17** | Chốt nộp: pytest 35/35 + dọn repo + push | Q | CP6 | tất cả | — | `main` xanh, `.env`/`chroma_db/`/`.venv/` không lọt git | ⬜ chờ tất cả |
 
 ### Ticket làm được NGAY, không chờ ai
 
 | Ticket | Ai | Vì sao không bị chặn |
 |--------|----|--------------------|
-| **F5-6** | S | 🔴 **Đường găng — làm ngay.** `chroma_db/` đã commit sẵn, pull về là chạy |
-| **F5-11** | H | F5-10 xong → nối `generate_with_citation()` thật vào `app.py` |
+| **F5-11** | H | 🔴 `retrieve()` đã chạy → nối thật vào `app.py` được ngay |
+| **F5-13** | S | 🔴 `retrieve()` đã chạy → chạy A/B thật được ngay |
 | **F5-12** (4 câu) | Q | Nhóm "Thành lập & đăng ký KD", evidence từ `luat-doanh-nghiep-2020.md` |
-| ~~F5-4, F5-5~~ | T | ✅ 1.216 chunk đã index và commit |
-| ~~F5-7, F5-12~~ | S | ✅ RRF + 16 câu golden dataset |
+| ⭐ Bonus | cả 4 | 🔓 Đã mở khoá sau khi đạt 35/35 |
+| ~~Task 1–10~~ | cả 4 | ✅ **50/50 điểm, 35/35 test** |
 
 ---
 
@@ -534,9 +544,9 @@ F5-2 (Q) ✅ ──┘             │              └─► F5-6 (S) ──┤
 
 | Nút thắt | Ai chờ ai | Hệ quả nếu trễ | Cách gỡ |
 |----------|-----------|----------------|---------|
-| **F5-6** (BM25) 🔴 **ĐANG XẢY RA** | S chặn Q (F5-9) → chặn chính S (F5-13) | Khoá 13đ Task + 9đ bài nhóm | Tường đã rảnh → nhảy vào làm cùng: BM25 và TF-IDF là 2 hàm độc lập, chia đôi được |
-| ~~F5-4 (ChromaDB)~~ ✅ | — | — | Đã xong, `chroma_db/` commit lên repo nên không ai phải index lại |
-| ~~F5-13 (RAGAS)~~ | S | — | Scaffold xong rồi, chỉ chờ `retrieve()` thật để chạy A/B |
+| **Không còn nút thắt ở Task 1–10** ✅ | — | — | 35/35 test passed, 50/50 điểm |
+| **F5-11 + F5-13** 🔴 **ĐANG XẢY RA** | H và S | 17/30 điểm bài nhóm | Q và T hết việc bắt buộc → nhảy vào giúp trước khi làm bonus |
+| **Rate limit RAGAS** | S | Eval treo giữa chừng, mất 9đ | Chạy thử 5 câu trước, thêm `time.sleep`, rồi mới full 16 câu |
 
 **Quy tắc bàn giao:** ai xong ticket thì **push lên `main` trong vòng 5 phút** rồi
 báo nhóm 1 dòng: `F5-4 merged — chroma_db/ có 342 chunks, chạy lại bằng python -m src.task4_chunking_indexing`.
@@ -1125,18 +1135,19 @@ Liệt kê vi phạm nếu có, đừng tự sửa vội.
 
 ## 11. Việc Kế Tiếp Ngay
 
-| Ưu tiên | Ai | Việc | Thời gian |
-|---------|----|------|-----------|
-| 🔴 **1** | **S** | **F5-6** `lexical_search()` BM25 — `chroma_db/` sẵn rồi, **đang khoá 13đ** | 15 phút |
-| 🟡 2 | **Q** | **F5-9** ngay khi F5-6 merge · đặt `SCORE_THRESHOLD ≈ 0,40` (số đo ở trên) | 30 phút |
-| 🟢 3 | **H** | F5-11 `app.py` — nối `generate_with_citation()` thật | 25 phút |
-| 🟢 3 | **Q** | 4 câu golden dataset nhóm "Thành lập & đăng ký KD" | 10 phút |
-| ⬜ 4 | **S** | F5-13 chạy A/B thật sau khi có `retrieve()` | 20 phút |
-| ⬜ 5 | **T** | Rảnh rồi → nhảy sang giúp F5-6 hoặc F5-11 (hỗ trợ chéo §1) | — |
+| Ưu tiên | Ai | Việc | Điểm | Thời gian |
+|---------|----|------|------|-----------|
+| 🔴 **1** | **H** (+T giúp) | **F5-11** `app.py` — nối `retrieve()` + `generate_with_citation()` thật | 8 | 25 phút |
+| 🔴 **1** | **S** (+Q giúp) | **F5-13** chạy RAGAS A/B thật · thử 5 câu trước rồi mới full 16 | 9 | 20 phút |
+| 🟡 2 | **Q** | 4 câu golden dataset nhóm "Thành lập & đăng ký KD" | — | 10 phút |
+| 🟡 2 | **Q** | Viết mục kiến trúc + phân công trong 2 README | 3 | 10 phút |
+| 🟢 3 | ⭐ **S** | Bonus TF-IDF — ghi giải thích cơ chế vào docstring | 5 | 10 phút |
+| 🟢 3 | ⭐ **H** | Bonus memory + UI source/score (làm luôn trong F5-11) | 6 | — |
+| 🟢 4 | ⭐ **T** | Bonus HyDE trong `task5` | 5 | 20 phút |
+| ⬜ 5 | ⭐ **Q** | Bonus deploy HF Spaces (`chroma_db/` đã commit sẵn) | 4 | 20 phút |
+| ⬜ 6 | **Q** | F5-17 chốt nộp: `pytest` lại trên `main`, dọn repo | — | 10 phút |
 
-**Trạng thái:** `pytest` **27 passed · 8 skipped · 0 failed** · **37/50 điểm**.
-Xong: Task 1, 2, 3, 4, 5, 7, 8, 10 + golden dataset.
-Còn: **Task 6 (6đ) + Task 9 (7đ)** — 8 test đang skip đúng là của 2 task này.
+**Trạng thái:** `pytest` **35 passed · 0 skipped · 0 failed** · **50/50 điểm Task 1–10** ✅
 
-> **Tường đã xong phần của mình** (F5-4 + F5-5, 13đ). Theo quy tắc hỗ trợ chéo,
-> Tường nên nhảy sang F5-6 cùng Sáng — đó là ticket duy nhất đang chặn cả nhóm.
+Còn lại toàn bộ là bài nhóm (30đ) và bonus (20đ). Hai ticket 🔴 ở trên chiếm **17/30 điểm**
+bài nhóm — làm xong 2 cái đó trước khi ai động vào bonus.
