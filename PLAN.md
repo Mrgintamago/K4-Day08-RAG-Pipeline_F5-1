@@ -96,7 +96,7 @@ Tụt xuống dưới 35 là mất điểm đã có — nguy hiểm hơn là kh�
 | ⭐ F5-15 | Bonus memory + UI source/score | H | 6 | ✅ |
 | **⭐ F5-18** | **Bonus TF-IDF** *(tách khỏi F5-6)* | **S** | **5** | 🔴 **CHƯA LÀM — bonus rẻ nhất còn lại** |
 | ⭐ F5-16 | Bonus deploy online | Q | 4 | ✅ Streamlit Cloud · ⚠️ cần chuyển sang public |
-| F5-17 | Chốt nộp | Q | — | ⬜ |
+| F5-17 | Chốt nộp | Q | — | 🟡 đã kiểm repo + pytest · chờ TF-IDF & đổi app public |
 
 Ký hiệu: ✅ xong · 🟡 đang làm · 🟢 làm được ngay, không chờ ai · ⬜ chờ ticket khác ·
 🔴 đang chặn người khác · 🔒 chưa được phép làm · ⭐ bonus
@@ -549,7 +549,7 @@ Bảng này là **nguồn sự thật duy nhất** về tiến độ. Ai cũng s
 | ⭐ **F5-15** | **[BONUS 3+3đ]** conversation memory + UI source/score | H | CP5 | ~~F5-11~~ ✅ | — | `generate_with_citation(..., chat_history=)` + query contextualization; UI badge **PHÁP LUẬT**/**QUY ĐỊNH SÀN** theo `doc_type` | ✅ |
 | ⭐ **F5-18** | **[BONUS 5đ]** TF-IDF song song BM25 + giải thích cơ chế | S | CP5 | ~~F5-6~~ ✅ | — | `tfidf_search()` dùng `TfidfVectorizer` + docstring giải thích 3 điểm khác BM25 | 🔴 **CHƯA LÀM** |
 | ⭐ **F5-16** | **[BONUS 4đ]** deploy Hugging Face Spaces | Q | CP6 | ~~F5-11~~ ✅ | — | Nhánh `hf-space` sẵn sàng (requirements 20→9 gói), hướng dẫn ở [`DEPLOY_HF.md`](DEPLOY_HF.md). **Còn chờ Quang tạo Space + token** | 🔵 **In Review — cần 1 việc tay** |
-| **F5-17** | Chốt nộp: pytest 35/35 + dọn repo + push | Q | CP6 | tất cả | — | `main` xanh, `.env`/`chroma_db/`/`.venv/` không lọt git | ⬜ chờ tất cả |
+| **F5-17** | Chốt nộp: pytest 35/35 + dọn repo + push | Q | CP6 | tất cả | — | ✅ 35 passed · ✅ không lọt `.env`/`.venv`/`__pycache__`/`pageindex_doc_ids.json` · ✅ không hardcode key · ✅ đủ 7 deliverable · ✅ link demo trong 2 README | 🟡 chờ ⭐F5-18 |
 
 ### Ticket làm được NGAY, không chờ ai
 
@@ -1299,6 +1299,54 @@ Liệt kê vi phạm nếu có, đừng tự sửa vội.
 | ⬜ 3 | **Q** | F5-17 chốt nộp: `pytest` lại trên `main`, dọn repo | — | 10 phút |
 
 **Chỉ còn 5 điểm bonus: TF-IDF.** Phần bắt buộc đã xong hết.
+
+---
+
+## ✅ CHECKLIST CHỐT NỘP (F5-17)
+
+Kiểm ngày 04/08/2026 trên `main` @ `1b4a68a`:
+
+| # | Hạng mục | Kết quả |
+|---|----------|---------|
+| 1 | `pytest tests/test_individual.py` | ✅ **35 passed · 0 failed · 0 skipped** |
+| 2 | File cấm lọt vào git (`.env`, `.venv/`, `__pycache__/`, `pageindex_doc_ids.json`) | ✅ sạch |
+| 3 | Hardcode API key trong code | ✅ không có |
+| 4 | 7 deliverable bắt buộc | ✅ đủ *(app.py · PLAN.md · 2 README · golden_dataset.json · eval_pipeline.py · results.md)* |
+| 5 | `chroma_db/` có trong repo | ✅ 36 file, 1.216 chunk |
+| 6 | Link demo trong README | ✅ cả 2 README |
+| 7 | `NotImplementedError` còn sót | ✅ chỉ ở `rerank_cross_encoder` và `rerank_mmr` — **đúng thiết kế** |
+
+> **Mục 7 — giải thích khi bị hỏi:** `README.md` Task 7 ghi *"Lựa chọn (chọn 1)"* giữa
+> cross-encoder / MMR / RRF. Nhóm chọn **RRF** vì nó gộp được kết quả từ nhiều ranker
+> (đúng nhu cầu hybrid search) mà không cần model phụ hay API trả phí. Hai nhánh còn lại
+> để nguyên `NotImplementedError` là **có chủ ý**, không phải làm dở — `TestTask7` vẫn 3/3.
+
+### 🚨 2 việc còn lại trước khi nộp
+
+| # | Việc | Ai | Điểm | Thời gian |
+|---|------|-----|------|-----------|
+| 1 | **Đổi app Streamlit sang public** — link đang redirect sang trang đăng nhập, coach mở sẽ bị chặn | Q | *giữ 4đ đã có* | 1 phút |
+| 2 | **⭐F5-18 TF-IDF** + giải thích cơ chế | ai cũng được | **5đ** | 10 phút |
+
+**Cách sửa việc 1:** share.streamlit.io → chọn app → **Settings → Sharing** →
+đổi từ *"Only specific people"* sang **"This app is public and searchable"**.
+
+> ⚠️ Không sửa thì bonus deploy **có nguy cơ mất 4 điểm** — giám khảo bấm link chỉ thấy
+> màn hình đăng nhập, không có cách nào xác nhận app chạy được.
+
+---
+
+## 📊 TỔNG KẾT ĐIỂM
+
+| Thành phần | Đạt | Tối đa |
+|-----------|-----|--------|
+| Pipeline kỹ thuật (Task 1–10) | **50** | 50 |
+| Bài nhóm | **27** | 30 |
+| Bonus | **15** | 20 |
+| **TỔNG** | **92** | **100** |
+
+Còn lấy được: TF-IDF **5đ** → **97/100**.
+3 điểm không lấy được là *"chất lượng câu trả lời"* — do giám khảo chấm chủ quan.
 Cả 4 người đều rảnh → ai làm F5-18 cũng được, đừng để 5 điểm rẻ nhất bị bỏ.
 
 **Prompt sẵn cho từng ticket bonus: [§10.6](#106-prompt-cho-4-ticket-bonus--copy-thẳng-vào-agent).**
