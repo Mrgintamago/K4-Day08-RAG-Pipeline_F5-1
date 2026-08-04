@@ -1,5 +1,9 @@
 """
-Task 1 — Thu thập văn bản chính sách thương mại điện tử / hỗ trợ khách hàng.
+Task 1 — Thu thập văn bản pháp lý cho chủ đề "Trợ Lý Pháp Lý Khởi Nghiệp & TMĐT".
+
+Hai nguồn bổ sung nhau:
+    - vi.wikisource.org  → luật Việt Nam (toàn văn, phạm vi công cộng)
+    - help.shopee.vn     → quy định/chính sách của sàn TMĐT
 
 Nguồn: Trung tâm trợ giúp công khai của Shopee Vietnam (help.shopee.vn).
 robots.txt của site cho phép crawl toàn bộ (`Allow: /`).

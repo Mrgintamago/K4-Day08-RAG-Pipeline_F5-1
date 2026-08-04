@@ -1,4 +1,7 @@
-# Bài Tập Nhóm — E-commerce Support RAG Chatbot
+# Bài Tập Nhóm — ⚖️ Trợ Lý Pháp Lý Khởi Nghiệp & Thương Mại Điện Tử
+
+> Chủ đề **#2** trong [`../SUGGESTED_TOPICS.md`](../SUGGESTED_TOPICS.md).
+> Tên tiếng Anh dùng cho deploy: **E-commerce & Startup Legal Assistant**.
 
 ## Mục Tiêu
 
@@ -8,7 +11,7 @@ Sau khi hoàn thành bài cá nhân, nhóm ngồi lại để xây dựng **1 tr
 
 ## Yêu cầu 1: Sản phẩm nhóm RAG Chatbot
 
-Xây dựng chatbot trả lời câu hỏi về chính sách thương mại điện tử và hỗ trợ khách hàng liên quan.
+Xây dựng chatbot tra cứu quy định pháp lý khi bán hàng online: nghĩa vụ thuế, đăng ký hộ kinh doanh / thành lập công ty, quy định đăng bán trên sàn TMĐT, quyền người tiêu dùng.
 
 **Yêu cầu:**
 - Giao diện chat (Streamlit / Gradio / Chainlit)

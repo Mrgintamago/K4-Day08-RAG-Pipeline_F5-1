@@ -1,6 +1,12 @@
 """
-RAG Chatbot — E-commerce Support (Starter Template)
+RAG Chatbot — Trợ Lý Pháp Lý Khởi Nghiệp & Thương Mại Điện Tử
 Streamlit app kết nối RAG Retrieval (Task 9) và Generation (Task 10).
+
+Chủ đề #2 trong SUGGESTED_TOPICS.md. Corpus 2 lớp:
+    - Văn bản luật (Wikisource): trả lời "pháp luật bắt tôi làm gì"
+    - Quy định sàn (help.shopee.vn): trả lời "sàn bắt tôi làm gì"
+Citation nên in kèm doc_type để người dùng phân biệt hai loại — khác biệt này
+quan trọng về mặt pháp lý.
 
 Chạy:
     streamlit run app.py
@@ -24,8 +30,8 @@ sys.path.insert(0, str(PROJECT_ROOT))
 # =============================================================================
 
 st.set_page_config(
-    page_title="E-commerce Support RAG Chatbot",
-    page_icon="🛒",
+    page_title="Trợ Lý Pháp Lý Khởi Nghiệp & TMĐT",
+    page_icon="⚖️",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -35,18 +41,20 @@ st.set_page_config(
 # =============================================================================
 
 with st.sidebar:
-    st.title("🛒 E-commerce Support RAG")
-    st.caption("Trợ lý hỏi đáp về chính sách thương mại điện tử và hỗ trợ khách hàng (đổi trả, thanh toán, bảo mật, người bán)")
+    st.title("⚖️ Trợ Lý Pháp Lý Khởi Nghiệp & TMĐT")
+    st.caption("Hỏi đáp về quy định pháp lý khi bán hàng online: thuế, đăng ký kinh doanh, quy định sàn TMĐT, quyền người tiêu dùng")
 
     st.divider()
 
+    # Câu hỏi gợi ý bám 4 nhóm chủ đề của golden dataset (PLAN.md §1.5),
+    # để demo chạm được cả 2 lớp corpus: văn bản luật và quy định sàn.
     st.subheader("💡 Câu hỏi gợi ý")
     suggestions = [
-        "Thời hạn yêu cầu trả hàng/hoàn tiền là bao lâu?",
-        "Shopee hỗ trợ những phương thức thanh toán nào?",
-        "Làm sao để đổi phương thức thanh toán đơn hàng?",
-        "Quy định về đăng bán sản phẩm cho người bán?",
-        "Cách mua hàng trên Shopee của quốc gia khác?",
+        "Bán hàng online doanh thu bao nhiêu thì phải nộp thuế TNCN?",
+        "Hồ sơ đăng ký hộ kinh doanh cá thể gồm những giấy tờ gì?",
+        "Những mặt hàng nào bị cấm đăng bán trên Shopee?",
+        "Người tiêu dùng có quyền trả hàng trong bao lâu?",
+        "Công ty TNHH một thành viên có bắt buộc có Ban kiểm soát không?",
     ]
     for s in suggestions:
         if st.button(s, use_container_width=True, key=f"sug_{s[:20]}"):
@@ -73,8 +81,8 @@ if "pending_query" not in st.session_state:
 # MAIN CHAT AREA
 # =============================================================================
 
-st.title("🛒 E-commerce Support RAG Chatbot")
-st.caption("Hệ thống hỏi đáp chính sách e-commerce và trợ giúp khách hàng")
+st.title("⚖️ Trợ Lý Pháp Lý Khởi Nghiệp & TMĐT")
+st.caption("Hỏi đáp dựa trên văn bản luật Việt Nam và quy định sàn thương mại điện tử — mọi câu trả lời đều kèm trích dẫn nguồn")
 
 # Hiển thị lịch sử chat
 for msg in st.session_state.messages:
