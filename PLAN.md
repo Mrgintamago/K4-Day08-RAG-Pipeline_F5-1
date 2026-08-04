@@ -13,12 +13,25 @@
 
 ```
 Task 1-10 :  ████████████████████  50 / 50 điểm   ✅ ĐẠT MỐC CP4
-Bài nhóm  :  ███████░░░░░░░░░░░░░  11 / 30 điểm   (chatbot 8 + golden dataset 3)
+Bài nhóm  :  ████████████░░░░░░░░  18 / 30 điểm
 Bonus     :  ░░░░░░░░░░░░░░░░░░░░   0 / 20 điểm   🔓 ĐÃ MỞ KHOÁ
 pytest    :  35 passed · 0 skipped · 0 failed      ✅ 35/35
 ```
 
-**Còn lại: F5-13 RAGAS (9đ) · README kiến trúc (3đ) · chất lượng câu trả lời (3đ) · bonus (20đ).**
+### Bài nhóm — chi tiết 18/30
+
+| Tiêu chí | Điểm | Trạng thái |
+|---|---|---|
+| RAG Chatbot demo hoạt động | 8 | ✅ `app.py` khởi động sạch, trả lời được |
+| Tích hợp pipeline Task 1–10 | 4 | ✅ `app.py` → `generate_with_citation()` → `retrieve()` |
+| Chất lượng câu trả lời (citation) | 3 | ✅ đã kiểm: trả lời có `[nguồn.md]`, thiếu evidence thì nói "không thể xác minh" |
+| Golden dataset ≥15 Q&A | 3 | ✅ 16 câu |
+| **Eval ≥4 metrics** | **4** | ⬜ **chưa chạy** |
+| **A/B ≥2 configs + phân tích** | **3** | ⬜ **chưa chạy** |
+| **Báo cáo worst performers** | **2** | ⬜ **chưa chạy** |
+| **Kiến trúc rõ ràng + README** | **3** | ⬜ **chưa viết** |
+
+**12 điểm còn thiếu nằm gọn ở 2 việc: F5-13 RAGAS (9đ) và mục kiến trúc trong README (3đ).**
 
 ## 🎉 ĐÃ QUA MỐC 50 ĐIỂM — BONUS MỞ KHOÁ
 
@@ -61,7 +74,7 @@ Tụt xuống dưới 35 là mất điểm đã có — nguy hiểm hơn là kh�
 | F5-13 | RAGAS eval + `results.md` | S | 9 | 🟡 scaffold 418 dòng · chờ pipeline thật để chạy |
 | ⭐ F5-14 | Bonus HyDE | T | 5 | 🔓 **đã mở khoá** |
 | ⭐ F5-15 | Bonus memory + UI | H | 6 | 🔓 **đã mở khoá** |
-| ⭐ F5-16 | Bonus deploy HF | Q | 4 | 🔓 **đã mở khoá** |
+| ⭐ F5-16 | Bonus deploy HF | Q | 4 | 🔵 nhánh `hf-space` sẵn sàng · chờ tạo Space |
 | F5-17 | Chốt nộp | Q | — | ⬜ |
 
 Ký hiệu: ✅ xong · 🟡 đang làm · 🟢 làm được ngay, không chờ ai · ⬜ chờ ticket khác ·
@@ -69,12 +82,12 @@ Ký hiệu: ✅ xong · 🟡 đang làm · 🟢 làm được ngay, không chờ
 
 ### Ai đang làm gì
 
-| | Đã xong (Task 1–10) | Đang làm | Kế tiếp |
+| | Đã xong | Đang làm | Kế tiếp |
 |---|---|---|---|
-| **Q** Quang | F5-0, 1, 2, 3, 8, 9 — **21đ** | 4 câu golden dataset | ⭐F5-16 deploy · F5-17 chốt nộp |
-| **T** Tường | F5-4, F5-5 — **13đ** | — | ⭐F5-14 HyDE · giúp F5-11 |
-| **H** Hân | F5-10 — **4đ** | **F5-11 `app.py` 🔴** | ⭐F5-15 memory + UI |
-| **S** Sáng | F5-6, F5-7 — **12đ** (+F5-12 3đ) | **F5-13 chạy A/B 🔴** | — |
+| **Q** Quang | F5-0,1,2,3,8,9 — **21đ** | **README kiến trúc (3đ) 🔴** | ⭐F5-16 deploy · F5-17 chốt nộp |
+| **T** Tường | F5-4, F5-5 — **13đ** | — *(rảnh)* | ⭐F5-14 HyDE · giúp S ở F5-13 |
+| **H** Hân | F5-10 **4đ** + F5-11 **8đ** | — *(rảnh)* | ⭐F5-15 kiểm memory + UI |
+| **S** Sáng | F5-6, F5-7 **12đ** + F5-12 **3đ** | **F5-13 chạy A/B (9đ) 🔴** | ⭐TF-IDF |
 
 ### 🚨 Đang chặn tiến độ
 
@@ -509,7 +522,7 @@ Bảng này là **nguồn sự thật duy nhất** về tiến độ. Ai cũng s
 | **F5-13** | `eval_pipeline.py` + `results.md` — RAGAS A/B | S | CP5 | ~~F5-10~~ ✅, ~~F5-12~~ ✅, **F5-9** | — | 4 metric × 2 config + phân tích worst performers | 🟡 scaffold 418 dòng · chờ `retrieve()` thật mới chạy được A/B |
 | ⭐ **F5-14** | **[BONUS 5đ]** HyDE / Query Expansion | T | CP5 | F5-5 | — | Flag bật/tắt trong `task5`, đo được chênh lệch | 🔓 **đã mở khoá** |
 | ⭐ **F5-15** | **[BONUS 3+3đ]** conversation memory + UI source/score | H | CP5 | F5-11 | — | Follow-up hiểu ngữ cảnh; UI hiện nguồn + điểm | 🔓 **đã mở khoá** |
-| ⭐ **F5-16** | **[BONUS 4đ]** deploy Hugging Face Spaces | Q | CP6 | F5-11 | — | URL Space chạy được | 🔓 **đã mở khoá** |
+| ⭐ **F5-16** | **[BONUS 4đ]** deploy Hugging Face Spaces | Q | CP6 | ~~F5-11~~ ✅ | — | Nhánh `hf-space` sẵn sàng (requirements 20→9 gói), hướng dẫn ở [`DEPLOY_HF.md`](DEPLOY_HF.md). **Còn chờ Quang tạo Space + token** | 🔵 **In Review — cần 1 việc tay** |
 | **F5-17** | Chốt nộp: pytest 35/35 + dọn repo + push | Q | CP6 | tất cả | — | `main` xanh, `.env`/`chroma_db/`/`.venv/` không lọt git | ⬜ chờ tất cả |
 
 ### Ticket làm được NGAY, không chờ ai
@@ -1254,13 +1267,15 @@ Liệt kê vi phạm nếu có, đừng tự sửa vội.
 
 | Ưu tiên | Ai | Việc | Điểm | Thời gian |
 |---------|----|------|------|-----------|
-| 🔴 **1** | **S** (+Q giúp) | **F5-13** chạy RAGAS A/B thật · thử 5 câu trước rồi mới full 16 | 9 | 20 phút |
-| 🟡 2 | **Q** | Viết mục kiến trúc + phân công trong 2 README | 3 | 10 phút |
-| 🟢 3 | ⭐ **S** | Bonus TF-IDF — ghi giải thích cơ chế vào docstring | 5 | 10 phút |
-| 🟢 3 | ⭐ **H** | Bonus memory + UI source/score — kiểm lại đã đủ tiêu chí chưa | 6 | 10 phút |
-| 🟢 4 | ⭐ **T** | Bonus HyDE trong `task5` | 5 | 20 phút |
-| ⬜ 5 | ⭐ **Q** | Bonus deploy HF Spaces (`chroma_db/` đã commit sẵn) | 4 | 20 phút |
+| 🔴 **1** | **S** (+Q giúp) | **F5-13** chạy RAGAS A/B thật · thử 5 câu trước rồi mới full 16 | **9** | 20 phút |
+| 🔴 **2** | **Q** | Viết mục kiến trúc + phân công trong 2 README | **3** | 10 phút |
+| 🟡 3 | ⭐ **Q** | **F5-16** — tạo Space + token rồi `git push hf hf-space:main` (xem `DEPLOY_HF.md`) | 4 | 10 phút |
+| 🟢 4 | ⭐ **S** | Bonus TF-IDF — ghi giải thích cơ chế vào docstring | 5 | 10 phút |
+| 🟢 4 | ⭐ **H** | Bonus memory + UI source/score — kiểm lại đã đủ tiêu chí chưa | 6 | 10 phút |
+| 🟢 5 | ⭐ **T** | Bonus HyDE trong `task5` | 5 | 20 phút |
 | ⬜ 6 | **Q** | F5-17 chốt nộp: `pytest` lại trên `main`, dọn repo | — | 10 phút |
+
+**12 điểm bắt buộc còn thiếu nằm ở 2 dòng 🔴 đầu bảng** — làm 2 cái đó trước mọi bonus.
 
 **Prompt sẵn cho từng ticket bonus: [§10.6](#106-prompt-cho-4-ticket-bonus--copy-thẳng-vào-agent).**
 
