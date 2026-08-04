@@ -1,5 +1,20 @@
 # PLAN — Ngày 8: RAG Pipeline v2 (Nhóm F5)
 
+> ## 🔴 ĐỌC TRƯỚC — Đổi chủ đề, ai bị ảnh hưởng gì
+>
+> **Chủ đề mới:** #2 trong `SUGGESTED_TOPICS.md` — **"Trợ lý Pháp lý Khởi nghiệp & TMĐT"**
+> (tra cứu quy định khi bán hàng online, đăng ký hộ kinh doanh, nghĩa vụ thuế).
+> Chủ đề cũ (hỗ trợ khách hàng Shopee) là **tập con** của chủ đề mới, nên **không ai phải làm lại từ đầu.**
+>
+> | Role | Có bị ảnh hưởng? | Phải làm gì khác |
+> |------|------------------|------------------|
+> | **Q — Quang** | ✅ Đã xử lý xong | Task 1–3 crawl lại xong rồi, không còn việc tồn |
+> | **T — Tường** | ⚠️ **CÓ — đọc mục [1.5](#15-corpus-doi--tuong-va-sang-phai-doc)** | Corpus to gấp 2.5 lần → chọn embedding provider cho đúng, nếu không F5-4 chạy 20+ phút |
+> | **H — Hân** | ⚪ Gần như không | Chỉ đổi câu hỏi gợi ý trong `app.py` sang chủ đề pháp lý |
+> | **S — Sáng** | ⚠️ **CÓ — đọc mục [1.5](#15-corpus-doi--tuong-va-sang-phai-doc)** | Golden dataset phải hỏi về luật + thuế, không chỉ hỏi đơn hàng |
+>
+> Chi tiết corpus mới và lý do chọn nguồn: [§1.5](#15-corpus-doi--tuong-va-sang-phai-doc).
+
 Bám theo `README.md` (chấm điểm), `LAB_GUIDE.md` (checkpoint & phân vai — **Phương Án A: nhóm 4 thành viên**)
 và `group_project/README.md` (deliverable bài nhóm).
 
@@ -48,14 +63,122 @@ nên phần còn lại (T3, T8, T9) tương đương người khác.
 
 | Việc | Kết quả | File |
 |------|---------|------|
-| **Task 1** | 6 PDF chính sách Shopee (60–104 KB), có dấu tiếng Việt, kèm `customer_role` | `data/landing/legal/*.pdf` + `_metadata.json` |
-| **Task 2** | 10 bài hướng dẫn JSON, đủ `url` / `title` / `date_crawled` / `topic` | `data/landing/news/article_*.json` |
-| Helper crawl | Parse SSR JSON của help.shopee.vn → text sạch, không cần Chromium | `src/shopee_help.py` (mới) |
+| **Task 1** | **13 văn bản PDF**: 8 quy định Shopee + 5 luật toàn văn, đều trích được text | `data/landing/legal/*.pdf` + `_metadata.json` |
+| **Task 2** | **18 bài hướng dẫn JSON**, đủ `url` / `title` / `date_crawled` / `topic` / `customer_role` | `data/landing/news/article_*.json` |
+| **Task 3** | **31 file `.md`** kèm header metadata, `TestTask3` 4/4 passed | `data/standardized/**` |
+| **Task 8** | PageIndex + fallback vectorless cục bộ, `TestTask8` 2/2 passed | `src/task8_pageindex_vectorless.py` |
+| Helper crawl | Parse SSR JSON của help.shopee.vn → text sạch, không cần Chromium; hỗ trợ portal 4 & 10 | `src/shopee_help.py` (mới) |
+| Helper luật | Lấy toàn văn luật qua API Wikisource, tự gom trang con theo chương | `src/wikisource_law.py` (mới) |
 | **F5-0** | Sửa 3 hằng số mâu thuẫn giữa starter và LAB_GUIDE (xem §3.3) | `task4_...py`, `task9_...py` |
-| Hạ tầng | `.venv` Python 3.12, thêm `chroma_db/` vào `.gitignore` | `.venv/`, `.gitignore` |
+| Merge upstream | Lấy hint `EMBEDDING_PROVIDER` + `SUGGESTED_TOPICS.md`, gỡ conflict `requirements.txt` | — |
+| Hạ tầng | `.venv` Python 3.12, `chroma_db/` vào `.gitignore`, sửa xung đột dependency | `.venv/`, `.gitignore`, `requirements.txt` |
+
+**Nguồn đã thử và loại cho lớp văn bản luật** (ghi lại để không ai mất công thử lại):
+`vanban.chinhphu.vn` PDF là ảnh scan → 0 ký tự · `thuvienphapluat.vn` 403 Cloudflare ·
+`luatvietnam.vn` paywall · `vbpl.vn` đổi sang Next.js SPA, URL `.aspx` cũ 404 ·
+`congbao.chinhphu.vn` chỉ có metadata. Chi tiết: docstring `src/wikisource_law.py`.
 
 > Task 1–10 vẫn là **bài chung của cả nhóm** (50% điểm) — chốt bằng
 > `pytest tests/test_individual.py` chạy trên `main`, cả nhóm cùng chịu trách nhiệm.
+
+### 1.5. Corpus đổi — Tường và Sáng phải đọc
+
+Chủ đề mới cần 2 lớp tài liệu bổ sung nhau:
+
+| Lớp | Trả lời câu hỏi | Nguồn | Số file |
+|-----|-----------------|-------|---------|
+| **Quy định sàn** | "Shopee bắt tôi làm gì?" | help.shopee.vn | 26 |
+| **Văn bản luật** | "Pháp luật bắt tôi làm gì?" | vi.wikisource.org | 5 |
+
+**Corpus hiện tại: 31 file `.md`, 865.028 ký tự ≈ 1.081 chunk @800.**
+Trước khi đổi chủ đề là 16 file / ~350k ký tự — **to lên 2,5 lần**.
+
+<details>
+<summary><b>13 văn bản lớp legal</b> (bấm để xem)</summary>
+
+| File | Role | Nguồn |
+|------|------|-------|
+| returns-refund-policy-shopee | buyer | Shopee |
+| privacy-policy-shopee | both | Shopee |
+| product-listing-regulations-shopee | seller | Shopee |
+| shipping-policy-shopee | both | Shopee |
+| prohibited-restricted-products-policy-shopee | seller | Shopee |
+| anti-fraud-policy-seller-shopee | seller | Shopee |
+| ecommerce-platform-operating-rules-shopee | seller | Shopee |
+| terms-of-service-shopee | both | Shopee |
+| **luat-doanh-nghiep-2020** (328k ký tự) | seller | Wikisource |
+| **luat-thuong-mai-2005** (182k ký tự) | both | Wikisource |
+| **luat-bao-ve-quyen-loi-nguoi-tieu-dung-2010** | both | Wikisource |
+| **luat-giao-dich-dien-tu-2005** | both | Wikisource |
+| **luat-thue-thu-nhap-ca-nhan-2007** | seller | Wikisource |
+
+18 bài news theo chủ đề: thuế & hoá đơn (5), theo dõi đơn hàng (3), phương thức
+thanh toán (3), trả hàng & hoàn tiền (2), mua hàng xuyên biên giới (2),
+dòng tiền người bán (2), bảo hành (1).
+</details>
+
+#### ⚠️ TƯỜNG (F5-4) — đọc kỹ, đây là thay đổi lớn nhất
+
+**1.081 chunk thay vì ~430.** Với `BAAI/bge-m3` chạy CPU, embedding 1.081 chunk mất
+**khoảng 15–25 phút** — vượt hẳn 25 phút của cả CP2. Ba lựa chọn, chọn 1 **ngay từ CP0**:
+
+| Cách | Lệnh / cấu hình | Thời gian embed | Đánh đổi |
+|------|-----------------|-----------------|----------|
+| 🟢 **`all-MiniLM-L6-v2`** (khuyến nghị nếu chưa tải model) | Đổi `EMBEDDING_MODEL`, `EMBEDDING_DIM=384` | ~3–5 phút | Yếu hơn với tiếng Việt, nhưng đủ để pass test và demo |
+| 🟡 **Google `text-embedding-004`** | `EMBEDDING_PROVIDER=google` + `GEMINI_API_KEY`, `EMBEDDING_DIM=768` | ~2–4 phút | Không phải tải 2.2GB; tốn API call, có thể dính rate limit |
+| 🔴 **`bge-m3`** (mặc định) | Giữ nguyên | 15–25 phút | Chất lượng tiếng Việt tốt nhất, nhưng **chặn cả S lẫn Q** |
+
+> Upstream vừa thêm hint viết `embed_texts()` dispatch theo `EMBEDDING_PROVIDER`
+> (xem docstring `task4_chunking_indexing.py`). Làm theo hint đó thì đổi provider chỉ
+> là sửa `.env`, và Task 5 tự dùng đúng provider mà không phải sửa code lần hai.
+>
+> **Đổi provider → BẮT BUỘC xoá `chroma_db/` rồi index lại** (dimension 384/768/1024
+> không tương thích ngược).
+
+Cân nhắc thêm: `luat-doanh-nghiep-2020.md` một mình đã chiếm ~38% corpus. Nếu cần
+cắt thời gian, có thể chỉ index các chương liên quan (Chương I quy định chung,
+Chương IV–V về công ty TNHH) — **ghi rõ lý do lược bớt vào comment** để trả lời được
+khi bị hỏi.
+
+#### ⚠️ SÁNG (F5-12, F5-13) — golden dataset phải đổi
+
+Bộ câu hỏi cũ chỉ hỏi vận hành đơn hàng → **không còn đại diện cho chủ đề mới**.
+16 câu chia theo 4 nhóm, mỗi người 4 câu:
+
+| Nhóm | Ai viết | Ví dụ câu hỏi | Tài liệu chứa evidence |
+|------|---------|---------------|------------------------|
+| **Thuế & hoá đơn** | Sáng | "Bán hàng online doanh thu bao nhiêu thì phải nộp thuế TNCN?" | `luat-thue-thu-nhap-ca-nhan-2007`, `article_11..15` |
+| **Thành lập & đăng ký KD** | Quang | "Công ty TNHH một thành viên có bắt buộc có Ban kiểm soát không?" | `luat-doanh-nghiep-2020` |
+| **Quy định bán hàng trên sàn** | Tường | "Những mặt hàng nào bị cấm đăng bán trên Shopee?" | `prohibited-restricted-products`, `product-listing-regulations` |
+| **Quyền người tiêu dùng & đổi trả** | Hân | "Người tiêu dùng có quyền trả hàng trong bao lâu?" | `luat-bao-ve-quyen-loi-nguoi-tieu-dung-2010`, `returns-refund-policy` |
+
+Yêu cầu thêm: **ít nhất 3 câu phải cần lọc `customer_role=seller`** để chứng minh
+metadata_filter hoạt động (yêu cầu K4 Variant). Corpus giờ có **12 tài liệu `seller`**
+nên retrieve được — trước khi đổi chủ đề chỉ có 3, quá mỏng.
+
+Với **F5-13 (A/B test)**: corpus 2 nguồn khiến so sánh có ý nghĩa hơn — câu hỏi về luật
+thường cần BM25 (bắt số hiệu điều luật "Điều 33", "Luật số 59/2020/QH14"), câu hỏi vận
+hành thì semantic mạnh hơn. Đây chính là luận điểm để phân tích worst performers.
+
+#### ⚪ HÂN (F5-10, F5-11) — chỉ đổi phần hiển thị
+
+Code không đổi. Chỉ cần:
+- Đổi **câu hỏi gợi ý** trong `app.py` sang chủ đề pháp lý (lấy từ bảng của Sáng ở trên).
+- Citation nên in kèm `doc_type` (`legal_document` vs `platform_policy`) để người dùng
+  phân biệt "đây là luật" hay "đây là quy định riêng của sàn" — khác biệt quan trọng
+  về mặt pháp lý, và là điểm cộng khi chấm "chất lượng câu trả lời".
+
+#### Metadata mỗi file `.md` giờ có thêm
+
+```markdown
+**customer_role:** buyer | seller | both
+**doc_type:** legal_document | platform_policy | support_article
+**topic:** thuế & hoá đơn | thành lập doanh nghiệp | ...
+```
+
+`doc_type` là trường mới — Tường nhớ đưa vào metadata của chunk ở F5-4.
+
+---
 
 ### 🔁 Quy tắc hỗ trợ chéo — XONG VIỆC LÀ QUA GIÚP NGƯỜI KHÁC
 
@@ -225,9 +348,9 @@ Trạng thái: ⬜ To Do · 🟡 In Progress · 🔵 In Review · ✅ Done · �
 |----|--------|----|----|-----------|--------|-----------------------------------|----|
 | **F5-00** | **Setup môi trường** (venv 3.12 + deps + `.env`) | **cả 4** | CP0 | — | *tất cả* | Mỗi máy chạy được lệnh verify `SETUP OK` (§CP0-A) | ⬜ |
 | **F5-0** | Chốt 3 hằng số + push `main` | Q | CP0 | — | F5-4, F5-9 | `main` có 800 / 100 / 0.48 | ✅ |
-| **F5-1** | Task 1 — ≥3 PDF chính sách | Q | CP1 | — | F5-3 | `data/landing/legal/*.pdf` (6 file) + `_metadata.json` | ✅ |
-| **F5-2** | Task 2 — ≥5 bài hướng dẫn | Q | CP1 | — | F5-3 | `data/landing/news/*.json` (10 file) | ✅ |
-| **F5-3** | Task 3 — convert markdown | Q | CP1 | F5-1, F5-2 | F5-4, F5-8, F5-12 | `data/standardized/legal/*.md` (6) + `news/*.md` (10), mỗi file có header metadata | ✅ |
+| **F5-1** | Task 1 — ≥3 PDF chính sách | Q | CP1 | — | F5-3 | `data/landing/legal/*.pdf` (**13** file: 8 Shopee + 5 luật) + `_metadata.json` | ✅ |
+| **F5-2** | Task 2 — ≥5 bài hướng dẫn | Q | CP1 | — | F5-3 | `data/landing/news/*.json` (**18** file) | ✅ |
+| **F5-3** | Task 3 — convert markdown | Q | CP1 | F5-1, F5-2 | F5-4, F5-8, F5-12 | `data/standardized/` **31 file** `.md`, mỗi file có header metadata | ✅ |
 | **F5-4** | Task 4 — chunking + ChromaDB index | T | CP2 | ~~F5-0, F5-3~~ **đã thông** | F5-5, F5-6 | `chroma_db/` có collection `ecommerce_support_docs` **> 0 docs** | 🟢 **sẵn sàng làm** |
 | **F5-5** | Task 5 — `semantic_search()` | T | CP2 | F5-4 | F5-9 | Trả `list[Result]` sorted desc, **score là cosine [0,1]** | ⬜ |
 | **F5-6** | Task 6 — `lexical_search()` BM25 + TF-IDF | S | CP2 | F5-4 | F5-9 | Trả `list[Result]` sorted desc | ⬜ |
@@ -236,7 +359,7 @@ Trạng thái: ⬜ To Do · 🟡 In Progress · 🔵 In Review · ✅ Done · �
 | **F5-9** | Task 9 — `retrieve()` + fallback | Q | CP4 | F5-5, F5-6, F5-7, F5-8 | F5-10, F5-13 | `retrieve()` chạy, fallback trigger khi cosine < 0.48 | ⬜ |
 | **F5-10** | Task 10 — `generate_with_citation()` | H | CP4 | F5-9 *(mock được)* | F5-11, F5-13 | `{answer, sources, retrieval_source}`, answer có `[Nguồn, Năm]` | ⬜ |
 | **F5-11** | `app.py` — Streamlit chatbot | H | CP5 | F5-10 | — | `streamlit run app.py` trả lời + hiện source & score | ⬜ |
-| **F5-12** | `golden_dataset.json` — 16 Q&A | **cả 4** (mỗi người 4 câu, S gộp) | CP5 | F5-3 | F5-13 | 15+ cặp `question` / `expected_answer` / `expected_context` | ⬜ |
+| **F5-12** | `golden_dataset.json` — 16 Q&A **theo 4 nhóm chủ đề mới** (§1.5) | **cả 4** (mỗi người 4 câu, S gộp) | CP5 | F5-3 | F5-13 | 15+ cặp `question` / `expected_answer` / `expected_context`, **≥3 câu cần filter `customer_role=seller`** | ⬜ |
 | **F5-13** | `eval_pipeline.py` + `results.md` — RAGAS A/B | S | CP5 | F5-10, F5-12 | — | 4 metric × 2 config + phân tích worst performers | ⬜ |
 | ⭐ **F5-14** | **[BONUS 5đ]** HyDE / Query Expansion | T | CP5 | F5-5 | — | Flag bật/tắt trong `task5`, đo được chênh lệch | ⬜ |
 | ⭐ **F5-15** | **[BONUS 3+3đ]** conversation memory + UI source/score | H | CP5 | F5-11 | — | Follow-up hiểu ngữ cảnh; UI hiện nguồn + điểm | ⬜ |
@@ -342,7 +465,7 @@ Rồi chạy test — đúng lúc này phải thấy **6 passed** (Task 1–2 đ
 |---|------|-----|----------|
 | 1 | ~~F5-0: sửa 3 hằng số (§3.3)~~ | Q | ✅ đã sửa, còn commit + push `main` |
 | 2 | Chia sẻ `OPENROUTER_API_KEY` cho cả nhóm (kênh riêng, KHÔNG commit) | Q | Cả 4 người gọi được API |
-| 3 | Tải model `bge-m3` chạy nền ngay (~2.2GB) — đừng đợi CP2 | T | `SentenceTransformer("BAAI/bge-m3")` load xong |
+| 3 | **Chốt embedding provider** theo bảng §1.5 (corpus 1.081 chunk!) rồi tải model chạy nền | T | Đã chọn xong provider, không đổi giữa chừng |
 | 4 | `streamlit run app.py` mở được | H | localhost:8501 |
 | 5 | Đọc `tests/test_individual.py::TestTask6,TestTask7` để nắm tiêu chí | S | Biết test đòi gì trước khi code |
 
@@ -388,7 +511,11 @@ Task 3 cần `markitdown[pdf]` — lỗi `MissingDependencyException` thì `pip 
 
 **F5-4 đã hết vật cản, Tường bắt đầu được ngay.** `git pull origin main` rồi làm.
 
-Đầu vào có sẵn: **16 file** trong `data/standardized/` — 6 `legal/` + 10 `news/`.
+⚠️ **Đọc [§1.5](#15-corpus-doi--tuong-va-sang-phai-doc) TRƯỚC** — corpus đã đổi, phải chọn
+embedding provider cho đúng nếu không F5-4 chạy 20+ phút và chặn cả nhóm.
+
+Đầu vào có sẵn: **31 file** trong `data/standardized/` — 13 `legal/` + 18 `news/`,
+tổng 865k ký tự ≈ 1.081 chunk @800.
 Mỗi file mở đầu bằng khối header cố định:
 
 ```markdown
@@ -396,13 +523,17 @@ Mỗi file mở đầu bằng khối header cố định:
 
 **Source:** https://help.shopee.vn/portal/4/article/77251
 **Crawled:** 2026-08-04T11:49:52+07:00
-**customer_role:** buyer
-**doc_type:** policy
-**topic:** trả hàng & hoàn tiền     ← chỉ có ở news/
+**customer_role:** buyer | seller | both
+**doc_type:** legal_document | platform_policy | support_article
+**topic:** thuế & hoá đơn | thành lập doanh nghiệp | ...
 
 ---
 <nội dung thật bắt đầu từ đây>
 ```
+
+`doc_type` là **trường mới** sau khi đổi chủ đề — phân biệt văn bản luật (Wikisource)
+với quy định riêng của sàn (Shopee). Nhớ đưa vào metadata chunk: Hân cần nó để in
+citation phân biệt "luật" vs "quy định sàn".
 
 **Tường nên làm gì với header này** trong `load_documents()`:
 - Parse `**Key:** value` phía trên dấu `---` → dict metadata cho document.
@@ -673,7 +804,9 @@ và là nút thắt chặn 2 người khác.
 
 | Rủi ro | Dấu hiệu | Xử lý | Ai |
 |--------|----------|-------|-----|
-| Tải `bge-m3` quá lâu (~2.2GB) | CP2 quá 10 phút chưa index xong | Đổi `all-MiniLM-L6-v2`, ghi lý do vào comment | T |
+| **Embed 1.081 chunk quá lâu** (corpus to 2.5× sau khi đổi chủ đề) | CP2 quá 10 phút chưa index xong | Đổi `all-MiniLM-L6-v2` (~3–5 ph) hoặc `EMBEDDING_PROVIDER=google` — bảng so sánh ở §1.5 | T |
+| Tải `bge-m3` quá lâu (~2.2GB) | Chưa tải xong khi tới CP2 | Đừng chờ: chuyển thẳng sang MiniLM/Google, ghi lý do vào comment | T |
+| Golden dataset vẫn hỏi theo chủ đề cũ | Câu hỏi toàn về đơn hàng, không có luật/thuế | Dùng đúng 4 nhóm chủ đề ở §1.5, mỗi người 4 câu | S |
 | PageIndex không đăng ký/hết quota | F5-8 lỗi 401/429 | Fallback vectorless tự viết theo heading `.md` | Q |
 | RAGAS dính 429 | Eval treo giữa chừng | Giảm còn 5–8 câu, thêm `time.sleep`, retry | S |
 | Fallback F5-9 không trigger | Query lạc đề vẫn ra kết quả hybrid | So threshold với **cosine gốc** `dense_results[0]["score"]`, không phải điểm RRF | Q |
@@ -864,8 +997,11 @@ Liệt kê vi phạm nếu có, đừng tự sửa vội.
 | Ai | Việc | Thời gian |
 |----|------|-----------|
 | **cả 4** | **F5-00** — setup theo §CP0-A, chạy đến khi thấy `SETUP OK` | 10–15 phút |
-| **Q** | Commit + push F5-0 (3 hằng số) + `.gitignore` lên `main` | 2 phút |
-| **Q** | `.\.venv\Scripts\python.exe -X utf8 -m src.task3_convert_markdown` | 5 phút |
-| **T** | Tải sẵn model `bge-m3` chạy nền (lệnh ở CP0-B) | chạy nền |
-| **S** | Đọc `TestTask6` / `TestTask7` để nắm tiêu chí trước khi code | 5 phút |
+| **cả 4** | Đọc [§1.5](#15-corpus-doi--tuong-va-sang-phai-doc) — chủ đề và corpus đã đổi | 3 phút |
+| **T** | **Chốt embedding provider** (bảng §1.5) rồi bắt đầu F5-4 | 2 phút quyết + chạy nền |
+| **S** | Viết 4 câu golden dataset nhóm "Thuế & hoá đơn"; đọc `TestTask6`/`TestTask7` | 10 phút |
 | **H** | Viết `reorder_for_llm()` bằng fixture giả §3.4 (không chờ ai) | 10 phút |
+| **Q** | Dán `PAGEINDEX_API_KEY` vào `.env` rồi chạy upload F5-8 | 5 phút |
+
+**Trạng thái:** Task 1, 2, 3, 8 xong · `pytest` **14 passed, 21 skipped** ·
+Nút thắt kế tiếp là **F5-4 của Tường** (chặn F5-5 + F5-6).

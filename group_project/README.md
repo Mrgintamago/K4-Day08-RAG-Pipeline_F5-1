@@ -69,9 +69,14 @@ Xem code mẫu (DeepEval/RAGAS/TruLens) chi tiết trong `README.md` gốc mục
 
 ## Kiến Trúc Hệ Thống
 
+**Chủ đề: #2 trong `SUGGESTED_TOPICS.md` — Trợ Lý Pháp Lý Khởi Nghiệp & TMĐT.**
+Corpus 31 file / 865k ký tự, 2 lớp: **văn bản luật** (Wikisource, 5 file) trả lời
+"pháp luật bắt tôi làm gì" + **quy định sàn** (Shopee, 26 file) trả lời "sàn bắt tôi làm gì".
+
 ```
-help.shopee.vn ──► Task 1 (6 PDF chính sách) ──┐
-                   Task 2 (10 JSON hướng dẫn) ─┤ data/landing/
+vi.wikisource.org ─► Task 1 (5 luật toàn văn) ─┐
+help.shopee.vn ───► Task 1 (8 PDF quy định) ───┤
+                    Task 2 (18 JSON hướng dẫn) ┤ data/landing/
                                                 ▼
                                 Task 3 — MarkItDown ──► data/standardized/*.md
                                                 ▼

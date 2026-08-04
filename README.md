@@ -25,9 +25,19 @@ Xây dựng một RAG pipeline thực tế, end-to-end, từ thu thập dữ li�
 
 ## Chủ Đề Dữ Liệu
 
-**Chính sách thương mại điện tử** (thanh toán, đổi trả/hoàn tiền, quy định người bán, quyền riêng tư) + **Hướng dẫn hỗ trợ khách hàng** (theo dõi đơn hàng, bằng chứng hoàn tiền, thay đổi phương thức thanh toán)
+> **Nhóm F5 chọn chủ đề #2 trong [`SUGGESTED_TOPICS.md`](SUGGESTED_TOPICS.md): "Trợ Lý Pháp Lý Khởi Nghiệp & Thương Mại Điện Tử"** — tra cứu quy định pháp lý khi bán hàng online, đăng ký hộ kinh doanh/thành lập công ty, nghĩa vụ thuế.
 
-Dữ liệu mẫu trong repo được crawl thật từ trang trung tâm trợ giúp công khai của **Shopee Vietnam** (help.shopee.vn) — xem chi tiết URL nguồn trong `src/task1_collect_legal_docs.py` và `src/task2_crawl_news.py`.
+Corpus gồm 2 lớp bổ sung nhau (**31 file**, 865k ký tự):
+
+| Lớp | Trả lời | Nguồn | Số file |
+|-----|---------|-------|---------|
+| **Văn bản luật** | "Pháp luật bắt tôi làm gì?" | [vi.wikisource.org](https://vi.wikisource.org) — Luật Doanh nghiệp 2020, Luật Thương mại 2005, Luật BVQL Người tiêu dùng 2010, Luật Giao dịch điện tử 2005, Luật Thuế TNCN 2007 | 5 |
+| **Quy định sàn TMĐT** | "Shopee bắt tôi làm gì?" | [help.shopee.vn](https://help.shopee.vn) — quy chế hoạt động sàn, quy định đăng bán, sản phẩm cấm, chống gian lận, thuế & hoá đơn, đổi trả... | 26 |
+
+Chi tiết URL nguồn: `src/task1_collect_legal_docs.py`, `src/task2_crawl_news.py`.
+Helper crawl: `src/shopee_help.py` (parse SSR JSON), `src/wikisource_law.py` (API MediaWiki).
+
+> **Lưu ý kỹ thuật:** PDF "bản ký số" trên `datafiles.chinhphu.vn` là **ảnh scan**, MarkItDown trích ra 0 ký tự nên không dùng được cho RAG. Các nguồn `thuvienphapluat.vn` (403 Cloudflare), `luatvietnam.vn` (paywall), `vbpl.vn` (đổi sang SPA) cũng không crawl được. Wikisource có toàn văn dạng text + API công khai, và văn bản QPPL Việt Nam thuộc phạm vi công cộng (Điều 15 Luật SHTT).
 
 ---
 
