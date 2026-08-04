@@ -12,13 +12,25 @@
 ### Điểm đã chắc
 
 ```
-Task 1-10 :  ██████████░░░░░░░░░░  24 / 50 điểm
+Task 1-10 :  ███████████████░░░░░  37 / 50 điểm
 Bài nhóm  :  ██░░░░░░░░░░░░░░░░░░   3 / 30 điểm   (golden dataset)
 Bonus     :  ░░░░░░░░░░░░░░░░░░░░   0 / 20 điểm
-pytest    :  20 passed · 15 skipped · 0 failed     (mốc cần: 35 passed)
+pytest    :  27 passed · 8 skipped · 0 failed      (mốc cần: 35 passed)
 ```
 
-**Còn thiếu 26đ = Task 4 (7) + Task 5 (6) + Task 6 (6) + Task 9 (7)** — cả 4 đều nằm sau F5-4.
+**Còn thiếu 13đ = Task 6 (6) + Task 9 (7).** `chroma_db/` đã có **1.216 chunk** → F5-6 hết vật cản.
+
+### 📈 Số đo retrieval (dùng cho F5-9 calibrate ngưỡng)
+
+Đo trên index thật sau khi lọc chunk rác:
+
+| Loại query | cosine top-1 |
+|---|---|
+| Đúng chủ đề (thuế, đăng ký KD, sản phẩm cấm) | **0,444 – 0,531** |
+| Lạc đề (thời tiết, nấu phở) | **0,265 – 0,365** |
+
+→ **`SCORE_THRESHOLD` nên đặt ~0,40**, không phải 0,48 như giá trị khởi điểm của LAB_GUIDE.
+Đặt 0,48 thì câu đúng chủ đề cũng rơi xuống fallback. Quang chốt lại khi làm F5-9.
 
 ### Ticket
 
@@ -29,12 +41,12 @@ pytest    :  20 passed · 15 skipped · 0 failed     (mốc cần: 35 passed)
 | F5-1 | Task 1 — 13 văn bản PDF | Q | 3 | ✅ |
 | F5-2 | Task 2 — 18 bài JSON | Q | 3 | ✅ |
 | F5-3 | Task 3 — 31 file `.md` | Q | 4 | ✅ |
-| **F5-4** | **Task 4 — chunking + ChromaDB** | **T** | **7** | 🔴 **CHƯA BẮT ĐẦU — chặn 26đ còn lại** |
-| F5-5 | Task 5 — semantic search | T | 6 | ⬜ chờ F5-4 |
-| F5-6 | Task 6 — lexical BM25 | S | 6 | ⬜ chờ F5-4 |
+| F5-4 | Task 4 — chunking + ChromaDB | T | 7 | ✅ **1.216 chunk**, 4/4 test passed |
+| F5-5 | Task 5 — semantic search | T | 6 | ✅ 4/4 test passed |
+| **F5-6** | **Task 6 — lexical BM25** | **S** | **6** | 🟢 **hết vật cản — làm được ngay** |
 | F5-7 | Task 7 — RRF rerank | S | 6 | ✅ 3/3 test passed |
 | F5-8 | Task 8 — PageIndex | Q | 4 | ✅ 3 doc trên PageIndex |
-| F5-9 | Task 9 — retrieve + fallback | Q | 7 | ⬜ chờ F5-4→5→6 |
+| **F5-9** | **Task 9 — retrieve + fallback** | **Q** | **7** | ⬜ chỉ còn chờ **F5-6** |
 | F5-10 | Task 10 — generation | H | 4 | ✅ 3/3 test passed |
 | F5-11 | `app.py` chatbot | H | 8 | 🟢 **làm được ngay** (F5-10 xong rồi) |
 | F5-12 | Golden dataset 16 câu | S | 3 | ✅ 16 câu, đủ 3 trường |
@@ -51,23 +63,33 @@ Ký hiệu: ✅ xong · 🟡 đang làm · 🟢 làm được ngay, không chờ
 
 | | Đã xong | Đang làm | Kế tiếp |
 |---|---|---|---|
-| **Q** Quang | F5-0, 1, 2, 3, 8 — **14đ** | 4 câu golden dataset | F5-9 (chờ F5-4→5→6) |
-| **T** Tường | — | **F5-4 🔴 CẢ NHÓM ĐANG CHỜ** | F5-5 |
+| **Q** Quang | F5-0, 1, 2, 3, 8 — **14đ** | 4 câu golden dataset | **F5-9** (chỉ chờ F5-6) |
+| **T** Tường | F5-4, F5-5 — **13đ** | — | ⭐F5-14 sau khi đủ 50đ |
 | **H** Hân | F5-10 — **4đ** | F5-11 `app.py` | ⭐F5-15 sau khi đủ 50đ |
-| **S** Sáng | F5-7, F5-12 — **6đ + 3đ** | F5-13 scaffold | F5-6 (chờ F5-4) |
+| **S** Sáng | F5-7, F5-12 — **6đ + 3đ** | **F5-6 🔴 đường găng** | F5-13 chạy A/B thật |
 
 ### 🚨 Đang chặn tiến độ
 
-**F5-4 của Tường — 3/4 người đã xong phần chạy được, chỉ còn cái này.**
+**F5-6 của Sáng.** `chroma_db/` đã có 1.216 chunk nên F5-6 hết vật cản — nhưng nó là
+ticket cuối cùng chặn **F5-9 (7đ)**, và F5-9 lại chặn phần chạy thật của **F5-13 (9đ)**.
+Nghĩa là 1 ticket đang khoá 13/50 điểm còn lại cộng 9 điểm bài nhóm.
 
-Sáng và Hân đã đi đường vòng bằng fixture giả (đúng như §3.4) nên vẫn tiến được.
-Nhưng **26/50 điểm còn lại đều nằm sau F5-4**: không có `chroma_db/` thì F5-5, F5-6 đứng,
-kéo theo F5-9 và cả phần chạy thật của F5-13.
+Thứ tự đúng: **F5-6 (S) → F5-9 (Q) → F5-13 chạy A/B (S)**.
 
-Tường đọc [§1.5](#15-corpus-doi--tuong-va-sang-phai-doc) **chọn embedding provider trước khi code** —
-corpus 1.081 chunk, dùng `bge-m3` là 15–25 phút.
-Nếu Tường chưa setup xong môi trường → áp dụng [hỗ trợ chéo §1](#-quy-tắc-hỗ-trợ-chéo--xong-việc-là-qua-giúp-người-khác),
-Sáng hoặc Quang nhảy vào làm F5-4 cùng (4 hàm rời, chia đôi được).
+### ⚠️ Chất lượng retrieval — cần biết trước khi làm F5-6 và F5-13
+
+Model đang dùng là `paraphrase-multilingual-MiniLM-L12-v2` (384 chiều), chọn vì đã có sẵn
+trong cache và embed 1.216 chunk chỉ mất ~40 giây. Đánh đổi: **chất lượng tiếng Việt ở mức
+trung bình** — với câu "sản phẩm nào bị cấm đăng bán", chunk đứng đầu vẫn là một đoạn liệt kê
+tên shop chứ không phải điều khoản cấm.
+
+Hệ quả cần lường trước:
+- **F5-6 (BM25) nhiều khả năng thắng semantic** ở câu hỏi có số hiệu điều luật
+  ("Điều 33", "Luật số 59/2020/QH14") — đây là luận điểm tốt cho phân tích A/B của F5-13.
+- **Điểm RAGAS context_precision sẽ không cao.** Đừng hoảng, hãy ghi vào `results.md`
+  như một phát hiện có căn cứ, kèm đề xuất cải tiến: đổi sang `BAAI/bge-m3` (1024 chiều,
+  chuyên đa ngữ) — chỉ cần sửa `EMBEDDING_MODEL` + `EMBEDDING_DIM` rồi xoá `chroma_db/`
+  và chạy lại Task 4. Đây chính là **cấu hình thứ 3 cho A/B test**, đáng giá điểm phân tích.
 
 ---
 
@@ -1105,18 +1127,16 @@ Liệt kê vi phạm nếu có, đừng tự sửa vội.
 
 | Ưu tiên | Ai | Việc | Thời gian |
 |---------|----|------|-----------|
-| 🔴 **1** | **T** | **F5-4** — chọn embedding provider (§1.5) rồi index. **Cả nhóm đang chờ** | 20–30 phút |
-| 🟡 2 | **T** | F5-5 `semantic_search()` ngay sau khi index xong | 15 phút |
-| 🟡 2 | **S** | F5-6 `lexical_search()` — chạy song song với F5-5, cùng chờ `chroma_db/` | 15 phút |
-| 🟢 3 | **H** | F5-11 `app.py` — F5-10 xong rồi, tạm mock `retrieve()` | 25 phút |
+| 🔴 **1** | **S** | **F5-6** `lexical_search()` BM25 — `chroma_db/` sẵn rồi, **đang khoá 13đ** | 15 phút |
+| 🟡 2 | **Q** | **F5-9** ngay khi F5-6 merge · đặt `SCORE_THRESHOLD ≈ 0,40` (số đo ở trên) | 30 phút |
+| 🟢 3 | **H** | F5-11 `app.py` — nối `generate_with_citation()` thật | 25 phút |
 | 🟢 3 | **Q** | 4 câu golden dataset nhóm "Thành lập & đăng ký KD" | 10 phút |
-| ⬜ 4 | **Q** | F5-9 ngay khi F5-5 + F5-6 merge → rồi calibrate `SCORE_THRESHOLD` | 30 phút |
-| ⬜ 5 | **S** | F5-13 chạy A/B thật sau khi có `retrieve()` | 20 phút |
+| ⬜ 4 | **S** | F5-13 chạy A/B thật sau khi có `retrieve()` | 20 phút |
+| ⬜ 5 | **T** | Rảnh rồi → nhảy sang giúp F5-6 hoặc F5-11 (hỗ trợ chéo §1) | — |
 
-**Trạng thái:** `pytest` **20 passed · 15 skipped · 0 failed** · **24/50 điểm**.
-Xong: Task 1, 2, 3, 7, 8, 10 + golden dataset.
-Còn: Task 4, 5, 6, 9 (**26đ**) — **tất cả đều nằm sau F5-4**.
+**Trạng thái:** `pytest` **27 passed · 8 skipped · 0 failed** · **37/50 điểm**.
+Xong: Task 1, 2, 3, 4, 5, 7, 8, 10 + golden dataset.
+Còn: **Task 6 (6đ) + Task 9 (7đ)** — 8 test đang skip đúng là của 2 task này.
 
-> Nếu Tường kẹt setup, đừng chờ: F5-4 gồm 4 hàm rời (`load_documents`, `chunk_documents`,
-> `embed_chunks`, `index_to_vectorstore`) — chia đôi cho 2 người làm song song được,
-> chỉ nối lại ở `run_pipeline()`.
+> **Tường đã xong phần của mình** (F5-4 + F5-5, 13đ). Theo quy tắc hỗ trợ chéo,
+> Tường nên nhảy sang F5-6 cùng Sáng — đó là ticket duy nhất đang chặn cả nhóm.
