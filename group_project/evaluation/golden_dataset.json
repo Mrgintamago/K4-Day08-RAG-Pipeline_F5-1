@@ -1,17 +1,82 @@
 [
   {
-    "question": "Người mua có thể yêu cầu trả hàng/hoàn tiền trong thời hạn bao lâu sau khi nhận hàng?",
-    "expected_answer": "Trong vòng 15 ngày kể từ khi giao hàng thành công (24 giờ đối với thực phẩm tươi sống/đông lạnh).",
-    "expected_context": "Trang Returns and Refunds Policy, mục Return/Refund Eligibility"
+    "question": "Theo Điều 10 Luật Thuế thu nhập cá nhân 2007, thu nhập chịu thuế từ kinh doanh được xác định như thế nào và thời điểm xác định doanh thu là khi nào?",
+    "expected_answer": "Thu nhập chịu thuế từ kinh doanh được xác định bằng doanh thu trừ các chi phí hợp lý liên quan đến việc tạo ra thu nhập chịu thuế. Thời điểm xác định doanh thu là khi chuyển giao quyền sở hữu hàng hóa, hoàn thành dịch vụ hoặc lập hóa đơn bán hàng, cung ứng dịch vụ.",
+    "expected_context": "Điều 10 Luật Thuế thu nhập cá nhân 2007 quy định thu nhập chịu thuế từ kinh doanh bằng doanh thu trừ các khoản chi phí hợp lý. Thời điểm xác định doanh thu là thời điểm chuyển giao quyền sở hữu hàng hóa, hoàn thành dịch vụ hoặc lập hóa đơn bán hàng, cung ứng dịch vụ."
   },
   {
-    "question": "Shopee hỗ trợ những phương thức thanh toán nào?",
-    "expected_answer": "ShopeePay Wallet, thẻ tín dụng/ghi nợ, trả góp qua thẻ, QR Code, chuyển khoản qua app ngân hàng, thẻ NAPAS, Apple Pay, Google Pay, và COD.",
-    "expected_context": "Trang Payment Methods Overview"
+    "question": "Hóa đơn điện tử của đơn hàng Shopee được gửi trong bao lâu và giá trị hóa đơn được tính như thế nào?",
+    "expected_answer": "Hóa đơn được gửi qua email trong vòng 7 ngày làm việc kể từ khi đơn hàng được giao thành công. Giá trị hóa đơn được tính theo tổng giá trị ban đầu của sản phẩm trước khi áp dụng Shopee Voucher và chưa bao gồm phí vận chuyển.",
+    "expected_context": "Bài [Thuế & Hóa đơn] Xuất hóa đơn Điện Tử/hóa đơn VAT cho đơn hàng Shopee nêu rằng hóa đơn được gửi qua email trong vòng 07 ngày làm việc kể từ ngày giao hàng thành công; giá trị hóa đơn tính trên tổng giá trị ban đầu của sản phẩm trước Shopee Voucher và chưa gồm phí vận chuyển."
   },
   {
-    "question": "Người bán không được đăng bán những sản phẩm nào?",
-    "expected_answer": "Hàng giả/nhái, sản phẩm bất hợp pháp, vi phạm sở hữu trí tuệ, và các mặt hàng nằm trong danh sách cấm của sàn.",
-    "expected_context": "Trang Product Listing Regulations, mục Prohibited Content"
+    "question": "KOL hoặc KOC có thể tra cứu mã số thuế cá nhân bằng những cách nào?",
+    "expected_answer": "KOL hoặc KOC có thể tra cứu trên trang thông tin của Tổng cục Thuế hoặc trang Thuế điện tử. Người dùng nhập số CMND hoặc CCCD và mã xác nhận để kiểm tra mã số thuế cá nhân.",
+    "expected_context": "Bài Hướng Dẫn Tra Cứu Mã Số Thuế Cá Nhân hướng dẫn hai cách: tra cứu tại trang thông tin của Tổng cục Thuế hoặc trang Thuế điện tử, sau đó nhập CMND hoặc CCCD và mã xác nhận."
+  },
+  {
+    "question": "Thông tin thanh toán và thông tin thuế của đối tác Shopee Affiliate phải đạt trạng thái nào mới có hiệu lực, và có hiệu lực từ khi nào?",
+    "expected_answer": "Cả thông tin thanh toán và thông tin thuế đều phải ở trạng thái Đã được duyệt. Các thông tin này có hiệu lực trong tháng tiếp theo kể từ ngày Shopee phê duyệt.",
+    "expected_context": "Bài Hướng dẫn tra cứu trạng thái Thông tin thanh toán & thuế quy định cả hai loại thông tin phải ở trạng thái Đã được duyệt mới có hiệu lực và sẽ có hiệu lực trong tháng tiếp theo kể từ ngày Shopee phê duyệt."
+  },
+  {
+    "question": "Theo Điều 21 Luật Doanh nghiệp 2020, hồ sơ đăng ký công ty trách nhiệm hữu hạn gồm những giấy tờ nào?",
+    "expected_answer": "Hồ sơ gồm giấy đề nghị đăng ký doanh nghiệp, điều lệ công ty, danh sách thành viên và bản sao giấy tờ pháp lý của thành viên, người đại diện theo pháp luật hoặc người đại diện theo ủy quyền. Nhà đầu tư nước ngoài còn phải cung cấp Giấy chứng nhận đăng ký đầu tư theo quy định.",
+    "expected_context": "Điều 21 Luật Doanh nghiệp 2020 quy định hồ sơ đăng ký công ty trách nhiệm hữu hạn gồm giấy đề nghị đăng ký doanh nghiệp, điều lệ công ty, danh sách thành viên và các giấy tờ pháp lý liên quan; nhà đầu tư nước ngoài phải có Giấy chứng nhận đăng ký đầu tư."
+  },
+  {
+    "question": "Cơ quan đăng ký kinh doanh phải xử lý hồ sơ đăng ký doanh nghiệp trong thời hạn bao lâu?",
+    "expected_answer": "Trong vòng 3 ngày làm việc kể từ ngày nhận hồ sơ, cơ quan đăng ký kinh doanh phải xem xét tính hợp lệ và cấp đăng ký doanh nghiệp. Nếu hồ sơ chưa hợp lệ hoặc bị từ chối, cơ quan này phải thông báo bằng văn bản và nêu nội dung cần sửa đổi hoặc lý do từ chối.",
+    "expected_context": "Khoản 5 Điều 26 Luật Doanh nghiệp 2020 quy định thời hạn xử lý hồ sơ là 03 ngày làm việc. Hồ sơ chưa hợp lệ phải được thông báo bằng văn bản về nội dung cần sửa đổi, bổ sung; trường hợp từ chối phải nêu rõ lý do."
+  },
+  {
+    "question": "Doanh nghiệp phải đáp ứng những điều kiện nào để được cấp Giấy chứng nhận đăng ký doanh nghiệp?",
+    "expected_answer": "Doanh nghiệp phải đăng ký ngành nghề không bị cấm đầu tư kinh doanh, có tên được đặt đúng quy định, có hồ sơ đăng ký hợp lệ và nộp đủ lệ phí đăng ký doanh nghiệp.",
+    "expected_context": "Điều 27 Luật Doanh nghiệp 2020 quy định bốn điều kiện cấp Giấy chứng nhận đăng ký doanh nghiệp: ngành nghề không bị cấm, tên doanh nghiệp hợp lệ, hồ sơ hợp lệ và đã nộp đủ lệ phí."
+  },
+  {
+    "question": "Công ty trách nhiệm hữu hạn một thành viên do tổ chức làm chủ sở hữu có bắt buộc phải thành lập Ban kiểm soát không?",
+    "expected_answer": "Không phải mọi công ty đều bắt buộc. Công ty có chủ sở hữu là doanh nghiệp nhà nước theo khoản 1 Điều 88 phải thành lập Ban kiểm soát; các trường hợp khác do công ty tự quyết định.",
+    "expected_context": "Khoản 2 Điều 79 Luật Doanh nghiệp 2020 quy định công ty trách nhiệm hữu hạn một thành viên có chủ sở hữu là doanh nghiệp nhà nước theo khoản 1 Điều 88 phải thành lập Ban kiểm soát; trường hợp khác do công ty quyết định."
+  },
+  {
+    "question": "Hãy nêu một số nhóm sản phẩm bị cấm hoặc hạn chế mua bán trên Shopee.",
+    "expected_answer": "Các nhóm bị cấm hoặc hạn chế gồm hàng giả, hàng nhái hoặc vi phạm sở hữu trí tuệ; thiết bị và trang phục của quân đội, công an hoặc chính phủ; tài liệu phản động hoặc xâm phạm an ninh quốc gia; dịch vụ bất hợp pháp; súng, vũ khí và sản phẩm có hình dạng giống vũ khí.",
+    "expected_context": "Chính sách Cấm/Hạn chế Sản phẩm của Shopee liệt kê hàng vi phạm bản quyền, thiết bị hoặc trang phục quân đội và lực lượng thi hành pháp luật, tài liệu phản động, dịch vụ bất hợp pháp, súng và các loại vũ khí."
+  },
+  {
+    "question": "Hình ảnh sản phẩm đăng bán trên Shopee phải đáp ứng những yêu cầu cơ bản nào?",
+    "expected_answer": "Hình ảnh phải rõ ràng và thể hiện chi tiết tình trạng sản phẩm; không chứa thông tin không liên quan. Tin đăng phải có ít nhất một ảnh thật do người bán tự chụp, trong đó sản phẩm chiếm ít nhất 40% diện tích ảnh. Ngôn ngữ trên phông nền phải là tiếng Việt và hình ảnh không được ghê rợn, khỏa thân, khiêu gợi hoặc phản cảm.",
+    "expected_context": "Mục Hình ảnh sản phẩm trong Quy định về đăng bán sản phẩm yêu cầu ảnh rõ và liên quan đến sản phẩm; có ít nhất một ảnh thật do người bán tự chụp với sản phẩm chiếm ít nhất 40% diện tích; ngôn ngữ trên phông nền là tiếng Việt và không chứa nội dung phản cảm."
+  },
+  {
+    "question": "Tên sản phẩm đăng bán trên Shopee phải được đặt như thế nào và không được chứa những từ khóa nào?",
+    "expected_answer": "Tên phải mô tả đúng sản phẩm, viết bằng tiếng Việt có dấu, đầy đủ, rõ nghĩa và khớp với hình ảnh. Tên không được chứa từ khóa fake, nhái, Sản phẩm hot, Bán chạy, Giảm giá, Miễn phí vận chuyển hoặc các ký tự đặc biệt dùng để che tên hay thương hiệu.",
+    "expected_context": "Mục Tên sản phẩm trong Quy định về đăng bán sản phẩm yêu cầu tên bằng tiếng Việt có dấu, mô tả đúng hàng hóa và khớp hình ảnh; cấm các từ fake, nhái, Sản phẩm hot, Bán chạy, Giảm giá và Miễn phí vận chuyển."
+  },
+  {
+    "question": "Người bán gian lận trên Shopee có thể bị áp dụng những biện pháp xử lý nào và phải bồi thường tối đa bao nhiêu cho mỗi đơn hàng vi phạm?",
+    "expected_answer": "Shopee có thể cảnh báo, hủy đơn hàng vi phạm, tạm khóa số dư, thu hồi tiền và lợi ích liên quan, ngừng hỗ trợ mã ưu đãi, khóa tài khoản vĩnh viễn hoặc báo cáo cơ quan chức năng. Từ ngày 28/12/2023, người bán có thể phải bồi thường tối đa 10 triệu đồng cho mỗi đơn hàng vi phạm; khoản tiền được cộng dồn theo số đơn vi phạm.",
+    "expected_context": "Mục Biện pháp xử lý trong Chính sách chống hành vi gian lận quy định các biện pháp như cảnh báo, hủy đơn, khóa số dư, thu hồi tiền, khóa tài khoản và báo cơ quan chức năng. Người bán phải bồi thường tối đa 10.000.000 đồng cho từng đơn hàng vi phạm kể từ ngày 28/12/2023."
+  },
+  {
+    "question": "Theo Điều 8 Luật Bảo vệ quyền lợi người tiêu dùng, người tiêu dùng có những quyền cơ bản nào?",
+    "expected_answer": "Người tiêu dùng có quyền được bảo đảm an toàn; được cung cấp thông tin và hóa đơn chính xác, đầy đủ; được lựa chọn hàng hóa và quyết định tham gia giao dịch; được góp ý; yêu cầu bồi thường; khiếu nại, tố cáo hoặc khởi kiện; và được tư vấn, hỗ trợ kiến thức tiêu dùng.",
+    "expected_context": "Điều 8 Luật Bảo vệ quyền lợi người tiêu dùng quy định các quyền về an toàn, cung cấp thông tin và chứng từ, lựa chọn giao dịch, góp ý, tham gia xây dựng chính sách, yêu cầu bồi thường, khiếu nại hoặc khởi kiện và được tư vấn hỗ trợ."
+  },
+  {
+    "question": "Khi giao dịch bằng phương tiện điện tử, bên kinh doanh phải tạo điều kiện gì cho người tiêu dùng đối với hóa đơn và chứng từ?",
+    "expected_answer": "Bên kinh doanh phải tạo điều kiện để người tiêu dùng truy nhập, tải, lưu giữ và in hóa đơn, chứng từ hoặc tài liệu liên quan đến giao dịch.",
+    "expected_context": "Khoản 2 Điều 20 Luật Bảo vệ quyền lợi người tiêu dùng quy định trong giao dịch điện tử, tổ chức hoặc cá nhân kinh doanh phải tạo điều kiện để người tiêu dùng truy nhập, tải, lưu giữ và in hóa đơn, chứng từ, tài liệu giao dịch."
+  },
+  {
+    "question": "Người mua Shopee được gửi yêu cầu trả hàng hoặc hoàn tiền trong thời hạn bao lâu sau khi đơn hàng được giao thành công?",
+    "expected_answer": "Thời hạn thông thường là 15 ngày kể từ khi đơn hàng được cập nhật giao thành công. Riêng thực phẩm tươi sống và đông lạnh, yêu cầu phải được gửi trong vòng 24 giờ.",
+    "expected_context": "Điều 3.2 Chính sách Trả hàng và Hoàn tiền của Shopee quy định thời hạn yêu cầu là 15 ngày kể từ khi giao hàng thành công; riêng thực phẩm tươi sống và đông lạnh là 24 giờ."
+  },
+  {
+    "question": "Người mua Shopee có thể yêu cầu trả hàng hoặc hoàn tiền trong những trường hợp nào?",
+    "expected_answer": "Người mua có thể yêu cầu khi không nhận được sản phẩm hoặc nhận thiếu hàng; nhận hàng giả, hàng nhái; sản phẩm bị lỗi hoặc hư hại khi vận chuyển; người bán giao sai sản phẩm; sản phẩm khác rõ rệt so với mô tả hoặc hết hạn; người bán đồng ý cho trả; hoặc sản phẩm còn nguyên vẹn, nguyên bao bì nhưng người mua không còn nhu cầu theo điều kiện Trả hàng COM.",
+    "expected_context": "Điều 3.1 Chính sách Trả hàng và Hoàn tiền của Shopee liệt kê các trường hợp không nhận được hàng, nhận thiếu, nhận hàng giả hoặc nhái, sản phẩm lỗi hoặc hư hại, giao sai, khác mô tả, hết hạn, người bán đồng ý nhận lại và Trả hàng COM."
   }
 ]
