@@ -629,7 +629,9 @@ if query and (not st.session_state.messages or query != st.session_state.message
         try:
             from src.task10_generation import generate_with_citation
 
-            response = generate_with_citation(query, top_k=5)
+            # Lấy lịch sử hội thoại cho conversation memory (Task F5-15)
+            prev_history = st.session_state.messages[:-1] if len(st.session_state.messages) > 1 else []
+            response = generate_with_citation(query, top_k=5, chat_history=prev_history)
             answer = response.get("answer", "Không thể tạo câu trả lời.")
             raw_sources = response.get("sources", [])
         except NotImplementedError:

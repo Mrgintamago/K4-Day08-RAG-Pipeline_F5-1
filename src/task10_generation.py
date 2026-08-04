@@ -136,21 +136,22 @@ def format_context(chunks: list[dict]) -> str:
 # GENERATION
 # =============================================================================
 
-def generate_with_citation(query: str, top_k: int = TOP_K) -> dict:
+def generate_with_citation(query: str, top_k: int = TOP_K, chat_history: list[dict] = None) -> dict:
     """
-    End-to-end RAG generation có citation.
+    End-to-end RAG generation có citation và hỗ trợ Conversation Memory (Multi-turn Chat).
 
     Pipeline:
-        1. Retrieve relevant chunks
+        1. Query Contextualization (nếu có chat_history) & Retrieve relevant chunks
         2. Reorder để tránh lost in the middle
         3. Format context với source labels
-        4. Build prompt (system + context + query)
+        4. Build prompt (system + chat_history + context + query)
         5. Call LLM
         6. Return answer + sources
 
     Args:
         query: Câu hỏi của user
         top_k: Số lượng chunk cần lấy từ retrieval pipeline
+        chat_history: Danh sách tin nhắn cũ dạng [{'role': 'user'/'assistant', 'content': str}]
 
     Returns:
         {
@@ -159,9 +160,19 @@ def generate_with_citation(query: str, top_k: int = TOP_K) -> dict:
             'retrieval_source': str  # 'hybrid' hoặc 'pageindex'
         }
     """
-    # Step 1: Retrieve
+    # Step 1: Query Contextualization & Retrieve
+    search_query = query
+    if chat_history:
+        # Lấy câu hỏi user gần nhất để bổ sung ngữ cảnh cho follow-up query
+        past_user_qs = [m["content"] for m in chat_history if m.get("role") == "user"]
+        if past_user_qs:
+            last_q = past_user_qs[-1]
+            # Nếu câu hỏi ngắn (follow-up dạng "còn phí thì sao?", "thế còn thuế?"), kết hợp với chủ đề trước
+            if len(query.split()) < 8 and not any(k in query.lower() for k in ["shopee", "luật", "thuế", "đăng ký"]):
+                search_query = f"{last_q} {query}"
+
     try:
-        chunks = retrieve(query, top_k=top_k)
+        chunks = retrieve(search_query, top_k=top_k)
     except (NotImplementedError, Exception):
         chunks = []
 
@@ -178,8 +189,20 @@ def generate_with_citation(query: str, top_k: int = TOP_K) -> dict:
     # Step 3: Format context
     context = format_context(reordered)
 
-    # Step 4: Build prompt
+    # Step 4: Build prompt & messages history
     user_message = f"Context:\n{context}\n\n---\n\nQuestion: {query}"
+
+    messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+
+    # Inject conversation history vào LLM messages (tối đa 4 tin nhắn gần nhất)
+    if chat_history:
+        for msg in chat_history[-4:]:
+            role = msg.get("role", "user")
+            content = msg.get("content", "")
+            if role in ["user", "assistant"] and content:
+                messages.append({"role": role, "content": content})
+
+    messages.append({"role": "user", "content": user_message})
 
     # Step 5: Call LLM (OpenRouter — OpenAI-compatible API)
     # pyrefly: ignore [missing-import]
@@ -213,10 +236,7 @@ def generate_with_citation(query: str, top_k: int = TOP_K) -> dict:
         try:
             response = client.chat.completions.create(
                 model=model,
-                messages=[
-                    {"role": "system", "content": SYSTEM_PROMPT},
-                    {"role": "user", "content": user_message}
-                ],
+                messages=messages,
                 temperature=TEMPERATURE,
                 top_p=TOP_P,
             )
