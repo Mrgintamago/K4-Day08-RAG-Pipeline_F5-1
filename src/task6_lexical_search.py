@@ -17,19 +17,9 @@ BM25 hoạt động thế nào:
 
 import re
 import unicodedata
-from pathlib import Path
 
-from langchain_text_splitters import RecursiveCharacterTextSplitter
 from rank_bm25 import BM25Okapi
 
-
-STANDARDIZED_DIR = Path(__file__).parent.parent / "data" / "standardized"
-
-# Dùng cùng cấu hình 800/100 đã chốt cho Task 4 để BM25 và dense retrieval
-# xếp hạng trên các đơn vị văn bản tương đương nhau. F5-6 tự chunk trong RAM vì
-# lexical search không cần embedding, API key hay ChromaDB.
-CORPUS_CHUNK_SIZE = 800
-CORPUS_CHUNK_OVERLAP = 100
 
 CORPUS: list[dict] = []  # List of {'content': str, 'metadata': dict}
 _BM25_INDEX: BM25Okapi | None = None
@@ -47,58 +37,16 @@ def _tokenize(text: str) -> list[str]:
     return re.findall(r"\w+", _normalize_text(text), flags=re.UNICODE)
 
 
-def _parse_document(md_file: Path) -> dict | None:
-    """Đọc một file Markdown chuẩn hóa và tách header khỏi nội dung thật."""
-    raw_text = md_file.read_text(encoding="utf-8")
-    parts = re.split(r"\r?\n---\r?\n", raw_text, maxsplit=1)
-    if len(parts) != 2:
-        return None
-
-    header, content = parts
-    metadata = {"source": md_file.name}
-
-    title_match = re.search(r"^#\s+(.+)$", header, flags=re.MULTILINE)
-    if title_match:
-        metadata["title"] = title_match.group(1).strip()
-
-    for key, value in re.findall(r"\*\*(.*?):\*\*\s*(.*)", header):
-        normalized_key = key.strip().casefold().replace(" ", "_")
-        # Header dùng nhãn Source cho URL; giữ source là tên file để citation và
-        # deduplicate ổn định, đồng thời lưu địa chỉ web ở trường url riêng.
-        if normalized_key == "source":
-            metadata["url"] = value.strip()
-        else:
-            metadata[normalized_key] = value.strip()
-
-    return {"content": content.strip(), "metadata": metadata}
-
-
 def _load_corpus() -> list[dict]:
-    """Tạo corpus chunk từ toàn bộ ``data/standardized/**/*.md``."""
-    if not STANDARDIZED_DIR.exists():
-        return []
+    """Dùng chung corpus đã parse, chunk và lọc rác với dense retrieval.
 
-    splitter = RecursiveCharacterTextSplitter(
-        chunk_size=CORPUS_CHUNK_SIZE,
-        chunk_overlap=CORPUS_CHUNK_OVERLAP,
-        separators=["\n\n", "\n", "##", "#", ". ", " ", ""],
-        length_function=len,
-    )
+    Import lười giúp ``build_bm25_index()`` vẫn có thể được kiểm thử độc lập bằng
+    fixture. Task 4 cũng khởi tạo embedding model theo kiểu lazy nên thao tác này
+    không cần API key, không tải model và không mở ChromaDB.
+    """
+    from .task4_chunking_indexing import chunk_documents, load_documents
 
-    corpus = []
-    for md_file in sorted(STANDARDIZED_DIR.rglob("*.md")):
-        document = _parse_document(md_file)
-        if document is None or not document["content"]:
-            continue
-
-        for chunk_index, chunk_text in enumerate(
-            splitter.split_text(document["content"])
-        ):
-            metadata = document["metadata"].copy()
-            metadata["chunk_index"] = chunk_index
-            corpus.append({"content": chunk_text, "metadata": metadata})
-
-    return corpus
+    return chunk_documents(load_documents())
 
 
 def _searchable_text(document: dict) -> str:
